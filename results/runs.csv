@@ -1,0 +1,1 @@
+run_id,timestamp,job,experiment,slurm_job_id,nodes,device,gpu_model,world_size,num_threads,n_layer,n_embd,n_head,n_params,seq_len,global_batch,precision,seed,steps,warmup_steps,nccl_p2p_disable,t_data_ms,t_fwd_bwd_ms,t_optim_ms,t_comm_ms,t_step_ms,tokens_per_s,peak_mem_mb,val_loss_500,final_val_loss,valid,status,notes

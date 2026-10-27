@@ -1,0 +1,6 @@
+# PyTorch comes from `module load pytorch/2.8.0` — do not pip-install torch.
+# Install the rest on top of the module, e.g. `pip install --user -r env/requirements.txt`.
+numpy
+tokenizers
+pandas
+matplotlib
