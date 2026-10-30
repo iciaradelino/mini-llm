@@ -43,3 +43,56 @@
 | valid            | Correctness rule result vs. single-GPU fp32 baseline: `yes` / `no` / `n/a` |
 | status           | `ok`, `failed`, `SKIPPED` |
 | notes            | Free text (reason for SKIPPED/failed, etc.) |
+
+## How the timing columns are measured
+
+Implemented in `src/timing.py`; `src/runlog.py` writes the row (rank 0 only).
+
+- **Phases.** Each training step is split into `data` (batch fetch + host→device
+  copy), `fwd_bwd` (forward, loss, `backward()`) and `optim` (`step()` +
+  `zero_grad()`). `t_step_ms` is the wall time of the whole step, so it can be
+  slightly larger than the sum of the phases (Python overhead, loss logging).
+- **GPU synchronization.** `torch.cuda.synchronize()` is called at every phase
+  boundary. Without it, CUDA kernels run asynchronously and their time would be
+  charged to whichever later phase happens to block. The extra syncs cost a
+  little throughput; every run pays the same cost, so comparisons stay fair.
+- **Warm-up.** The first `warmup_steps` (default 20) steps are dropped (cuDNN
+  autotuning, allocator growth, NCCL connection setup). All `t_*_ms` values are
+  **medians** over the remaining steps, from rank 0.
+- `tokens_per_s = global_batch × seq_len / (t_step_ms / 1000)`.
+- `peak_mem_mb`: `torch.cuda.max_memory_allocated` on GPU; peak process RSS
+  (`getrusage`) on CPU.
+
+### How communication time is measured (`t_comm_ms`)
+
+DDP starts all-reducing gradient buckets *during* `backward()`, so most of the
+communication overlaps with compute and cannot be timed as a separate phase.
+We report **exposed communication**: the part of the communication that is not
+hidden and actually lengthens the step.
+
+Method: the `no_sync()` comparison (`timing.measure_exposed_comm`).
+
+1. After training (and after the step-500 evaluation), run N extra
+   forward+backward steps (`--comm_measure_steps`, default 20, plus 3 warm-up),
+   **alternating** between normal DDP and `model.no_sync()` (no all-reduce).
+2. Before each of these steps, all ranks wait at a barrier, so differences in
+   when ranks start are not counted as communication.
+3. No optimizer step is taken and gradients are zeroed afterwards, so the
+   weights and the reported losses are unaffected.
+4. `t_comm_ms = max(0, median(fwd_bwd with sync) − median(fwd_bwd with no_sync))`.
+
+Single-process runs report `t_comm_ms = 0`.
+
+Caveats, which the report should mention:
+- This counts **exposed** time, not total all-reduce time. A fast link that is
+  fully hidden behind backward shows up as ≈ 0, even though bytes were sent.
+- With sync on, all ranks wait for the slowest one, so compute imbalance
+  between ranks also ends up in `t_comm_ms`.
+- `t_fwd_bwd_ms` from the training loop *includes* the exposed communication
+  (it is the synced fwd+bwd). To get pure compute, use
+  `t_fwd_bwd_ms − t_comm_ms`.
+
+We considered a DDP communication hook that timestamps each bucket's
+all-reduce instead. We rejected it because the hook returns an asynchronous
+future, so the per-bucket wall times overlap with each other and with backward
+and do not add up to a per-step cost.
