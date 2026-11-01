@@ -1,0 +1,37 @@
+{
+  "n_params": 13865856,
+  "steps": 200,
+  "seed": 1337,
+  "precision": "fp32",
+  "global_batch": 16,
+  "seq_len": 256,
+  "device": "cpu",
+  "data": "tiny.bin",
+  "first_train_loss": 9.074850082397461,
+  "final_train_loss": 5.715630054473877,
+  "val_loss_500": null,
+  "final_val_loss": 6.055856227874756,
+  "wall_s": 200.38,
+  "history": [
+    {
+      "step": 50,
+      "train_loss": 6.490824222564697,
+      "val_loss": 6.667651176452637
+    },
+    {
+      "step": 100,
+      "train_loss": 5.94171667098999,
+      "val_loss": 6.290436267852783
+    },
+    {
+      "step": 150,
+      "train_loss": 5.902203559875488,
+      "val_loss": 6.1122941970825195
+    },
+    {
+      "step": 200,
+      "train_loss": 5.715630054473877,
+      "val_loss": 6.055856227874756
+    }
+  ]
+}
