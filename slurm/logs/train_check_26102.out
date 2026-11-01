@@ -1,0 +1,37 @@
+==================================================
+Job ID:      26102
+Node:        fortran
+Start:       Sun Nov  1 02:22:54 PM CET 2026
+Working dir: /home/hpca21/mini-llm
+==================================================
+torch 2.8.0+cu128 | numpy 2.3.2 | threads 8
+[INFO] params 13.87M (13.77M excl. positions) | device cpu | fp32 | data tiny.bin | batch 16 (micro 16 x accum 1) | seq 256 | seed 1337
+step     1 | loss 9.0749 | lr 3.00e-05 | 1213 ms/step
+step    10 | loss 8.0129 | lr 3.00e-04 | 966 ms/step
+step    20 | loss 7.0448 | lr 6.00e-04 | 949 ms/step
+step    30 | loss 6.5910 | lr 5.97e-04 | 945 ms/step
+step    40 | loss 6.4982 | lr 5.85e-04 | 944 ms/step
+step    50 | loss 6.4908 | lr 5.66e-04 | 943 ms/step
+step    50 | VAL loss 6.6677
+step    60 | loss 6.3142 | lr 5.40e-04 | 994 ms/step
+step    70 | loss 6.1391 | lr 5.07e-04 | 986 ms/step
+step    80 | loss 6.0717 | lr 4.69e-04 | 980 ms/step
+step    90 | loss 6.0205 | lr 4.27e-04 | 976 ms/step
+step   100 | loss 5.9417 | lr 3.82e-04 | 972 ms/step
+step   100 | VAL loss 6.2904
+step   110 | loss 5.9104 | lr 3.35e-04 | 997 ms/step
+step   120 | loss 5.9640 | lr 2.88e-04 | 993 ms/step
+step   130 | loss 5.8515 | lr 2.42e-04 | 988 ms/step
+step   140 | loss 5.9488 | lr 1.99e-04 | 985 ms/step
+step   150 | loss 5.9022 | lr 1.60e-04 | 982 ms/step
+step   150 | VAL loss 6.1123
+step   160 | loss 5.7916 | lr 1.26e-04 | 999 ms/step
+step   170 | loss 5.7345 | lr 9.86e-05 | 995 ms/step
+step   180 | loss 5.7353 | lr 7.79e-05 | 992 ms/step
+step   190 | loss 5.8229 | lr 6.50e-05 | 989 ms/step
+step   200 | loss 5.7156 | lr 6.00e-05 | 987 ms/step
+step   200 | VAL loss 6.0559
+SUMMARY {"n_params": 13865856, "steps": 200, "seed": 1337, "precision": "fp32", "global_batch": 16, "seq_len": 256, "device": "cpu", "data": "tiny.bin", "first_train_loss": 9.074850082397461, "final_train_loss": 5.715630054473877, "val_loss_500": null, "final_val_loss": 6.055856227874756, "wall_s": 200.38}
+==================================================
+Finished: Sun Nov  1 02:26:24 PM CET 2026
+==================================================
