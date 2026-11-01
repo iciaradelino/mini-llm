@@ -27,11 +27,11 @@ echo "=================================================="
 
 module load pytorch/2.8.0
 export OMP_NUM_THREADS=${SLURM_CPUS_PER_TASK:-8}
-python3 -c "import torch, numpy; print('torch', torch.__version__, '| numpy', numpy.__version__, '| threads', torch.get_num_threads())"
+torch-python -c "import torch, numpy; print('torch', torch.__version__, '| numpy', numpy.__version__, '| threads', torch.get_num_threads())"
 
 test -f data/tokenized/tiny.bin || { echo "[ERROR] data/tokenized/tiny.bin missing - run slurm/tokenize.sbatch first"; exit 1; }
 
-python3 src/train.py \
+torch-python src/train.py \
     --dataset tiny --device cpu --seed 1337 \
     --max_steps 200 --global_batch 16 --warmup_steps 20 \
     --eval_interval 50 --eval_iters 10 --log_interval 10 \
