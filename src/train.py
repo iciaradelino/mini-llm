@@ -1,28 +1,38 @@
 #!/usr/bin/env python3
 """
-src/train.py  (step 6a)
+src/train.py  (steps 6a + 6b)
 
 GPT model and training loop adapted from nanoGPT (Karpathy, MIT licence).
-Single-device version: DDP and per-phase timers are added on top by step 6b.
+Runs single-process with `python` or data-parallel (DDP) under `torchrun`
+(nccl on GPU, gloo on CPU; see src/ddp_utils.py).
 
 Baseline (README): 6 layers, width 384, 6 heads, sequence length 256,
 global batch 64 sequences, vocab 8192 (from data/tokenized/meta.json).
+Under DDP the global batch stays fixed: each rank processes
+global_batch / world_size sequences per step.
 
 Data: flat uint16 streams read with np.memmap (data/tokenized/{train,val,tiny}.bin).
 If the files are missing, or --dummy_data is given, random tokens are used so the
 loop can be tested before the real data exists.
 
-Reproducibility: one --seed drives model init and training batches; validation
-batches come from a separate fixed-seed generator, so val loss is comparable
-across runs (same seed + same global batch -> same numbers, up to numerics).
+Reproducibility: one --seed drives model init and training batches (rank r samples
+with seed + 1000*r, so ranks see different windows); validation batches come from
+a separate fixed-seed generator and are sharded over ranks, so every run evaluates
+exactly the same windows whatever the world size.
 
 Validation loss is evaluated every --eval_interval steps and always at step 500
 (`val_loss_500`, used by the 2% correctness rule) and at the final step.
 
+Timing (src/timing.py): every step is split into data / fwd_bwd / optim with
+torch.cuda.synchronize() at phase boundaries; the first --timing_warmup steps are
+dropped. Exposed gradient communication is measured after training with the
+no_sync() comparison (results/README.md). Rank 0 appends one row to --runs_csv.
+
 Usage
     python src/train.py --dataset tiny --max_steps 50 --eval_interval 10
     python src/train.py --dummy_data --max_steps 20 --device cpu
-    python src/train.py --precision bf16 --max_steps 1000
+    python src/train.py --precision bf16 --max_steps 1000 --job A --experiment baseline_fp32
+    torchrun --standalone --nproc_per_node=2 src/train.py --device cpu --dataset tiny
 """
 
 import argparse
@@ -37,6 +47,10 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+
+import ddp_utils
+import runlog
+from timing import StepTimer, measure_exposed_comm
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 LOSS_CHECK_STEP = 500  # step whose validation loss feeds the correctness rule
@@ -176,7 +190,7 @@ class BatchLoader:
             ix = torch.randint(self.n_tokens - T - 1, (batch_size,), generator=self.gen).tolist()
             x = torch.from_numpy(np.stack([self.data[i:i + T].astype(np.int64) for i in ix]))
             y = torch.from_numpy(np.stack([self.data[i + 1:i + 1 + T].astype(np.int64) for i in ix]))
-        if self.device == "cuda":
+        if torch.device(self.device).type == "cuda":
             return x.pin_memory().to(self.device, non_blocking=True), y.pin_memory().to(self.device, non_blocking=True)
         return x.to(self.device), y.to(self.device)
 
@@ -197,17 +211,26 @@ def get_lr(step, a):
 
 
 @torch.no_grad()
-def estimate_val_loss(model, a, val_seed, ctx, micro_batch):
-    """Mean loss over a FIXED set of validation windows (same for every run)."""
+def estimate_val_loss(model, a, val_seed, ctx, info):
+    """Mean loss over a FIXED set of validation windows (same for every run).
+
+    Every rank draws the same eval_iters batches; rank r evaluates batches
+    r, r + world_size, ... and the per-batch losses are summed across ranks, so the
+    result does not depend on the world size. `model` is the unwrapped module.
+    """
     loader = BatchLoader(a.val_path, a.vocab_size, a.seq_len, val_seed, a.device)
     model.eval()
-    losses = torch.zeros(a.eval_iters)
+    losses = torch.zeros(a.eval_iters, dtype=torch.float64, device=info.device)
     for k in range(a.eval_iters):
-        x, y = loader.get_batch(micro_batch)
+        x, y = loader.get_batch(a.eval_batch)  # always drawn, to keep the generator in step
+        if k % info.world_size != info.rank:
+            continue
         with ctx:
             _, loss = model(x, y)
         losses[k] = loss.item()
     model.train()
+    if info.enabled:
+        torch.distributed.all_reduce(losses, op=torch.distributed.ReduceOp.SUM)
     return losses.mean().item()
 
 
@@ -227,7 +250,8 @@ def parse_args(argv=None):
     # optimisation
     p.add_argument("--global_batch", type=int, default=64, help="sequences per optimizer step")
     p.add_argument("--micro_batch", type=int, default=None,
-                   help="sequences per forward pass (gradient accumulation); default = global_batch")
+                   help="sequences per forward pass per rank (gradient accumulation); "
+                        "default = global_batch / world_size")
     p.add_argument("--max_steps", type=int, default=1000)
     p.add_argument("--lr", type=float, default=6e-4)
     p.add_argument("--min_lr", type=float, default=6e-5)
@@ -243,9 +267,46 @@ def parse_args(argv=None):
     p.add_argument("--num_threads", type=int, default=None, help="torch CPU threads")
     p.add_argument("--eval_interval", type=int, default=100)
     p.add_argument("--eval_iters", type=int, default=20, help="validation batches per evaluation")
+    p.add_argument("--eval_batch", type=int, default=None,
+                   help="sequences per validation batch (independent of world size); default = global_batch")
     p.add_argument("--log_interval", type=int, default=10)
     p.add_argument("--summary_json", default=None, help="write the final summary dict here")
+    # instrumentation / results (step 6b)
+    p.add_argument("--timing_warmup", type=int, default=20, help="steps excluded from the timing medians")
+    p.add_argument("--comm_measure_steps", type=int, default=20,
+                   help="extra fwd+bwd pairs for the no_sync() comm measurement (DDP only; 0 = skip)")
+    p.add_argument("--runs_csv", default=str(BASE_DIR / "results" / "runs.csv"),
+                   help="rank 0 appends one row here; 'none' disables")
+    p.add_argument("--job", default="dev", help="runs.csv `job`: A, B, C, D, E, opt, final, smoke, dev")
+    p.add_argument("--experiment", default=None, help="runs.csv `experiment` label (default: derived)")
+    p.add_argument("--notes", default="", help="free text for runs.csv `notes`")
     return p.parse_args(argv)
+
+
+def build_row(a, info, n_params, med, comm, val_loss_500, last_val, status, notes):
+    """One runs.csv row (schema: results/README.md). `valid` is filled in later by
+    src/check_correctness.py against the fp32 single-GPU baseline."""
+    step_ms = med.get("step")
+    return {
+        "run_id": runlog.make_run_id(0),
+        "timestamp": runlog.now_iso(),
+        "job": a.job,
+        "experiment": a.experiment or f"{info.device.type}_ws{info.world_size}_{a.precision}",
+        **runlog.slurm_fields(),
+        **runlog.device_fields(info.device),
+        "world_size": info.world_size,
+        "n_layer": a.n_layer, "n_embd": a.n_embd, "n_head": a.n_head, "n_params": n_params,
+        "seq_len": a.seq_len, "global_batch": a.global_batch,
+        "precision": a.precision, "seed": a.seed,
+        "steps": a.max_steps, "warmup_steps": a.timing_warmup,
+        "t_data_ms": med.get("data"), "t_fwd_bwd_ms": med.get("fwd_bwd"),
+        "t_optim_ms": med.get("optim"), "t_comm_ms": comm["comm_ms"],
+        "t_step_ms": step_ms,
+        "tokens_per_s": a.global_batch * a.seq_len / (step_ms / 1000.0) if step_ms else None,
+        "peak_mem_mb": runlog.peak_mem_mb(info.device),
+        "val_loss_500": val_loss_500, "final_val_loss": last_val,
+        "valid": None, "status": status, "notes": notes,
+    }
 
 
 def main(argv=None):
@@ -253,14 +314,23 @@ def main(argv=None):
     if a.device == "auto":
         a.device = "cuda" if torch.cuda.is_available() else "cpu"
     device_type = a.device.split(":")[0]
+    info = ddp_utils.setup(device=device_type)
+    if not info.enabled:  # single process: honour an explicit cuda:N
+        info.device = torch.device(a.device)
+        if device_type == "cuda":
+            torch.cuda.set_device(info.device)
+    a.device = str(info.device)
+    log = print if info.is_master else (lambda *args, **kwargs: None)
     if a.num_threads:
         torch.set_num_threads(a.num_threads)
-    torch.manual_seed(a.seed)
-    np.random.seed(a.seed)
+    ddp_utils.seed_everything(a.seed)  # same init on every rank
 
-    micro = a.micro_batch or a.global_batch
-    assert a.global_batch % micro == 0, "global_batch must be a multiple of micro_batch"
-    accum = a.global_batch // micro
+    # global batch fixed; each rank takes global_batch / world_size, optionally in micro-batches
+    per_rank = ddp_utils.per_rank_batch(a.global_batch, info.world_size)
+    micro = a.micro_batch or per_rank
+    assert per_rank % micro == 0, "global_batch / world_size must be a multiple of micro_batch"
+    accum = per_rank // micro
+    a.eval_batch = a.eval_batch or a.global_batch
 
     # data / vocab
     meta_path = Path(a.data_dir) / "meta.json"
@@ -269,68 +339,119 @@ def main(argv=None):
     a.train_path = None if a.dummy_data else resolve_split(a.data_dir, a.dataset)
     a.val_path = None if a.dummy_data else resolve_split(a.data_dir, "val")
     if a.train_path is None or a.val_path is None:
-        print("[WARN] .bin files not found -> using random tokens (loss will stay near ln(vocab))")
+        log("[WARN] .bin files not found -> using random tokens (loss will stay near ln(vocab))")
         a.train_path = a.val_path = None
     data_kind = "random" if a.train_path is None else Path(a.train_path).name
-    train_loader = BatchLoader(a.train_path, a.vocab_size, a.seq_len, a.seed, a.device)
+    # per-rank seed so ranks sample different windows (rank 0 = single-process stream)
+    train_loader = BatchLoader(a.train_path, a.vocab_size, a.seq_len, a.seed + 1000 * info.rank, a.device)
 
     # model
     cfg = GPTConfig(block_size=a.seq_len, vocab_size=a.vocab_size, n_layer=a.n_layer,
                     n_head=a.n_head, n_embd=a.n_embd, dropout=a.dropout)
-    model = GPT(cfg).to(a.device)
-    n_params = model.num_params()
-    print(f"[INFO] params {n_params / 1e6:.2f}M ({model.num_params(True) / 1e6:.2f}M excl. positions) | "
-          f"device {a.device} | {a.precision} | data {data_kind} | batch {a.global_batch} "
-          f"(micro {micro} x accum {accum}) | seq {a.seq_len} | seed {a.seed}")
+    raw_model = GPT(cfg).to(info.device)
+    n_params = raw_model.num_params()
+    model = ddp_utils.wrap(raw_model, info)
+    log(f"[INFO] params {n_params / 1e6:.2f}M ({raw_model.num_params(True) / 1e6:.2f}M excl. positions) | "
+        f"device {a.device} | world {info.world_size} ({info.backend or 'no DDP'}) | {a.precision} | "
+        f"data {data_kind} | batch {a.global_batch} (per rank {per_rank} = micro {micro} x accum {accum}) | "
+        f"seq {a.seq_len} | seed {a.seed}")
 
-    optimizer = model.configure_optimizer(a.weight_decay, a.lr, (a.beta1, a.beta2), device_type)
+    optimizer = raw_model.configure_optimizer(a.weight_decay, a.lr, (a.beta1, a.beta2), device_type)
     ctx = (torch.autocast(device_type=device_type, dtype=torch.bfloat16)
            if a.precision == "bf16" else nullcontext())
     val_seed = 10_000  # fixed: identical validation windows in every run
 
+    def get_batches():
+        return [train_loader.get_batch(micro) for _ in range(accum)]
+
+    def fwd_bwd(batches):
+        """Forward + backward over this rank's share of one global batch; returns the mean loss."""
+        loss_sum = torch.zeros((), device=info.device)
+        for i, (x, y) in enumerate(batches):
+            # DDP all-reduces on every backward(); only sync on the last micro-batch
+            last = i == len(batches) - 1
+            with nullcontext() if last or not info.enabled else model.no_sync():
+                with ctx:
+                    _, loss = model(x, y)
+                (loss / accum).backward()
+            loss_sum += loss.detach()
+        return loss_sum / accum
+
+    timer = StepTimer(info.device, warmup_steps=a.timing_warmup)
+    comm = {"fwd_bwd_sync_ms": 0.0, "fwd_bwd_nosync_ms": 0.0, "comm_ms": 0.0}
     val_loss_500, last_val, train_loss, first_loss = None, None, float("nan"), None
     history, t0 = [], time.time()
     model.train()
-    for step in range(1, a.max_steps + 1):
-        lr = get_lr(step - 1, a)
-        for g in optimizer.param_groups:
-            g["lr"] = lr
-        optimizer.zero_grad(set_to_none=True)
-        step_loss = 0.0
-        for _ in range(accum):
-            x, y = train_loader.get_batch(micro)
-            with ctx:
-                _, loss = model(x, y)
-            (loss / accum).backward()
-            step_loss += loss.item() / accum
-        if a.grad_clip > 0:
-            torch.nn.utils.clip_grad_norm_(model.parameters(), a.grad_clip)
-        optimizer.step()
-        train_loss = step_loss
-        first_loss = first_loss if first_loss is not None else train_loss
-        if not math.isfinite(train_loss):
-            raise RuntimeError(f"non-finite training loss at step {step}")
+    try:
+        for step in range(1, a.max_steps + 1):
+            lr = get_lr(step - 1, a)
+            for g in optimizer.param_groups:
+                g["lr"] = lr
+            timer.start_step()
+            with timer.phase("data"):
+                batches = get_batches()
+            with timer.phase("fwd_bwd"):
+                loss = fwd_bwd(batches)
+            with timer.phase("optim"):
+                if a.grad_clip > 0:
+                    torch.nn.utils.clip_grad_norm_(raw_model.parameters(), a.grad_clip)
+                optimizer.step()
+                optimizer.zero_grad(set_to_none=True)
+            timer.end_step()
 
-        if step % a.log_interval == 0 or step == 1:
-            dt = (time.time() - t0) / step
-            print(f"step {step:5d} | loss {train_loss:.4f} | lr {lr:.2e} | {dt * 1000:.0f} ms/step")
-        if step % a.eval_interval == 0 or step == LOSS_CHECK_STEP or step == a.max_steps:
-            last_val = estimate_val_loss(model, a, val_seed, ctx, micro)
-            history.append({"step": step, "train_loss": train_loss, "val_loss": last_val})
-            if step == LOSS_CHECK_STEP:
-                val_loss_500 = last_val
-            print(f"step {step:5d} | VAL loss {last_val:.4f}" + ("  <- step 500" if step == LOSS_CHECK_STEP else ""))
+            # averaged over ranks so every rank takes the same branches below
+            train_loss = ddp_utils.all_reduce_mean(loss.item(), info)
+            first_loss = first_loss if first_loss is not None else train_loss
+            if not math.isfinite(train_loss):
+                raise RuntimeError(f"non-finite training loss at step {step}")
 
+            if step % a.log_interval == 0 or step == 1:
+                dt = (time.time() - t0) / step
+                log(f"step {step:5d} | loss {train_loss:.4f} | lr {lr:.2e} | {dt * 1000:.0f} ms/step")
+            if step % a.eval_interval == 0 or step == LOSS_CHECK_STEP or step == a.max_steps:
+                last_val = estimate_val_loss(raw_model, a, val_seed, ctx, info)
+                history.append({"step": step, "train_loss": train_loss, "val_loss": last_val})
+                if step == LOSS_CHECK_STEP:
+                    val_loss_500 = last_val
+                log(f"step {step:5d} | VAL loss {last_val:.4f}" + ("  <- step 500" if step == LOSS_CHECK_STEP else ""))
+        wall_s = round(time.time() - t0, 2)
+
+        # exposed gradient communication: after training, so the losses above are unaffected
+        if info.enabled and a.comm_measure_steps > 0:
+            fixed = get_batches()  # same batch every time: the comparison is pure compute vs comm
+            comm = measure_exposed_comm(model, lambda: fwd_bwd(fixed), info.device,
+                                        n_steps=a.comm_measure_steps)
+    except Exception as e:
+        if info.is_master and a.runs_csv.lower() != "none":
+            note = "; ".join(filter(None, [a.notes, f"{type(e).__name__}: {e}"[:300]]))
+            runlog.append_row(build_row(a, info, n_params, timer.medians(), comm,
+                                        val_loss_500, last_val, "failed", note), a.runs_csv)
+        ddp_utils.cleanup(info)
+        raise
+
+    med = timer.medians()
     summary = {
         "n_params": n_params, "steps": a.max_steps, "seed": a.seed, "precision": a.precision,
         "global_batch": a.global_batch, "seq_len": a.seq_len, "device": a.device, "data": data_kind,
+        "world_size": info.world_size, "backend": info.backend,
         "first_train_loss": first_loss, "final_train_loss": train_loss,
         "val_loss_500": val_loss_500, "final_val_loss": last_val,
-        "wall_s": round(time.time() - t0, 2), "history": history,
+        "timing_ms": med, "timed_steps": timer.measured_steps, "comm": comm,
+        "wall_s": wall_s, "history": history,
     }
-    print("SUMMARY " + json.dumps({k: v for k, v in summary.items() if k != "history"}))
-    if a.summary_json:
-        Path(a.summary_json).write_text(json.dumps(summary, indent=2))
+    log("SUMMARY " + json.dumps({k: v for k, v in summary.items() if k != "history"}))
+    if info.is_master:
+        if a.summary_json:
+            Path(a.summary_json).write_text(json.dumps(summary, indent=2))
+        if a.runs_csv.lower() != "none":
+            auto = f"data {data_kind}; train loss {first_loss:.3f}->{train_loss:.3f}"
+            if info.enabled:
+                auto += (f"; fwd_bwd sync {comm['fwd_bwd_sync_ms']:.2f}ms "
+                         f"nosync {comm['fwd_bwd_nosync_ms']:.2f}ms")
+            runlog.append_row(build_row(a, info, n_params, med, comm, val_loss_500, last_val, "ok",
+                                        "; ".join(filter(None, [a.notes, auto]))), a.runs_csv)
+            log(f"[INFO] appended run to {a.runs_csv}")
+    ddp_utils.cleanup(info)
     return summary
 
 

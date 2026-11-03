@@ -1,7 +1,8 @@
-"""Stand-in harness for the DDP + instrumentation code until train.py exists.
+"""Minimal harness for the DDP + instrumentation helpers, independent of train.py.
 
 Trains a tiny next-token model on random tokens using ddp_utils, timing and
-runlog exactly the way train.py will, then writes one CSV row from rank 0.
+runlog the same way train.py does, then writes one CSV row from rank 0. Useful
+for debugging the helpers in isolation; train.py is the real entry point.
 
     # single process
     python src/ddp_smoke.py

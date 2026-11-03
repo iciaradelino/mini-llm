@@ -35,6 +35,7 @@ torch-python src/train.py \
     --dataset tiny --device cpu --seed 1337 \
     --max_steps 200 --global_batch 16 --warmup_steps 20 \
     --eval_interval 50 --eval_iters 10 --log_interval 10 \
+    --job smoke --runs_csv results/smoke_runs.csv \
     --summary_json slurm/logs/train_check_${SLURM_JOB_ID:-local}.json
 
 echo "=================================================="

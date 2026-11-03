@@ -40,13 +40,31 @@
 | peak_mem_mb      | Peak GPU memory (or RSS for CPU) |
 | val_loss_500     | Validation loss after 500 steps (empty if fewer steps) |
 | final_val_loss   | |
-| valid            | Correctness rule result vs. single-GPU fp32 baseline: `yes` / `no` / `n/a` |
+| valid            | Correctness rule result vs. single-GPU fp32 baseline: `yes` / `no` / `n/a`. Left empty by `train.py`; filled in by `src/check_correctness.py` |
 | status           | `ok`, `failed`, `SKIPPED` |
 | notes            | Free text (reason for SKIPPED/failed, etc.) |
 
 ## How the timing columns are measured
 
-Implemented in `src/timing.py`; `src/runlog.py` writes the row (rank 0 only).
+Implemented in `src/timing.py`; `src/train.py` calls `src/runlog.py` to write the
+row (rank 0 only, after training). A run that crashes or diverges still gets a
+row, with `status = failed` and the error in `notes`.
+
+Relevant `train.py` flags:
+
+| Flag                   | Default            | Meaning |
+|------------------------|--------------------|---------|
+| `--job`                | `dev`              | `job` column |
+| `--experiment`         | `<device>_ws<N>_<precision>` | `experiment` column |
+| `--notes`              | empty              | prepended to the auto notes (data file, loss, comm details) |
+| `--runs_csv`           | `results/runs.csv` | where rank 0 appends; `none` disables. Test runs use `results/smoke_runs.csv` (git-ignored) |
+| `--timing_warmup`      | 20                 | steps dropped from the medians (`warmup_steps` column; not the LR warm-up `--warmup_steps`) |
+| `--comm_measure_steps` | 20                 | no_sync() comparison pairs after training (DDP only; 0 skips it) |
+
+Under DDP, `global_batch` is fixed and each rank processes
+`global_batch / world_size` sequences per step. Validation uses the same fixed
+windows in every run (sharded across ranks), so `val_loss_500` is comparable
+across world sizes.
 
 - **Phases.** Each training step is split into `data` (batch fetch + host→device
   copy), `fwd_bwd` (forward, loss, `backward()`) and `optim` (`step()` +
