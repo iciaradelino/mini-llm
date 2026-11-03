@@ -20,6 +20,9 @@ checkpoints/
 results/profiles/*.json
 results/profiles/*.pt.trace.json
 
+# Output of src/ddp_smoke.py (never mixed into runs.csv)
+results/smoke_runs.csv
+
 # Keep Slurm logs (they are evidence) — do NOT ignore slurm/logs/
 
 # OS / editor
