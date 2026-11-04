@@ -1,0 +1,152 @@
+==================================================
+Job ID:      26995
+Node:        fortran
+Start:       Wed Nov  4 12:13:00 CET 2026
+Working dir: /home/hpca06/hpc_group_project/mini-llm
+==================================================
+environment snapshot written to slurm/logs/env_snapshot_26995.txt
+repo root: /home/hpca06/hpc_group_project/mini-llm | python: torch-python | steps: 50 | out: data/tokenized_smoke | threads: 8
+
+=== [STAGE 0/5 environment] 2026-11-04 12:13:00 ===
+torch 2.8.0+cu128 | numpy 2.3.2 | tokenizers 0.23.3
+raw files found: 30
+
+=== [STAGE 1/5 prepare corpus (src/prepare_corpus.py)] 2026-11-04 12:13:04 ===
+============================================================
+Starting Project Gutenberg Spanish Corpus Download & Prep
+============================================================
+[CACHE] Found raw file: donquijote.txt
+[PROCESSED] donquijote -> train (2.07 MB)
+[CACHE] Found raw file: novelasejemplares.txt
+[PROCESSED] novelasejemplares -> train (1.01 MB)
+[CACHE] Found raw file: obrasescogidas.txt
+[PROCESSED] obrasescogidas -> train (0.54 MB)
+[CACHE] Found raw file: poesiascompletas.txt
+[PROCESSED] poesiascompletas -> val (0.22 MB)
+[CACHE] Found raw file: paginasescogidas.txt
+[PROCESSED] paginasescogidas -> train (0.09 MB)
+[CACHE] Found raw file: romancerogitano.txt
+[PROCESSED] romancerogitano -> train (0.04 MB)
+[CACHE] Found raw file: librodepoemas.txt
+[PROCESSED] librodepoemas -> train (0.10 MB)
+[CACHE] Found raw file: fortunatayjacinta.txt
+[PROCESSED] fortunatayjacinta -> train (2.20 MB)
+[CACHE] Found raw file: misericordia.txt
+[PROCESSED] misericordia -> val (0.47 MB)
+[CACHE] Found raw file: trafalgar.txt
+[PROCESSED] trafalgar -> train (0.29 MB)
+[CACHE] Found raw file: tormento.txt
+[PROCESSED] tormento -> train (0.47 MB)
+[CACHE] Found raw file: marianela.txt
+[PROCESSED] marianela -> train (0.29 MB)
+[CACHE] Found raw file: lospazosdeulloa.txt
+[PROCESSED] lospazosdeulloa -> train (0.48 MB)
+[CACHE] Found raw file: insolacionymorrina.txt
+[PROCESSED] insolacionymorrina -> train (0.48 MB)
+[CACHE] Found raw file: latribuna.txt
+[PROCESSED] latribuna -> val (0.37 MB)
+[CACHE] Found raw file: cuentosdeamor.txt
+[PROCESSED] cuentosdeamor -> train (0.37 MB)
+[CACHE] Found raw file: loscuatrojinetesdelapocalipsis.txt
+[PROCESSED] loscuatrojinetesdelapocalipsis -> train (0.78 MB)
+[CACHE] Found raw file: marenostrum.txt
+[PROCESSED] marenostrum -> train (0.85 MB)
+[CACHE] Found raw file: losargonautas.txt
+[PROCESSED] losargonautas -> train (1.19 MB)
+[CACHE] Found raw file: canasybarro.txt
+[PROCESSED] canasybarro -> val (0.43 MB)
+[CACHE] Found raw file: laregenta.txt
+[PROCESSED] laregenta -> train (1.75 MB)
+[CACHE] Found raw file: elsenorylosdemassoncuentos.txt
+[PROCESSED] elsenorylosdemassoncuentos -> train (0.29 MB)
+[CACHE] Found raw file: suunicohijo.txt
+[PROCESSED] suunicohijo -> train (0.50 MB)
+[CACHE] Found raw file: pepitajimenez.txt
+[PROCESSED] pepitajimenez -> train (0.31 MB)
+[CACHE] Found raw file: juanitalalarga.txt
+[PROCESSED] juanitalalarga -> train (0.40 MB)
+[CACHE] Found raw file: cuentosydialogos.txt
+[PROCESSED] cuentosydialogos -> val (0.22 MB)
+[CACHE] Found raw file: enlasorillasdelsar.txt
+[PROCESSED] enlasorillasdelsar -> train (0.16 MB)
+[CACHE] Found raw file: sotileza.txt
+[PROCESSED] sotileza -> train (0.65 MB)
+[CACHE] Found raw file: lapuchera.txt
+[PROCESSED] lapuchera -> train (0.69 MB)
+[CACHE] Found raw file: lamontalvez.txt
+[PROCESSED] lamontalvez -> train (0.59 MB)
+------------------------------------------------------------
+Corpus Prep Complete:
+ - Train Corpus Size: 16.59 MB
+ - Val Corpus Size:   1.72 MB
+ - Total Clean Size:  18.30 MB
+============================================================
+clean files: train=25 val=5
+
+=== [STAGE 2/5 train BPE tokenizer (src/train_tokenizer.py)] 2026-11-04 12:13:04 ===
+[INFO] training BPE (vocab=8192) on 25 file(s), 16.59 MB
+[INFO] trained in 1.5s, final vocab size 8192
+[INFO] sample: 61 chars -> 17 tokens
+[DONE] wrote data/tokenized_smoke/tokenizer.json (sha256 2fca7f76fb9d…)
+
+=== [STAGE 3/5 encode (src/encode.py)] 2026-11-04 12:13:06 ===
+[INFO] tokenizer tokenizer.json: vocab 8192, EOT id 0
+  [train] cuentosdeamor.txt                           375,269 chars ->   107,730 tokens
+  [train] donquijote.txt                            2,110,726 chars ->   583,362 tokens
+  [train] elsenorylosdemassoncuentos.txt              298,525 chars ->    85,285 tokens
+  [train] enlasorillasdelsar.txt                      161,078 chars ->    46,820 tokens
+  [train] fortunatayjacinta.txt                     2,241,393 chars ->   631,606 tokens
+  [train] insolacionymorrina.txt                      485,552 chars ->   142,623 tokens
+  [train] juanitalalarga.txt                          413,708 chars ->   116,331 tokens
+  [train] lamontalvez.txt                             602,297 chars ->   167,742 tokens
+  [train] lapuchera.txt                               694,766 chars ->   197,266 tokens
+  [train] laregenta.txt                             1,786,173 chars ->   495,712 tokens
+  [train] librodepoemas.txt                           104,438 chars ->    33,050 tokens
+  [train] losargonautas.txt                         1,223,629 chars ->   336,643 tokens
+  [train] loscuatrojinetesdelapocalipsis.txt          801,678 chars ->   217,554 tokens
+  [train] lospazosdeulloa.txt                         493,670 chars ->   142,312 tokens
+  [train] marenostrum.txt                             873,370 chars ->   241,376 tokens
+  [train] marianela.txt                               293,980 chars ->    82,892 tokens
+  [train] novelasejemplares.txt                     1,035,143 chars ->   289,449 tokens
+  [train] obrasescogidas.txt                          553,182 chars ->   156,270 tokens
+  [train] paginasescogidas.txt                         91,157 chars ->    30,548 tokens
+  [train] pepitajimenez.txt                           315,000 chars ->    89,362 tokens
+  [train] romancerogitano.txt                          36,477 chars ->    12,446 tokens
+  [train] sotileza.txt                                664,706 chars ->   192,370 tokens
+  [train] suunicohijo.txt                             515,816 chars ->   143,617 tokens
+  [train] tormento.txt                                477,885 chars ->   135,379 tokens
+  [train] trafalgar.txt                               300,188 chars ->    83,358 tokens
+  [val] canasybarro.txt                             443,432 chars ->   126,630 tokens
+  [val] cuentosydialogos.txt                        223,940 chars ->    68,328 tokens
+  [val] latribuna.txt                               382,827 chars ->   113,299 tokens
+  [val] misericordia.txt                            480,278 chars ->   141,397 tokens
+  [val] poesiascompletas.txt                        230,684 chars ->    68,724 tokens
+------------------------------------------------------------
+train:   4,761,128 tokens   25 docs   16.59 MB text  3.56 chars/token
+val  :     518,383 tokens    5 docs    1.72 MB text  3.397 chars/token
+tiny :   1,500,000 tokens  (2.86 MB)
+[DONE] wrote train.bin, val.bin, tiny.bin, meta.json to data/tokenized_smoke in 7.0s
+memmap OK: train.bin 4,761,128 tokens
+memmap OK: val.bin 518,383 tokens
+memmap OK: tiny.bin 1,500,000 tokens
+
+=== [STAGE 4/5 train 50 steps on tiny.bin, CPU (src/train.py)] 2026-11-04 12:13:14 ===
+[INFO] params 13.87M (13.77M excl. positions) | device cpu | world 1 (no DDP) | fp32 | data tiny.bin | batch 16 (per rank 16 = micro 16 x accum 1) | seq 256 | seed 1337
+step     1 | loss 9.0749 | lr 1.20e-04 | 1405 ms/step
+step    10 | loss 7.4038 | lr 5.90e-04 | 1323 ms/step
+step    20 | loss 6.7902 | lr 4.81e-04 | 1117 ms/step
+step    25 | VAL loss 6.9257
+step    30 | loss 6.5631 | lr 3.02e-04 | 1096 ms/step
+step    40 | loss 6.5221 | lr 1.36e-04 | 1050 ms/step
+step    50 | loss 6.5701 | lr 6.07e-05 | 1022 ms/step
+step    50 | VAL loss 6.7851
+SUMMARY {"n_params": 13865856, "steps": 50, "seed": 1337, "precision": "fp32", "global_batch": 16, "seq_len": 256, "device": "cpu", "data": "tiny.bin", "world_size": 1, "backend": null, "first_train_loss": 9.074850082397461, "final_train_loss": 6.570146560668945, "val_loss_500": null, "final_val_loss": 6.785087203979492, "timing_ms": {"data": 0.2806539414450526, "fwd_bwd": 892.8557485342026, "optim": 11.971723986789584, "step": 905.885289539583}, "timed_steps": 30, "comm": {"fwd_bwd_sync_ms": 0.0, "fwd_bwd_nosync_ms": 0.0, "comm_ms": 0.0}, "wall_s": 52.52}
+[INFO] appended run to results/smoke_runs.csv
+runs csv row appended (0 -> 2 lines), status ok
+
+=== [STAGE 5/5 DDP check skipped (set RUN_DDP=1 to enable)] 2026-11-04 12:14:12 ===
+
+[PIPELINE OK] 2026-11-04 12:14:12
+==================================================
+Finished: Wed Nov  4 12:14:12 CET 2026
+==================================================

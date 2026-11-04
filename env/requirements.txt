@@ -1,6 +1,9 @@
 # PyTorch comes from `module load pytorch/2.8.0` — do not pip-install torch.
-# Install the rest on top of the module, e.g. `pip install --user -r env/requirements.txt`.
+# Install the rest on top of the module, e.g.
+#     torch-python -m pip install --user -r env/requirements.txt
+# numpy 2.3.2 comes with the module (see env/modules.md); it is listed unpinned here.
 numpy
-tokenizers
-pandas
-matplotlib
+tokenizers==0.23.3
+pandas==3.1.0
+matplotlib==3.11.2
+
