@@ -1,1 +1,2 @@
 run_id,timestamp,job,experiment,slurm_job_id,nodes,device,gpu_model,world_size,num_threads,n_layer,n_embd,n_head,n_params,seq_len,global_batch,precision,seed,steps,warmup_steps,nccl_p2p_disable,t_data_ms,t_fwd_bwd_ms,t_optim_ms,t_comm_ms,t_step_ms,tokens_per_s,peak_mem_mb,val_loss_500,final_val_loss,valid,status,notes
+26995_0,2026-11-04T11:14:11+00:00,smoke,smoke_single_26995,26995,fortran,cpu,,1,8,6,384,6,13865856,256,16,fp32,1337,50,20,0,0.280654,892.856,11.9717,0,905.885,4521.54,2070.59,,6.78509,,ok,data tiny.bin; train loss 9.075->6.570
