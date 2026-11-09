@@ -1,0 +1,78 @@
+==================================================
+Job ID:        27918
+Running on:    fortran
+Start time:    Mon Nov  9 04:37:54 PM CET 2026
+Working dir:   /home/hpca15/mini-llm
+==================================================
+============================================================
+Starting Project Gutenberg Spanish Corpus Download & Prep
+============================================================
+[CACHE] Found raw file: donquijote.txt
+[PROCESSED] donquijote -> train (2.07 MB)
+[CACHE] Found raw file: novelasejemplares.txt
+[PROCESSED] novelasejemplares -> train (1.01 MB)
+[CACHE] Found raw file: obrasescogidas.txt
+[PROCESSED] obrasescogidas -> train (0.54 MB)
+[CACHE] Found raw file: poesiascompletas.txt
+[PROCESSED] poesiascompletas -> val (0.22 MB)
+[CACHE] Found raw file: paginasescogidas.txt
+[PROCESSED] paginasescogidas -> train (0.09 MB)
+[CACHE] Found raw file: romancerogitano.txt
+[PROCESSED] romancerogitano -> train (0.04 MB)
+[CACHE] Found raw file: librodepoemas.txt
+[PROCESSED] librodepoemas -> train (0.10 MB)
+[CACHE] Found raw file: fortunatayjacinta.txt
+[PROCESSED] fortunatayjacinta -> train (2.20 MB)
+[CACHE] Found raw file: misericordia.txt
+[PROCESSED] misericordia -> val (0.47 MB)
+[CACHE] Found raw file: trafalgar.txt
+[PROCESSED] trafalgar -> train (0.29 MB)
+[CACHE] Found raw file: tormento.txt
+[PROCESSED] tormento -> train (0.47 MB)
+[CACHE] Found raw file: marianela.txt
+[PROCESSED] marianela -> train (0.29 MB)
+[CACHE] Found raw file: lospazosdeulloa.txt
+[PROCESSED] lospazosdeulloa -> train (0.48 MB)
+[CACHE] Found raw file: insolacionymorrina.txt
+[PROCESSED] insolacionymorrina -> train (0.48 MB)
+[CACHE] Found raw file: latribuna.txt
+[PROCESSED] latribuna -> val (0.37 MB)
+[CACHE] Found raw file: cuentosdeamor.txt
+[PROCESSED] cuentosdeamor -> train (0.37 MB)
+[CACHE] Found raw file: loscuatrojinetesdelapocalipsis.txt
+[PROCESSED] loscuatrojinetesdelapocalipsis -> train (0.78 MB)
+[CACHE] Found raw file: marenostrum.txt
+[PROCESSED] marenostrum -> train (0.85 MB)
+[CACHE] Found raw file: losargonautas.txt
+[PROCESSED] losargonautas -> train (1.19 MB)
+[CACHE] Found raw file: canasybarro.txt
+[PROCESSED] canasybarro -> val (0.43 MB)
+[CACHE] Found raw file: laregenta.txt
+[PROCESSED] laregenta -> train (1.75 MB)
+[CACHE] Found raw file: elsenorylosdemassoncuentos.txt
+[PROCESSED] elsenorylosdemassoncuentos -> train (0.29 MB)
+[CACHE] Found raw file: suunicohijo.txt
+[PROCESSED] suunicohijo -> train (0.50 MB)
+[CACHE] Found raw file: pepitajimenez.txt
+[PROCESSED] pepitajimenez -> train (0.31 MB)
+[CACHE] Found raw file: juanitalalarga.txt
+[PROCESSED] juanitalalarga -> train (0.40 MB)
+[CACHE] Found raw file: cuentosydialogos.txt
+[PROCESSED] cuentosydialogos -> val (0.22 MB)
+[CACHE] Found raw file: enlasorillasdelsar.txt
+[PROCESSED] enlasorillasdelsar -> train (0.16 MB)
+[CACHE] Found raw file: sotileza.txt
+[PROCESSED] sotileza -> train (0.65 MB)
+[CACHE] Found raw file: lapuchera.txt
+[PROCESSED] lapuchera -> train (0.69 MB)
+[CACHE] Found raw file: lamontalvez.txt
+[PROCESSED] lamontalvez -> train (0.59 MB)
+------------------------------------------------------------
+Corpus Prep Complete:
+ - Train Corpus Size: 16.59 MB
+ - Val Corpus Size:   1.72 MB
+ - Total Clean Size:  18.30 MB
+============================================================
+==================================================
+Job finished at: Mon Nov  9 04:37:54 PM CET 2026
+==================================================

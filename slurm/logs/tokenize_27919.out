@@ -1,0 +1,62 @@
+==================================================
+Job ID:      27919
+Node:        fortran
+Start:       Mon Nov  9 04:37:56 PM CET 2026
+Working dir: /home/hpca15/mini-llm
+==================================================
+python 3.11.13 | numpy 2.3.2 | tokenizers 0.23.3
+[INFO] training BPE (vocab=8192) on 25 file(s), 16.59 MB
+[INFO] trained in 1.7s, final vocab size 8192
+[INFO] sample: 61 chars -> 17 tokens
+[DONE] wrote /home/hpca15/mini-llm/data/tokenized/tokenizer.json (sha256 2fca7f76fb9d…)
+[INFO] tokenizer tokenizer.json: vocab 8192, EOT id 0
+  [train] cuentosdeamor.txt                           375,269 chars ->   107,730 tokens
+  [train] donquijote.txt                            2,110,704 chars ->   583,351 tokens
+  [train] elsenorylosdemassoncuentos.txt              298,525 chars ->    85,285 tokens
+  [train] enlasorillasdelsar.txt                      161,078 chars ->    46,820 tokens
+  [train] fortunatayjacinta.txt                     2,241,393 chars ->   631,606 tokens
+  [train] insolacionymorrina.txt                      485,552 chars ->   142,623 tokens
+  [train] juanitalalarga.txt                          413,708 chars ->   116,331 tokens
+  [train] lamontalvez.txt                             602,297 chars ->   167,742 tokens
+  [train] lapuchera.txt                               694,766 chars ->   197,266 tokens
+  [train] laregenta.txt                             1,786,173 chars ->   495,712 tokens
+  [train] librodepoemas.txt                           104,438 chars ->    33,050 tokens
+  [train] losargonautas.txt                         1,223,629 chars ->   336,643 tokens
+  [train] loscuatrojinetesdelapocalipsis.txt          801,678 chars ->   217,554 tokens
+  [train] lospazosdeulloa.txt                         493,670 chars ->   142,312 tokens
+  [train] marenostrum.txt                             873,370 chars ->   241,376 tokens
+  [train] marianela.txt                               293,980 chars ->    82,892 tokens
+  [train] novelasejemplares.txt                     1,035,143 chars ->   289,449 tokens
+  [train] obrasescogidas.txt                          553,182 chars ->   156,270 tokens
+  [train] paginasescogidas.txt                         91,157 chars ->    30,548 tokens
+  [train] pepitajimenez.txt                           315,000 chars ->    89,362 tokens
+  [train] romancerogitano.txt                          36,477 chars ->    12,446 tokens
+  [train] sotileza.txt                                664,706 chars ->   192,370 tokens
+  [train] suunicohijo.txt                             515,816 chars ->   143,617 tokens
+  [train] tormento.txt                                477,885 chars ->   135,379 tokens
+  [train] trafalgar.txt                               300,188 chars ->    83,358 tokens
+  [val] canasybarro.txt                             443,432 chars ->   126,630 tokens
+  [val] cuentosydialogos.txt                        223,940 chars ->    68,328 tokens
+  [val] latribuna.txt                               382,827 chars ->   113,299 tokens
+  [val] misericordia.txt                            480,278 chars ->   141,397 tokens
+  [val] poesiascompletas.txt                        230,684 chars ->    68,724 tokens
+------------------------------------------------------------
+train:   4,761,117 tokens   25 docs   16.59 MB text  3.56 chars/token
+val  :     518,383 tokens    5 docs    1.72 MB text  3.397 chars/token
+tiny :   1,500,000 tokens  (2.86 MB)
+[DONE] wrote train.bin, val.bin, tiny.bin, meta.json to /home/hpca15/mini-llm/data/tokenized in 7.6s
+[OK] train.bin: 4,761,117 tokens, max id 8191 < 8192
+[OK] val.bin: 518,383 tokens, max id 8191 < 8192
+[OK] tiny.bin: 1,500,000 tokens, max id 8191 < 8192
+[OK] tiny.bin is a prefix of train.bin
+[OK] train: all 25 documents decode back to the clean text exactly
+[OK] val: all 5 documents decode back to the clean text exactly
+[OK] 5 edge-case strings round-trip
+[PASS] all round-trip checks passed
+87a868f60f721bc70f6097ac126ed1ee0729db7a66a7876f121cf1b4afe671de  data/tokenized/tiny.bin
+384889148ecc90b774588660bf47202bd8405cdba88a2c0d12e76d9197c70dc0  data/tokenized/train.bin
+85e001078be1504a3687005aa928cde7509de5e40a51953d7b491837b0874b2f  data/tokenized/val.bin
+2fca7f76fb9d42d0d33ab2d54ad514df236e3a20e86cbfc867f6a735be6771d2  data/tokenized/tokenizer.json
+==================================================
+Finished: Mon Nov  9 04:38:07 PM CET 2026
+==================================================

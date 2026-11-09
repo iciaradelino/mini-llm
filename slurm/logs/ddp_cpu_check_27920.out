@@ -1,0 +1,50 @@
+==================================================
+Job ID:      27920
+Node:        fortran
+Start:       Mon Nov  9 04:38:08 PM CET 2026
+Working dir: /home/hpca15/mini-llm
+==================================================
+torch 2.8.0+cu128 | numpy 2.3.2 | gloo True
+---------------- 1 process ----------------
+[INFO] params 13.87M (13.77M excl. positions) | device cpu | world 1 (no DDP) | fp32 | data tiny.bin | batch 16 (per rank 16 = micro 16 x accum 1) | seq 256 | seed 1337
+step     1 | loss 9.0599 | lr 3.00e-05 | 1359 ms/step
+step    10 | loss 8.0055 | lr 3.00e-04 | 1040 ms/step
+step    20 | loss 7.0493 | lr 6.00e-04 | 1015 ms/step
+step    30 | loss 6.5978 | lr 5.83e-04 | 1006 ms/step
+step    40 | loss 6.5330 | lr 5.28e-04 | 1000 ms/step
+step    50 | loss 6.4813 | lr 4.43e-04 | 996 ms/step
+step    50 | VAL loss 6.6761
+step    60 | loss 6.3454 | lr 3.41e-04 | 1050 ms/step
+step    70 | loss 6.1876 | lr 2.37e-04 | 1041 ms/step
+step    80 | loss 6.1653 | lr 1.47e-04 | 1035 ms/step
+step    90 | loss 6.1667 | lr 8.48e-05 | 1030 ms/step
+step   100 | loss 6.1071 | lr 6.02e-05 | 1025 ms/step
+step   100 | VAL loss 6.4359
+SUMMARY {"n_params": 13865856, "steps": 100, "seed": 1337, "precision": "fp32", "global_batch": 16, "seq_len": 256, "device": "cpu", "data": "tiny.bin", "world_size": 1, "backend": null, "first_train_loss": 9.059898376464844, "final_train_loss": 6.107132911682129, "val_loss_500": null, "final_val_loss": 6.435870742797851, "timing_ms": {"data": 0.2802030649036169, "fwd_bwd": 962.7082769293338, "optim": 17.613132018595934, "step": 982.8523511532694}, "timed_steps": 80, "comm": {"fwd_bwd_sync_ms": 0.0, "fwd_bwd_nosync_ms": 0.0, "comm_ms": 0.0}, "wall_s": 105.79}
+[INFO] appended run to results/smoke_runs.csv
+---------------- 2 processes (gloo) ----------------
+[Gloo] Rank [Gloo] Rank 01 is connected to  is connected to 11 peer ranks.  peer ranks. Expected number of connected peer ranks is : Expected number of connected peer ranks is : 11
+
+[INFO] params 13.87M (13.77M excl. positions) | device cpu | world 2 (gloo) | fp32 | data tiny.bin | batch 16 (per rank 8 = micro 8 x accum 1) | seq 256 | seed 1337
+step     1 | loss 9.0641 | lr 3.00e-05 | 1474 ms/step
+step    10 | loss 7.9854 | lr 3.00e-04 | 1228 ms/step
+step    20 | loss 7.0406 | lr 6.00e-04 | 1205 ms/step
+step    30 | loss 6.6805 | lr 5.83e-04 | 1197 ms/step
+step    40 | loss 6.5100 | lr 5.28e-04 | 1193 ms/step
+step    50 | loss 6.3669 | lr 4.43e-04 | 1186 ms/step
+step    50 | VAL loss 6.6752
+step    60 | loss 6.2989 | lr 3.41e-04 | 1245 ms/step
+step    70 | loss 6.2428 | lr 2.37e-04 | 1236 ms/step
+step    80 | loss 6.1344 | lr 1.47e-04 | 1229 ms/step
+step    90 | loss 6.2326 | lr 8.48e-05 | 1222 ms/step
+step   100 | loss 6.2019 | lr 6.02e-05 | 1217 ms/step
+step   100 | VAL loss 6.4229
+SUMMARY {"n_params": 13865856, "steps": 100, "seed": 1337, "precision": "fp32", "global_batch": 16, "seq_len": 256, "device": "cpu", "data": "tiny.bin", "world_size": 2, "backend": "gloo", "first_train_loss": 9.064116954803467, "final_train_loss": 6.201918363571167, "val_loss_500": null, "final_val_loss": 6.422922897338867, "timing_ms": {"data": 0.23303402122110128, "fwd_bwd": 1139.8503324016929, "optim": 33.642982016317546, "step": 1173.0364754330367}, "timed_steps": 80, "comm": {"fwd_bwd_sync_ms": 1123.5367939807475, "fwd_bwd_nosync_ms": 1090.6942600850016, "comm_ms": 32.84253389574587}, "wall_s": 125.43}
+[INFO] appended run to results/smoke_runs.csv
+---------------- rows written to results/smoke_runs.csv ----------------
+run_id,timestamp,job,experiment,slurm_job_id,nodes,device,gpu_model,world_size,num_threads,n_layer,n_embd,n_head,n_params,seq_len,global_batch,precision,seed,steps,warmup_steps,nccl_p2p_disable,t_data_ms,t_fwd_bwd_ms,t_optim_ms,t_comm_ms,t_step_ms,tokens_per_s,peak_mem_mb,val_loss_500,final_val_loss,valid,status,notes
+27920_0,2026-11-09T15:40:00+00:00,smoke,ddp_check_ws1,27920,fortran,cpu,,1,8,6,384,6,13865856,256,16,fp32,1337,100,20,0,0.280203,962.708,17.6131,0,982.852,4167.46,2146.46,,6.43587,,ok,data tiny.bin; train loss 9.060->6.107
+27920_0,2026-11-09T15:42:41+00:00,smoke,ddp_check_ws2,27920,fortran,cpu,,2,4,6,384,6,13865856,256,16,fp32,1337,100,20,0,0.233034,1139.85,33.643,32.8425,1173.04,3491.79,1587.55,,6.42292,,ok,data tiny.bin; train loss 9.064->6.202; fwd_bwd sync 1123.54ms nosync 1090.69ms
+==================================================
+Finished: Mon Nov  9 04:42:42 PM CET 2026
+==================================================

@@ -1,0 +1,7 @@
+==================================================
+Job ID:      27914
+Node:        fortran
+Start:       Mon Nov  9 04:37:14 PM CET 2026
+Working dir: /home/hpca15/mini-llm
+==================================================
+python 3.11.13 | numpy 2.3.2 | tokenizers 0.23.3

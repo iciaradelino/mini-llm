@@ -1,0 +1,8 @@
+==================================================
+Job ID:      27916
+Node:        fortran
+Start:       Mon Nov  9 04:37:14 PM CET 2026
+Working dir: /home/hpca15/mini-llm
+==================================================
+torch 2.8.0+cu128 | numpy 2.3.2 | gloo True
+[ERROR] data/tokenized/tiny.bin missing - run slurm/tokenize.sbatch first
