@@ -170,7 +170,7 @@ sbatch --export=ALL,RUN_DDP=1 slurm/cpu_smoke.sbatch
 only and takes milliseconds, so it can run on the login node:
 
 ```bash
-python3 tests/test_check_correctness.py     # expected: PASSED: 17 rows ...
+python3 tests/test_check_correctness.py     # expected: PASSED: 18 rows ...
 python3 src/check_correctness.py            # after every job that adds rows
 ```
 

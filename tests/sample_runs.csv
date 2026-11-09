@@ -16,3 +16,4 @@ sample_14,2026-11-09T10:00:00+00:00,A,baseline_bf16_r3,0,haskell,cuda,GPU-haskel
 sample_15,2026-11-09T10:00:00+00:00,dev,dev_check,0,haskell,cuda,GPU-haskell,1,8,6,384,6,13865856,256,64,fp32,1337,500,20,0,,,,,,,,5.10,,,ok,SYNTHETIC test row; expect valid=n/a
 sample_16,2026-11-09T10:00:00+00:00,A,batch32_bf16_r1,0,haskell,cuda,GPU-haskell,1,8,6,384,6,13865856,256,32,bf16,1337,500,20,0,,,,,,,,5.10,,,ok,SYNTHETIC test row; expect valid=n/a
 sample_17,2026-11-09T10:00:00+00:00,E,cpu_threads1_r1,0,fortran,cpu,,1,1,6,384,6,13865856,256,64,fp32,1337,500,20,0,,,,,,,,5.31,,,ok,SYNTHETIC test row; expect valid=yes
+sample_18,2026-11-09T10:00:00+00:00,C,ddp_ws2_1000steps_r1,0,haskell,cuda,GPU-haskell,2,8,6,384,6,13865856,256,64,fp32,1337,1000,20,0,,,,,,,,5.40,,,ok,SYNTHETIC test row; expect valid=n/a
