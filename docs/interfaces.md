@@ -124,6 +124,8 @@ These flag names and defaults are frozen. Defaults equal the baseline
 | `--save_checkpoint` | none | rank 0 saves the model to this `.pt` file at the end of the run. Off by default, so timing runs write nothing |
 | `--checkpoint_interval` | 0 | also save every N steps, overwriting the same file (protects long runs against the time limit); 0 = only at the end. Needs `--save_checkpoint` |
 
+
+
 A checkpoint is a dict saved with `torch.save`: `model` (state dict of the unwrapped
 model, so it loads the same whatever the world size), `config` (`GPTConfig` as a
 dict), `step`, `val_loss`, `tokenizer_sha256` (from `meta.json`) and `args` (the
@@ -131,6 +133,14 @@ simple-valued flags). It is written to `<path>.tmp` and then renamed, so a job k
 mid-save keeps the previous checkpoint. Saving happens outside the timed part of the
 step. It stores no optimizer state, so a checkpoint is for generation, not for
 resuming training.
+
+**Profiling**
+
+| Flag | Default | Meaning |
+|------|---------|---------|
+| `--profile` | off | rank 0 records a `torch.profiler` trace: waits `--timing_warmup` steps, 2 profiler warm-up steps, then records `--profile_steps`. Needs `--max_steps` ≥ timing warm-up + 2 + `--profile_steps` (checked on every rank). The run's timings include profiler overhead, so its row is marked `PROFILED` in `notes` and must not be compared with normal runs |
+| `--profile_steps` | 5 | steps recorded |
+| `--profile_dir` | `results/profiles` | writes `<job>_<experiment>_<time>_ops.txt` (top 30 operators, committed) and `.pt.trace.json` (timeline for ui.perfetto.dev, git-ignored) |
 
 DDP runs are launched with `torch-python -m torch.distributed.run`; the backend is
 NCCL on GPU and gloo on CPU. The world size comes from the launcher, not from a flag.
