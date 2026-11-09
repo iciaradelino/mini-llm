@@ -336,11 +336,17 @@ def main(argv=None):
     meta_path = Path(a.data_dir) / "meta.json"
     if a.vocab_size is None:
         a.vocab_size = json.loads(meta_path.read_text())["vocab_size"] if meta_path.exists() else 8192
-    a.train_path = None if a.dummy_data else resolve_split(a.data_dir, a.dataset)
-    a.val_path = None if a.dummy_data else resolve_split(a.data_dir, "val")
-    if a.train_path is None or a.val_path is None:
-        log("[WARN] .bin files not found -> using random tokens (loss will stay near ln(vocab))")
+    if a.dummy_data:
         a.train_path = a.val_path = None
+        log("[INFO] --dummy_data: training on random tokens (loss will stay near ln(vocab))")
+    else:
+        a.train_path = resolve_split(a.data_dir, a.dataset)
+        a.val_path = resolve_split(a.data_dir, "val")
+        missing = [f"{n}.bin" for n, p in ((a.dataset, a.train_path), ("val", a.val_path)) if p is None]
+        if missing:
+            raise SystemExit(f"[ERROR] {', '.join(missing)} not found in {a.data_dir}. "
+                            "Run slurm/tokenize.sbatch, check --data_dir, "
+                            "or pass --dummy_data to train on random tokens on purpose.")
     data_kind = "random" if a.train_path is None else Path(a.train_path).name
     # per-rank seed so ranks sample different windows (rank 0 = single-process stream)
     train_loader = BatchLoader(a.train_path, a.vocab_size, a.seq_len, a.seed + 1000 * info.rank, a.device)
