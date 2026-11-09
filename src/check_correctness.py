@@ -33,9 +33,12 @@ DEFAULT_CSV = os.path.join("results", "runs.csv")
 TOLERANCE = 0.02
 
 # Columns that must be identical between a run and its baseline (interfaces.md section 5).
+# `steps` is --max_steps: the cosine learning-rate schedule ends at max_steps, so the
+# learning rate at step 500 (and therefore val_loss_500) depends on it. A 1000-step run
+# is not comparable with a 500-step baseline and gets n/a instead of a wrong `no`.
 MATCH_KEYS = ["n_layer", "n_embd", "n_head", "seq_len", "global_batch", "seed",
-              "device", "gpu_model"]
-NUMERIC_KEYS = {"n_layer", "n_embd", "n_head", "seq_len", "global_batch", "seed"}
+              "steps", "device", "gpu_model"]
+NUMERIC_KEYS = {"n_layer", "n_embd", "n_head", "seq_len", "global_batch", "seed", "steps"}
 REQUIRED_COLUMNS = set(MATCH_KEYS) | {"run_id", "job", "experiment", "precision",
                                       "world_size", "val_loss_500", "valid", "status"}
 NON_EXPERIMENT_JOBS = {"smoke", "dev"}  # these belong in results/smoke_runs.csv
@@ -76,6 +79,17 @@ def is_baseline(row):
             and loss is not None and math.isfinite(loss))
 
 
+def no_baseline_reason(row, baselines):
+    """Explain a missing baseline; name the columns that differ from the closest one."""
+    if not baselines:
+        return "no matching fp32 single-device baseline"
+    key = config_key(row)
+    closest = min(baselines, key=lambda b: sum(x != y for x, y in zip(key, b)))
+    diff = [f"{k}={a or '-'} (baseline {b or '-'})"
+            for k, a, b in zip(MATCH_KEYS, key, closest) if a != b]
+    return "no matching fp32 single-device baseline; closest differs in " + ", ".join(diff)
+
+
 def evaluate(rows, tolerance):
     """Return one result dict per row: valid, reference, rel_diff, n_baselines, reason."""
     baselines = {}
@@ -98,7 +112,7 @@ def evaluate(rows, tolerance):
         elif loss is None:
             res["reason"] = "no val_loss_500 (run shorter than 500 steps)"
         elif not refs:
-            res["reason"] = "no matching fp32 single-device baseline"
+            res["reason"] = no_baseline_reason(row, baselines)
         else:
             reference = statistics.median(refs)
             res["reference"], res["n_baselines"] = reference, len(refs)

@@ -140,17 +140,24 @@ Operational definition used by `src/check_correctness.py`:
 - **Baseline rows:** `precision = fp32`, `world_size = 1`, `status = ok`, non-empty
   `val_loss_500`.
 - **Matching:** a run is compared with the baseline rows that share `n_layer`,
-  `n_embd`, `n_head`, `seq_len`, `global_batch`, `seed`, `device` and `gpu_model`.
+  `n_embd`, `n_head`, `seq_len`, `global_batch`, `seed`, `steps`, `device` and
+  `gpu_model`. `steps` is `--max_steps`: the cosine learning-rate schedule ends at
+  `max_steps`, so the learning rate at step 500 depends on it.
   The reference is the **median** `val_loss_500` of those rows.
 - **Test:** `|val_loss_500 − reference| / reference ≤ 0.02` → `yes`, otherwise `no`.
   Baseline rows are tested against their own median, so a baseline that disagrees
   with its repeats is flagged too.
 - **`n/a`:** `status` is not `ok`, `val_loss_500` is empty (run shorter than 500
-  steps), or no matching baseline exists. The reason is printed, not stored.
+  steps), or no matching baseline exists (the printed reason names the columns that
+  differ from the closest baseline). The reason is printed, not stored.
 
 Consequences for the experiment plan:
 - Any run that must pass the rule needs ≥ 500 steps and an fp32 single-device
   baseline with identical settings on the same device.
+- Runs checked against the rule use **`--max_steps 500`**, like the Job A baseline.
+  They also keep the default `--lr`, `--min_lr` and `--warmup_steps`: these change
+  the loss at step 500 too, but `runs.csv` does not record them, so the checker
+  cannot catch a mismatch.
 - Job B needs its own fp32 baseline on julia; it is not judged against haskell.
 - The Job A sequence-length sweep (100 steps) gets `n/a`: it is a timing
   measurement, not a correctness check.
