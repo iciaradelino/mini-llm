@@ -27,11 +27,14 @@ COLUMNS = [
 DEFAULT_PATH = os.path.join("results", "runs.csv")
 
 
+def now_iso() -> str:
+    return datetime.now(timezone.utc).isoformat(timespec="seconds")
+
+
 def make_run_id(index: int = 0) -> str:
     """`<slurm_job_id>_<index>`; outside Slurm, `local-<YYYYmmddHHMMSS>_<index>`."""
     job = os.environ.get("SLURM_JOB_ID") or "local-" + datetime.now().strftime("%Y%m%d%H%M%S")
     return f"{job}_{index}"
-
 
 
 def next_run_id(path: str = DEFAULT_PATH) -> str:
@@ -49,6 +52,7 @@ def next_run_id(path: str = DEFAULT_PATH) -> str:
         count = sum(1 for row in csv.DictReader(f)
                     if (row.get("run_id") or "").startswith(f"{job}_"))
     return f"{job}_{count}"
+
 
 def slurm_fields() -> dict:
     return {
