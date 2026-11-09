@@ -4,16 +4,16 @@ Tick items off as they are done. Milestones: first GPU results by **Session 25**
 deliverables before **Session 29**.
 
 ## Phase 0 — Organize
-- [ ] 1. Split roles (`docs/roles.md`)
-- [ ] 2. Ask the instructor the three questions (`docs/roles.md`)
+- [x] 1. Split roles (`docs/roles.md`)
+- [ ] 2. Ask the instructor the three questions (`docs/roles.md`; Q2 answered by the assignment brief)
 - [x] 3. Create the repository skeleton; record cluster facts in `env/cluster.md`
 
 ## Phase 1 — Data and code (CPU only)
-- [ ] 4. Corpus script: download, strip Gutenberg headers/licence, hold out 1–2 works (cpu partition)
-- [ ] 5. Train BPE tokenizer (~8k, train only), encode to `.bin`, make tiny subset
-- [ ] 6. Training script from nanoGPT: CLI args, DDP, per-phase timing (skip ~20 warm-up), append to `results/runs.csv`
-- [ ] 7. CPU smoke test on cpu partition; verify `module load pytorch/2.8.0` in a job
-- [x] 8. Correctness rule in README
+- [x] 4. Corpus script: download, strip Gutenberg headers/licence, hold out 1–2 works (cpu partition) — jobs 25843, 26989
+- [x] 5. Train BPE tokenizer (~8k, train only), encode to `.bin`, make tiny subset — job 26101
+- [ ] 6. Training script from nanoGPT: CLI args, DDP, per-phase timing (skip ~20 warm-up), append to `results/runs.csv` — single-device done (job 26102); 2-process gloo log from `slurm/ddp_cpu_check.sbatch` still missing
+- [x] 7. CPU smoke test on cpu partition; verify `module load pytorch/2.8.0` in a job — job 26995
+- [x] 8. Correctness rule in README — operational definition in `docs/interfaces.md` §5; `src/check_correctness.py` pending
 
 ## Phase 2 — First GPU results (Session 25)
 - [ ] 9. Submit first bundled GPU job as soon as CPU test passes; save `squeue --start` output if blocked
