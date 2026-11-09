@@ -1,0 +1,18 @@
+run_id,timestamp,job,experiment,slurm_job_id,nodes,device,gpu_model,world_size,num_threads,n_layer,n_embd,n_head,n_params,seq_len,global_batch,precision,seed,steps,warmup_steps,nccl_p2p_disable,t_data_ms,t_fwd_bwd_ms,t_optim_ms,t_comm_ms,t_step_ms,tokens_per_s,peak_mem_mb,val_loss_500,final_val_loss,valid,status,notes
+sample_01,2026-11-09T10:00:00+00:00,A,baseline_fp32_r1,0,haskell,cuda,GPU-haskell,1,8,6,384,6,13865856,256,64,fp32,1337,500,20,0,,,,,,,,5.10,,,ok,SYNTHETIC test row; expect valid=yes
+sample_02,2026-11-09T10:00:00+00:00,A,baseline_fp32_r2,0,haskell,cuda,GPU-haskell,1,8,6,384,6,13865856,256,64,fp32,1337,500,20,0,,,,,,,,5.12,,,ok,SYNTHETIC test row; expect valid=yes
+sample_03,2026-11-09T10:00:00+00:00,A,baseline_fp32_r3,0,haskell,cuda,GPU-haskell,1,8,6,384,6,13865856,256,64,fp32,1337,500,20,0,,,,,,,,5.08,,,ok,SYNTHETIC test row; expect valid=yes
+sample_04,2026-11-09T10:00:00+00:00,A,baseline_bf16_r1,0,haskell,cuda,GPU-haskell,1,8,6,384,6,13865856,256,64,bf16,1337,500,20,0,,,,,,,,5.14,,,ok,SYNTHETIC test row; expect valid=yes
+sample_05,2026-11-09T10:00:00+00:00,A,baseline_bf16_r2,0,haskell,cuda,GPU-haskell,1,8,6,384,6,13865856,256,64,bf16,1337,500,20,0,,,,,,,,5.25,,,ok,SYNTHETIC test row; expect valid=no
+sample_06,2026-11-09T10:00:00+00:00,A,seqlen512_fp32_r1,0,haskell,cuda,GPU-haskell,1,8,6,384,6,13865856,512,64,fp32,1337,100,20,0,,,,,,,,,,,ok,SYNTHETIC test row; expect valid=n/a
+sample_07,2026-11-09T10:00:00+00:00,B,baseline_fp32_r1,0,julia,cuda,GPU-julia,1,8,6,384,6,13865856,256,64,fp32,1337,500,20,0,,,,,,,,5.11,,,ok,SYNTHETIC test row; expect valid=yes
+sample_08,2026-11-09T10:00:00+00:00,B,baseline_bf16_r1,0,julia,cuda,GPU-julia,1,8,6,384,6,13865856,256,64,bf16,1337,500,20,0,,,,,,,,5.13,,,ok,SYNTHETIC test row; expect valid=yes
+sample_09,2026-11-09T10:00:00+00:00,C,ddp_ws2_r1,0,haskell,cuda,GPU-haskell,2,8,6,384,6,13865856,256,64,fp32,1337,500,20,0,,,,,,,,5.11,,,ok,SYNTHETIC test row; expect valid=yes
+sample_10,2026-11-09T10:00:00+00:00,C,ddp_p2p_off_r1,0,haskell,cuda,GPU-haskell,2,8,6,384,6,13865856,256,64,fp32,1337,500,20,1,,,,,,,,5.09,,,ok,SYNTHETIC test row; expect valid=yes
+sample_11,2026-11-09T10:00:00+00:00,D,crossnode_ws2_r1,0,"haskell,julia",cuda,GPU-haskell,2,8,6,384,6,13865856,256,64,fp32,1337,0,20,0,,,,,,,,,,,SKIPPED,SYNTHETIC test row; expect valid=n/a
+sample_12,2026-11-09T10:00:00+00:00,E,cpu_threads16_r1,0,fortran,cpu,,1,16,6,384,6,13865856,256,64,fp32,1337,500,20,0,,,,,,,,5.30,,,ok,SYNTHETIC test row; expect valid=yes
+sample_13,2026-11-09T10:00:00+00:00,opt,opt_example_r1,0,haskell,cuda,GPU-haskell,1,8,6,384,6,13865856,256,64,bf16,1337,500,20,0,,,,,,,,nan,,,ok,SYNTHETIC test row; expect valid=no
+sample_14,2026-11-09T10:00:00+00:00,A,baseline_bf16_r3,0,haskell,cuda,GPU-haskell,1,8,6,384,6,13865856,256,64,bf16,1337,312,20,0,,,,,,,,,,,failed,SYNTHETIC test row; expect valid=n/a
+sample_15,2026-11-09T10:00:00+00:00,dev,dev_check,0,haskell,cuda,GPU-haskell,1,8,6,384,6,13865856,256,64,fp32,1337,500,20,0,,,,,,,,5.10,,,ok,SYNTHETIC test row; expect valid=n/a
+sample_16,2026-11-09T10:00:00+00:00,A,batch32_bf16_r1,0,haskell,cuda,GPU-haskell,1,8,6,384,6,13865856,256,32,bf16,1337,500,20,0,,,,,,,,5.10,,,ok,SYNTHETIC test row; expect valid=n/a
+sample_17,2026-11-09T10:00:00+00:00,E,cpu_threads1_r1,0,fortran,cpu,,1,1,6,384,6,13865856,256,64,fp32,1337,500,20,0,,,,,,,,5.31,,,ok,SYNTHETIC test row; expect valid=yes
