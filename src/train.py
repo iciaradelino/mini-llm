@@ -12,8 +12,8 @@ Under DDP the global batch stays fixed: each rank processes
 global_batch / world_size sequences per step.
 
 Data: flat uint16 streams read with np.memmap (data/tokenized/{train,val,tiny}.bin).
-If the files are missing, or --dummy_data is given, random tokens are used so the
-loop can be tested before the real data exists.
+With --dummy_data, random tokens are used instead (development only); without it,
+missing .bin files are an error.
 
 Reproducibility: one --seed drives model init and training batches (rank r samples
 with seed + 1000*r, so ranks see different windows); validation batches come from
@@ -28,10 +28,17 @@ torch.cuda.synchronize() at phase boundaries; the first --timing_warmup steps ar
 dropped. Exposed gradient communication is measured after training with the
 no_sync() comparison (results/README.md). Rank 0 appends one row to --runs_csv.
 
+Profiling (--profile): rank 0 records a torch.profiler trace of --profile_steps steps
+after the timing warm-up and writes an operator table (*_ops.txt) and a timeline
+(*.pt.trace.json, open in ui.perfetto.dev) to --profile_dir. The profiler slows the
+run down, so a profiled run's timings are marked in `notes` and must not be compared
+with normal runs.
+
 Usage
     python src/train.py --dataset tiny --max_steps 50 --eval_interval 10
     python src/train.py --dummy_data --max_steps 20 --device cpu
     python src/train.py --precision bf16 --max_steps 1000 --job A --experiment baseline_fp32
+    python src/train.py --dataset tiny --max_steps 30 --profile --runs_csv none
     torchrun --standalone --nproc_per_node=2 src/train.py --device cpu --dataset tiny
 """
 
@@ -47,6 +54,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from torch.profiler import ProfilerActivity, profile, record_function, schedule
 
 import ddp_utils
 import runlog
@@ -277,6 +285,10 @@ def parse_args(argv=None):
                    help="save model weights + config to this .pt file (rank 0, end of run); off by default")
     p.add_argument("--checkpoint_interval", type=int, default=0,
                    help="also save every N steps, overwriting the same file (0 = only at the end)")
+    p.add_argument("--profile", action="store_true",
+                   help="record a PyTorch profiler trace of a few steps (rank 0); timings of this run are distorted")
+    p.add_argument("--profile_steps", type=int, default=5, help="steps recorded by the profiler")
+    p.add_argument("--profile_dir", default=str(BASE_DIR / "results" / "profiles"))
     # instrumentation / results (step 6b)
     p.add_argument("--timing_warmup", type=int, default=20, help="steps excluded from the timing medians")
     p.add_argument("--comm_measure_steps", type=int, default=20,
@@ -408,6 +420,19 @@ def main(argv=None):
         return loss_sum / accum
 
     timer = StepTimer(info.device, warmup_steps=a.timing_warmup)
+    # profiler: rank 0 only. The length check runs on every rank, so in DDP all ranks
+    # stop together instead of the others waiting forever for rank 0.
+    prof = None
+    if a.profile:
+        need = a.timing_warmup + 2 + a.profile_steps
+        if a.max_steps < need:
+            raise SystemExit(f"[ERROR] --profile needs --max_steps >= {need} "
+                             "(timing warm-up + 2 profiler warm-up + --profile_steps)")
+        if info.is_master:
+            activities = [ProfilerActivity.CPU] + ([ProfilerActivity.CUDA] if device_type == "cuda" else [])
+            prof = profile(activities=activities,
+                           schedule=schedule(wait=a.timing_warmup, warmup=2, active=a.profile_steps, repeat=1))
+            prof.start()
     comm = {"fwd_bwd_sync_ms": 0.0, "fwd_bwd_nosync_ms": 0.0, "comm_ms": 0.0}
     val_loss_500, last_val, train_loss, first_loss = None, None, float("nan"), None
     history, t0 = [], time.time()
@@ -418,16 +443,18 @@ def main(argv=None):
             for g in optimizer.param_groups:
                 g["lr"] = lr
             timer.start_step()
-            with timer.phase("data"):
+            with timer.phase("data"), record_function("data"):
                 batches = get_batches()
-            with timer.phase("fwd_bwd"):
+            with timer.phase("fwd_bwd"), record_function("fwd_bwd"):
                 loss = fwd_bwd(batches)
-            with timer.phase("optim"):
+            with timer.phase("optim"), record_function("optim"):
                 if a.grad_clip > 0:
                     torch.nn.utils.clip_grad_norm_(raw_model.parameters(), a.grad_clip)
                 optimizer.step()
                 optimizer.zero_grad(set_to_none=True)
             timer.end_step()
+            if prof is not None:
+                prof.step()
 
             # averaged over ranks so every rank takes the same branches below
             train_loss = ddp_utils.all_reduce_mean(loss.item(), info)
@@ -451,6 +478,15 @@ def main(argv=None):
         if a.save_checkpoint and info.is_master:
             save_checkpoint(a.save_checkpoint, raw_model, cfg, a, a.max_steps, last_val)
             log(f"[INFO] saved checkpoint to {a.save_checkpoint}")
+        if prof is not None:
+            prof.stop()
+            out = Path(a.profile_dir)
+            out.mkdir(parents=True, exist_ok=True)
+            tag = f"{a.job}_{a.experiment or 'run'}_{time.strftime('%Y%m%d-%H%M%S')}"
+            sort_key = "self_device_time_total" if device_type == "cuda" else "self_cpu_time_total"
+            (out / f"{tag}_ops.txt").write_text(prof.key_averages().table(sort_by=sort_key, row_limit=30))
+            prof.export_chrome_trace(str(out / f"{tag}.pt.trace.json"))
+            log(f"[INFO] profiler: {out / (tag + '_ops.txt')} and {tag}.pt.trace.json")
         # exposed gradient communication: after training, so the losses above are unaffected
         if info.enabled and a.comm_measure_steps > 0:
             fixed = get_batches()  # same batch every time: the comparison is pure compute vs comm
@@ -480,6 +516,8 @@ def main(argv=None):
             Path(a.summary_json).write_text(json.dumps(summary, indent=2))
         if a.runs_csv.lower() != "none":
             auto = f"data {data_kind}; train loss {first_loss:.3f}->{train_loss:.3f}"
+            if a.profile:
+                auto += "; PROFILED: timings include profiler overhead"
             if info.enabled:
                 auto += (f"; fwd_bwd sync {comm['fwd_bwd_sync_ms']:.2f}ms "
                          f"nosync {comm['fwd_bwd_nosync_ms']:.2f}ms")
