@@ -27,15 +27,28 @@ COLUMNS = [
 DEFAULT_PATH = os.path.join("results", "runs.csv")
 
 
-def now_iso() -> str:
-    return datetime.now(timezone.utc).isoformat(timespec="seconds")
-
-
 def make_run_id(index: int = 0) -> str:
     """`<slurm_job_id>_<index>`; outside Slurm, `local-<YYYYmmddHHMMSS>_<index>`."""
     job = os.environ.get("SLURM_JOB_ID") or "local-" + datetime.now().strftime("%Y%m%d%H%M%S")
     return f"{job}_{index}"
 
+
+
+def next_run_id(path: str = DEFAULT_PATH) -> str:
+    """`<slurm_job_id>_<n>`, where n = rows this job already has in `path`.
+
+    Every train.py run is a separate process, so the index can't be kept in
+    memory; counting the job's existing rows gives 0, 1, 2, ... for the runs of a
+    bundled job. Assumes runs of the same job write one after another (true for
+    our jobs: runs are sequential and only rank 0 writes).
+    """
+    job = os.environ.get("SLURM_JOB_ID") or "local-" + datetime.now().strftime("%Y%m%d%H%M%S")
+    if not os.path.exists(path):
+        return f"{job}_0"
+    with open(path, newline="", encoding="utf-8") as f:
+        count = sum(1 for row in csv.DictReader(f)
+                    if (row.get("run_id") or "").startswith(f"{job}_"))
+    return f"{job}_{count}"
 
 def slurm_fields() -> dict:
     return {

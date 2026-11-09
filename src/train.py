@@ -288,7 +288,7 @@ def build_row(a, info, n_params, med, comm, val_loss_500, last_val, status, note
     src/check_correctness.py against the fp32 single-GPU baseline."""
     step_ms = med.get("step")
     return {
-        "run_id": runlog.make_run_id(0),
+        "run_id": runlog.next_run_id(a.runs_csv),
         "timestamp": runlog.now_iso(),
         "job": a.job,
         "experiment": a.experiment or f"{info.device.type}_ws{info.world_size}_{a.precision}",
