@@ -12,11 +12,11 @@ ends with a 50-step training run on the tiny subset.
 ```bash
 git clone https://github.com/iciaradelino/mini-llm.git
 cd mini-llm
-git checkout phase1          # tag of the Phase 1 state described here
 ```
 
 All commands assume you stay in the repository root. `slurm/logs/` already exists
-in the clone; Slurm writes every log there.
+in the clone; Slurm writes every log there. The exact commit used for the results
+in the report will be tagged and recorded here at the end of the project.
 
 ### Software
 
