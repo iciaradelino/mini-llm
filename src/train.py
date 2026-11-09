@@ -40,7 +40,7 @@ import json
 import math
 import time
 from contextlib import nullcontext
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from pathlib import Path
 
 import numpy as np
@@ -51,6 +51,8 @@ import torch.nn.functional as F
 import ddp_utils
 import runlog
 from timing import StepTimer, measure_exposed_comm
+
+
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 LOSS_CHECK_STEP = 500  # step whose validation loss feeds the correctness rule
@@ -271,6 +273,10 @@ def parse_args(argv=None):
                    help="sequences per validation batch (independent of world size); default = global_batch")
     p.add_argument("--log_interval", type=int, default=10)
     p.add_argument("--summary_json", default=None, help="write the final summary dict here")
+    p.add_argument("--save_checkpoint", default=None,
+                   help="save model weights + config to this .pt file (rank 0, end of run); off by default")
+    p.add_argument("--checkpoint_interval", type=int, default=0,
+                   help="also save every N steps, overwriting the same file (0 = only at the end)")
     # instrumentation / results (step 6b)
     p.add_argument("--timing_warmup", type=int, default=20, help="steps excluded from the timing medians")
     p.add_argument("--comm_measure_steps", type=int, default=20,
@@ -282,6 +288,24 @@ def parse_args(argv=None):
     p.add_argument("--notes", default="", help="free text for runs.csv `notes`")
     return p.parse_args(argv)
 
+def save_checkpoint(path, raw_model, cfg, a, step, val_loss):
+    """Write weights + config to `path` (rank 0 only). Saves to path.tmp first, then
+    renames, so a job killed mid-save never leaves a half-written checkpoint."""
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    meta_path = Path(a.data_dir) / "meta.json"
+    tok_sha = json.loads(meta_path.read_text()).get("tokenizer_sha256") if meta_path.exists() else None
+    ckpt = {
+        "model": raw_model.state_dict(),
+        "config": asdict(cfg),
+        "step": step,
+        "val_loss": val_loss,
+        "tokenizer_sha256": tok_sha,
+        "args": {k: v for k, v in vars(a).items() if isinstance(v, (str, int, float, bool, type(None)))},
+    }
+    tmp = path.with_suffix(path.suffix + ".tmp")
+    torch.save(ckpt, tmp)
+    tmp.replace(path)
 
 def build_row(a, info, n_params, med, comm, val_loss_500, last_val, status, notes):
     """One runs.csv row (schema: results/README.md). `valid` is filled in later by
@@ -420,8 +444,13 @@ def main(argv=None):
                 if step == LOSS_CHECK_STEP:
                     val_loss_500 = last_val
                 log(f"step {step:5d} | VAL loss {last_val:.4f}" + ("  <- step 500" if step == LOSS_CHECK_STEP else ""))
+            if (a.save_checkpoint and a.checkpoint_interval
+                    and step % a.checkpoint_interval == 0 and info.is_master):
+                save_checkpoint(a.save_checkpoint, raw_model, cfg, a, step, last_val)
         wall_s = round(time.time() - t0, 2)
-
+        if a.save_checkpoint and info.is_master:
+            save_checkpoint(a.save_checkpoint, raw_model, cfg, a, a.max_steps, last_val)
+            log(f"[INFO] saved checkpoint to {a.save_checkpoint}")
         # exposed gradient communication: after training, so the losses above are unaffected
         if info.enabled and a.comm_measure_steps > 0:
             fixed = get_batches()  # same batch every time: the comparison is pure compute vs comm
