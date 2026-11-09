@@ -1,0 +1,11 @@
+==================================================
+Job ID:      27915
+Node:        fortran
+Start:       Mon Nov  9 04:37:14 PM CET 2026
+Working dir: /home/hpca15/mini-llm
+==================================================
+environment snapshot written to slurm/logs/env_snapshot_27915.txt
+repo root: /home/hpca15/mini-llm | python: torch-python | steps: 50 | out: data/tokenized_smoke | threads: 8
+
+=== [STAGE 0/5 environment] 2026-11-09 16:37:15 ===
+torch 2.8.0+cu128 | numpy 2.3.2 | tokenizers 0.23.3
