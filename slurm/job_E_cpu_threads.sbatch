@@ -4,10 +4,13 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=64
+#SBATCH --hint=nomultithread
+
 #SBATCH --mem=32G
 #SBATCH --time=06:00:00
 #SBATCH --output=slurm/logs/job_E_%j.out
 #SBATCH --error=slurm/logs/job_E_%j.err
+
 
 
 
@@ -60,6 +63,7 @@ fi
 # record the hardware and PyTorch's threading setup for the report
 echo; echo "---- lscpu ----"; lscpu | grep -E "Model name|Socket|Core\(s\) per|Thread\(s\) per|NUMA node\(s\)|^CPU\(s\)|L3" || true
 echo "---- cores visible to this job (nproc): $(nproc)"
+echo "---- CPUs allowed: $(grep Cpus_allowed_list /proc/self/status | cut -f2)"
 "$PY" -c "import torch; print('torch', torch.__version__); print(torch.__config__.parallel_info())" \
   || { echo "[ERROR] python/torch not available"; exit 1; }
 
@@ -77,7 +81,7 @@ run() {
   local t="$1" r="$2" label="cpu_threads${1}_r${2}"
   echo; echo "=== [RUN] $label | $(date '+%F %T') ==="
   # every thread pool PyTorch may use gets the same count
-  if OMP_NUM_THREADS="$t" MKL_NUM_THREADS="$t" OPENBLAS_NUM_THREADS="$t" \
+  if OMP_PROC_BIND=close OMP_PLACES=cores OMP_NUM_THREADS="$t" MKL_NUM_THREADS="$t" OPENBLAS_NUM_THREADS="$t" \
      "$PY" src/train.py --device cpu --num_threads "$t" --seed "$SEED" \
        --job "$JOB" --experiment "$label" --data_dir data/tokenized \
        --precision fp32 --seq_len 256 --global_batch "$BATCH" \
