@@ -100,6 +100,7 @@ These flag names and defaults are frozen. Defaults equal the baseline
 | `--device` | `auto` | `auto`, `cpu`, `cuda`, `cuda:N` |
 | `--seed` | 1337 | |
 | `--num_threads` | torch default | CPU threads (job E) |
+| `--compile` | off | wrap the model in `torch.compile` for training (step 12). Validation and checkpoints use the plain model. The first steps include compile time, which `--timing_warmup` excludes. The row's `notes` say `COMPILED`; give the run an `--experiment` label ending in `_compile` |
 | `--eval_interval` | 100 | validation every N steps; step 500 is always evaluated |
 | `--eval_iters` | 20 | validation batches per evaluation |
 | `--eval_batch` | `global_batch` | sequences per validation batch, independent of world size |

@@ -272,6 +272,8 @@ def parse_args(argv=None):
     p.add_argument("--grad_clip", type=float, default=1.0)
     # run
     p.add_argument("--precision", default="fp32", choices=["fp32", "bf16"])
+    p.add_argument("--compile", action="store_true",
+                   help="train with torch.compile (validation and checkpoints use the plain model)")
     p.add_argument("--device", default="auto", help="auto | cpu | cuda | cuda:N")
     p.add_argument("--seed", type=int, default=1337)
     p.add_argument("--num_threads", type=int, default=None, help="torch CPU threads")
@@ -392,7 +394,10 @@ def main(argv=None):
                     n_head=a.n_head, n_embd=a.n_embd, dropout=a.dropout)
     raw_model = GPT(cfg).to(info.device)
     n_params = raw_model.num_params()
-    model = ddp_utils.wrap(raw_model, info)
+    # torch.compile shares its parameters with raw_model, so the optimizer, validation
+    # and checkpoints keep using raw_model. The compile time lands in the first steps,
+    # which the timing warm-up excludes.
+    model = ddp_utils.wrap(torch.compile(raw_model) if a.compile else raw_model, info)
     log(f"[INFO] params {n_params / 1e6:.2f}M ({raw_model.num_params(True) / 1e6:.2f}M excl. positions) | "
         f"device {a.device} | world {info.world_size} ({info.backend or 'no DDP'}) | {a.precision} | "
         f"data {data_kind} | batch {a.global_batch} (per rank {per_rank} = micro {micro} x accum {accum}) | "
@@ -518,6 +523,8 @@ def main(argv=None):
             auto = f"data {data_kind}; train loss {first_loss:.3f}->{train_loss:.3f}"
             if a.profile:
                 auto += "; PROFILED: timings include profiler overhead"
+            if a.compile:
+                auto += "; COMPILED: torch.compile"
             if info.enabled:
                 auto += (f"; fwd_bwd sync {comm['fwd_bwd_sync_ms']:.2f}ms "
                          f"nosync {comm['fwd_bwd_nosync_ms']:.2f}ms")
