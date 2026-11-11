@@ -1,0 +1,181 @@
+==================================================
+Job ID:        28436
+Running on:    fortran
+Start time:    Wed Nov 11 08:57:20 AM CET 2026
+Working dir:   /home/hpca15/mini-llm
+==================================================
+============================================================
+Starting Project Gutenberg Spanish Corpus Download & Prep
+============================================================
+[CACHE] Found raw file: donquijote.txt
+[PROCESSED] donquijote -> train | siglo_de_oro | prosa (2.07 MB)
+[CACHE] Found raw file: novelasejemplares.txt
+[PROCESSED] novelasejemplares -> train | siglo_de_oro | prosa (1.01 MB)
+[CACHE] Found raw file: obrasescogidas.txt
+[PROCESSED] obrasescogidas -> train | romanticismo | mixto (0.54 MB)
+[CACHE] Found raw file: poesiascompletas.txt
+[PROCESSED] poesiascompletas -> val | generacion_98 | poesia (0.22 MB)
+[CACHE] Found raw file: romancerogitano.txt
+[PROCESSED] romancerogitano -> train | generacion_27 | poesia (0.04 MB)
+[CACHE] Found raw file: librodepoemas.txt
+[PROCESSED] librodepoemas -> train | generacion_27 | poesia (0.10 MB)
+[CACHE] Found raw file: fortunatayjacinta.txt
+[PROCESSED] fortunatayjacinta -> train | realismo | prosa (2.20 MB)
+[CACHE] Found raw file: misericordia.txt
+[PROCESSED] misericordia -> val | realismo | prosa (0.47 MB)
+[CACHE] Found raw file: trafalgar.txt
+[PROCESSED] trafalgar -> train | realismo | prosa (0.29 MB)
+[CACHE] Found raw file: tormento.txt
+[PROCESSED] tormento -> train | realismo | prosa (0.47 MB)
+[CACHE] Found raw file: marianela.txt
+[PROCESSED] marianela -> train | realismo | prosa (0.29 MB)
+[CACHE] Found raw file: lospazosdeulloa.txt
+[PROCESSED] lospazosdeulloa -> train | naturalismo | prosa (0.48 MB)
+[CACHE] Found raw file: insolacionymorrina.txt
+[PROCESSED] insolacionymorrina -> train | naturalismo | prosa (0.48 MB)
+[CACHE] Found raw file: latribuna.txt
+[PROCESSED] latribuna -> val | naturalismo | prosa (0.37 MB)
+[CACHE] Found raw file: cuentosdeamor.txt
+[PROCESSED] cuentosdeamor -> train | naturalismo | prosa (0.37 MB)
+[CACHE] Found raw file: loscuatrojinetesdelapocalipsis.txt
+[PROCESSED] loscuatrojinetesdelapocalipsis -> train | naturalismo | prosa (0.78 MB)
+[CACHE] Found raw file: marenostrum.txt
+[PROCESSED] marenostrum -> train | naturalismo | prosa (0.85 MB)
+[CACHE] Found raw file: losargonautas.txt
+[PROCESSED] losargonautas -> train | naturalismo | prosa (1.19 MB)
+[CACHE] Found raw file: canasybarro.txt
+[PROCESSED] canasybarro -> val | naturalismo | prosa (0.43 MB)
+[CACHE] Found raw file: laregenta.txt
+[PROCESSED] laregenta -> train | realismo | prosa (1.75 MB)
+[CACHE] Found raw file: elsenorylosdemassoncuentos.txt
+[PROCESSED] elsenorylosdemassoncuentos -> train | realismo | prosa (0.29 MB)
+[CACHE] Found raw file: suunicohijo.txt
+[PROCESSED] suunicohijo -> train | realismo | prosa (0.50 MB)
+[CACHE] Found raw file: pepitajimenez.txt
+[PROCESSED] pepitajimenez -> train | realismo | prosa (0.31 MB)
+[CACHE] Found raw file: juanitalalarga.txt
+[PROCESSED] juanitalalarga -> train | realismo | prosa (0.40 MB)
+[CACHE] Found raw file: cuentosydialogos.txt
+[PROCESSED] cuentosydialogos -> val | realismo | prosa (0.22 MB)
+[CACHE] Found raw file: enlasorillasdelsar.txt
+[PROCESSED] enlasorillasdelsar -> train | romanticismo | poesia (0.16 MB)
+[CACHE] Found raw file: sotileza.txt
+[PROCESSED] sotileza -> train | realismo | prosa (0.65 MB)
+[CACHE] Found raw file: lapuchera.txt
+[PROCESSED] lapuchera -> train | realismo | prosa (0.69 MB)
+[CACHE] Found raw file: lamontalvez.txt
+[PROCESSED] lamontalvez -> train | realismo | prosa (0.59 MB)
+[CACHE] Found raw file: obrascompletasdefigarotomo1.txt
+[PROCESSED] obrascompletasdefigarotomo1 -> train | romanticismo | prosa (1.00 MB)
+[CACHE] Found raw file: obrascompletasdefigarotomo2.txt
+[PROCESSED] obrascompletasdefigarotomo2 -> train | romanticismo | prosa (0.80 MB)
+[CACHE] Found raw file: donalvaroolafuerzadelsino.txt
+[PROCESSED] donalvaroolafuerzadelsino -> val | romanticismo | teatro (0.15 MB)
+[CACHE] Found raw file: recuerdosdeltiempoviejo.txt
+[PROCESSED] recuerdosdeltiempoviejo -> train | romanticismo | prosa (0.42 MB)
+[CACHE] Found raw file: granadapoemaorientalprecedidodelaleyenda.txt
+[PROCESSED] granadapoemaorientalprecedidodelaleyenda -> train | romanticismo | poesia (0.24 MB)
+[CACHE] Found raw file: granadapoemaorientalprecedidodelaleyenda58275.txt
+[PROCESSED] granadapoemaorientalprecedidodelaleyenda58275 -> train | romanticismo | poesia (0.24 MB)
+[CACHE] Found raw file: traidorinconfesoymartir.txt
+[PROCESSED] traidorinconfesoymartir -> train | romanticismo | teatro (0.15 MB)
+[CACHE] Found raw file: lagaviota.txt
+[PROCESSED] lagaviota -> train | romanticismo | prosa (0.52 MB)
+[CACHE] Found raw file: clemencianoveladecostumbres.txt
+[PROCESSED] clemencianoveladecostumbres -> train | romanticismo | prosa (0.54 MB)
+[CACHE] Found raw file: sabnovelaoriginal.txt
+[PROCESSED] sabnovelaoriginal -> val | romanticismo | prosa (0.32 MB)
+[CACHE] Found raw file: elcondedecandespina1de2.txt
+[PROCESSED] elcondedecandespina1de2 -> train | romanticismo | prosa (0.17 MB)
+[CACHE] Found raw file: elcondedecandespina2de2.txt
+[PROCESSED] elcondedecandespina2de2 -> train | romanticismo | prosa (0.17 MB)
+[CACHE] Found raw file: viagealparnaso.txt
+[PROCESSED] viagealparnaso -> train | siglo_de_oro | mixto (0.30 MB)
+[CACHE] Found raw file: losentremeses.txt
+[PROCESSED] losentremeses -> train | siglo_de_oro | teatro (0.22 MB)
+[CACHE] Found raw file: historiadelavidadelbusconllamadodonpablo.txt
+[PROCESSED] historiadelavidadelbusconllamadodonpablo -> val | siglo_de_oro | prosa (0.23 MB)
+[CACHE] Found raw file: lossuenosvolumei.txt
+[PROCESSED] lossuenosvolumei -> train | siglo_de_oro | prosa (0.41 MB)
+[CACHE] Found raw file: lossuenosvolumeii.txt
+[PROCESSED] lossuenosvolumeii -> train | siglo_de_oro | prosa (0.37 MB)
+[CACHE] Found raw file: eldiablocojuelo.txt
+[PROCESSED] eldiablocojuelo -> train | siglo_de_oro | prosa (0.48 MB)
+[CACHE] Found raw file: comediasineditas.txt
+[PROCESSED] comediasineditas -> train | siglo_de_oro | teatro (0.44 MB)
+[CACHE] Found raw file: fuenteovejuna.txt
+[PROCESSED] fuenteovejuna -> val | siglo_de_oro | teatro (0.09 MB)
+[CACHE] Found raw file: elcastigosinvenganza.txt
+[PROCESSED] elcastigosinvenganza -> train | siglo_de_oro | teatro (0.11 MB)
+[CACHE] Found raw file: teatroselectotomo1de4.txt
+[PROCESSED] teatroselectotomo1de4 -> train | siglo_de_oro | teatro (0.49 MB)
+[CACHE] Found raw file: teatroselectotomo2de4.txt
+[PROCESSED] teatroselectotomo2de4 -> train | siglo_de_oro | teatro (0.52 MB)
+[CACHE] Found raw file: teatroselectotomo3de4.txt
+[PROCESSED] teatroselectotomo3de4 -> train | siglo_de_oro | teatro (0.41 MB)
+[CACHE] Found raw file: teatroselectotomo4de4.txt
+[PROCESSED] teatroselectotomo4de4 -> train | siglo_de_oro | teatro (0.54 MB)
+[CACHE] Found raw file: laverdadsospechosa.txt
+[PROCESSED] laverdadsospechosa -> train | siglo_de_oro | teatro (0.12 MB)
+[CACHE] Found raw file: losfavoresdelmundo.txt
+[PROCESSED] losfavoresdelmundo -> train | siglo_de_oro | teatro (0.14 MB)
+[CACHE] Found raw file: lasparedesoyen.txt
+[PROCESSED] lasparedesoyen -> train | siglo_de_oro | teatro (0.11 MB)
+[CACHE] Found raw file: laperfectacasada.txt
+[PROCESSED] laperfectacasada -> train | siglo_de_oro | prosa (0.23 MB)
+[CACHE] Found raw file: latiatulanovela.txt
+[PROCESSED] latiatulanovela -> train | generacion_98 | prosa (0.17 MB)
+[CACHE] Found raw file: abelsanchezunahistoriadepasion.txt
+[PROCESSED] abelsanchezunahistoriadepasion -> train | generacion_98 | prosa (0.16 MB)
+[CACHE] Found raw file: amorypedagogia.txt
+[PROCESSED] amorypedagogia -> train | generacion_98 | prosa (0.28 MB)
+[CACHE] Found raw file: nieblanivola.txt
+[PROCESSED] nieblanivola -> val | generacion_98 | prosa (0.32 MB)
+[CACHE] Found raw file: tresnovelasejemplaresyunprologo.txt
+[PROCESSED] tresnovelasejemplaresyunprologo -> train | generacion_98 | prosa (0.16 MB)
+[CACHE] Found raw file: elespejodelamuerte.txt
+[PROCESSED] elespejodelamuerte -> train | generacion_98 | prosa (0.25 MB)
+[CACHE] Found raw file: andanzasyvisionesespanolas.txt
+[PROCESSED] andanzasyvisionesespanolas -> train | generacion_98 | prosa (0.44 MB)
+[CACHE] Found raw file: delsentimientotragicodelavida.txt
+[PROCESSED] delsentimientotragicodelavida -> train | generacion_98 | prosa (0.55 MB)
+[CACHE] Found raw file: vidadedonquijoteysancho.txt
+[PROCESSED] vidadedonquijoteysancho -> train | generacion_98 | prosa (0.54 MB)
+[CACHE] Found raw file: sonatadeestiomemoriasdelmarquesdebradomi.txt
+[PROCESSED] sonatadeestiomemoriasdelmarquesdebradomi -> train | generacion_98 | prosa (0.13 MB)
+[CACHE] Found raw file: sonatadeprimaveramemoriasdelmarquesdebra.txt
+[PROCESSED] sonatadeprimaveramemoriasdelmarquesdebra -> train | generacion_98 | prosa (0.11 MB)
+[CACHE] Found raw file: sonatadeotonosonatadeinviernomemoriasdel.txt
+[PROCESSED] sonatadeotonosonatadeinviernomemoriasdel -> train | generacion_98 | prosa (0.26 MB)
+[CACHE] Found raw file: tiranobanderasnoveladetierracaliente.txt
+[PROCESSED] tiranobanderasnoveladetierracaliente -> train | generacion_98 | prosa (0.30 MB)
+[CACHE] Found raw file: lucesdebohemiaesperpento.txt
+[PROCESSED] lucesdebohemiaesperpento -> val | generacion_98 | teatro (0.12 MB)
+[CACHE] Found raw file: divinaspalabras.txt
+[PROCESSED] divinaspalabras -> train | generacion_98 | teatro (0.11 MB)
+[CACHE] Found raw file: romancedeloboscomediabarbara.txt
+[PROCESSED] romancedeloboscomediabarbara -> train | generacion_98 | teatro (0.13 MB)
+[CACHE] Found raw file: elmarquesdebradomincoloquiosromanticos.txt
+[PROCESSED] elmarquesdebradomincoloquiosromanticos -> train | generacion_98 | teatro (0.13 MB)
+[CACHE] Found raw file: azul.txt
+[PROCESSED] azul -> val | modernismo | prosa (0.19 MB)
+[CACHE] Found raw file: prosasprofanas.txt
+[PROCESSED] prosasprofanas -> train | modernismo | poesia (0.09 MB)
+[CACHE] Found raw file: cantosdevidayesperanzaloscisnesyotrospoe.txt
+[PROCESSED] cantosdevidayesperanzaloscisnesyotrospoe -> train | modernismo | poesia (0.08 MB)
+[CACHE] Found raw file: cuentosycronicas.txt
+[PROCESSED] cuentosycronicas -> train | modernismo | prosa (0.14 MB)
+[CACHE] Found raw file: losraros.txt
+[PROCESSED] losraros -> train | modernismo | prosa (0.38 MB)
+[CACHE] Found raw file: elcantoerrante.txt
+[PROCESSED] elcantoerrante -> train | modernismo | poesia (0.09 MB)
+------------------------------------------------------------
+Corpus Prep Complete:
+ - Train Corpus Size: 30.13 MB
+ - Val Corpus Size:   3.13 MB
+ - Total Clean Size:  33.26 MB
+ - Catalog:           data/clean/catalog.csv (81 works)
+============================================================
+==================================================
+Job finished at: Wed Nov 11 08:57:20 AM CET 2026
+==================================================
