@@ -1,0 +1,38 @@
+==================================================
+Job ID:      28297
+Node:        fortran
+Start:       Tue Nov 10 07:54:51 PM CET 2026
+Working dir: /home/hpca21/mini-llm
+==================================================
+torch 2.8.0+cu128 | numpy 2.3.2 | threads 8
+[INFO] params 13.87M (13.77M excl. positions) | device cpu | world 1 (no DDP) | fp32 | data tiny.bin | batch 16 (per rank 16 = micro 16 x accum 1) | seq 256 | seed 1337
+step     1 | loss 9.0749 | lr 3.00e-05 | 1271 ms/step
+step    10 | loss 8.0129 | lr 3.00e-04 | 971 ms/step
+step    20 | loss 7.0448 | lr 6.00e-04 | 952 ms/step
+step    30 | loss 6.5910 | lr 5.97e-04 | 940 ms/step
+step    40 | loss 6.4982 | lr 5.85e-04 | 935 ms/step
+step    50 | loss 6.4908 | lr 5.66e-04 | 931 ms/step
+step    50 | VAL loss 6.6677
+step    60 | loss 6.3142 | lr 5.40e-04 | 978 ms/step
+step    70 | loss 6.1391 | lr 5.07e-04 | 970 ms/step
+step    80 | loss 6.0717 | lr 4.69e-04 | 968 ms/step
+step    90 | loss 6.0205 | lr 4.27e-04 | 964 ms/step
+step   100 | loss 5.9417 | lr 3.82e-04 | 961 ms/step
+step   100 | VAL loss 6.2904
+step   110 | loss 5.9104 | lr 3.35e-04 | 983 ms/step
+step   120 | loss 5.9640 | lr 2.88e-04 | 978 ms/step
+step   130 | loss 5.8515 | lr 2.42e-04 | 975 ms/step
+step   140 | loss 5.9488 | lr 1.99e-04 | 971 ms/step
+step   150 | loss 5.9022 | lr 1.60e-04 | 971 ms/step
+step   150 | VAL loss 6.1123
+step   160 | loss 5.7916 | lr 1.26e-04 | 987 ms/step
+step   170 | loss 5.7345 | lr 9.86e-05 | 984 ms/step
+step   180 | loss 5.7353 | lr 7.79e-05 | 980 ms/step
+step   190 | loss 5.8229 | lr 6.50e-05 | 977 ms/step
+step   200 | loss 5.7156 | lr 6.00e-05 | 975 ms/step
+step   200 | VAL loss 6.0559
+SUMMARY {"n_params": 13865856, "steps": 200, "seed": 1337, "precision": "fp32", "global_batch": 16, "seq_len": 256, "device": "cpu", "data": "tiny.bin", "world_size": 1, "backend": null, "first_train_loss": 9.074850082397461, "final_train_loss": 5.715630054473877, "val_loss_500": null, "final_val_loss": 6.055856323242187, "timing_ms": {"data": 0.2987128682434559, "fwd_bwd": 903.814563062042, "optim": 15.329943969845772, "step": 921.5153544209898}, "timed_steps": 180, "comm": {"fwd_bwd_sync_ms": 0.0, "fwd_bwd_nosync_ms": 0.0, "comm_ms": 0.0}, "wall_s": 197.87}
+[INFO] appended run to results/smoke_runs.csv
+==================================================
+Finished: Tue Nov 10 07:58:17 PM CET 2026
+==================================================
