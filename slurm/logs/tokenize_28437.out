@@ -1,0 +1,113 @@
+==================================================
+Job ID:      28437
+Node:        fortran
+Start:       Wed Nov 11 08:57:22 AM CET 2026
+Working dir: /home/hpca15/mini-llm
+==================================================
+python 3.11.13 | numpy 2.3.2 | tokenizers 0.23.3
+[INFO] training BPE (vocab=8192) on 69 file(s), 30.13 MB
+[INFO] trained in 2.9s, final vocab size 8192
+[INFO] sample: 61 chars -> 17 tokens
+[DONE] wrote /home/hpca15/mini-llm/data/tokenized/tokenizer.json (sha256 33d0978a6ed4…)
+[INFO] tokenizer tokenizer.json: vocab 8192, EOT id 0
+  [train] abelsanchezunahistoriadepasion.txt          162,974 chars ->    49,678 tokens
+  [train] amorypedagogia.txt                          285,203 chars ->    85,919 tokens
+  [train] andanzasyvisionesespanolas.txt              447,359 chars ->   129,977 tokens
+  [train] cantosdevidayesperanzaloscisnesyotrospoe.txt     80,156 chars ->    25,160 tokens
+  [train] clemencianoveladecostumbres.txt             550,067 chars ->   161,036 tokens
+  [train] comediasineditas.txt                        450,774 chars ->   157,774 tokens
+  [train] cuentosdeamor.txt                           375,246 chars ->   108,410 tokens
+  [train] cuentosycronicas.txt                        142,537 chars ->    43,390 tokens
+  [train] delsentimientotragicodelavida.txt           568,646 chars ->   165,361 tokens
+  [train] divinaspalabras.txt                         116,773 chars ->    42,041 tokens
+  [train] donquijote.txt                            2,110,726 chars ->   585,443 tokens
+  [train] elcantoerrante.txt                           89,086 chars ->    27,254 tokens
+  [train] elcastigosinvenganza.txt                    112,724 chars ->    34,590 tokens
+  [train] elcondedecandespina1de2.txt                 174,956 chars ->    47,327 tokens
+  [train] elcondedecandespina2de2.txt                 174,684 chars ->    48,158 tokens
+  [train] eldiablocojuelo.txt                         496,660 chars ->   154,821 tokens
+  [train] elespejodelamuerte.txt                      256,861 chars ->    75,215 tokens
+  [train] elmarquesdebradomincoloquiosromanticos.txt    135,500 chars ->    42,271 tokens
+  [train] elsenorylosdemassoncuentos.txt              298,423 chars ->    85,425 tokens
+  [train] enlasorillasdelsar.txt                      161,052 chars ->    46,398 tokens
+  [train] fortunatayjacinta.txt                     2,241,317 chars ->   638,754 tokens
+  [train] granadapoemaorientalprecedidodelaleyenda.txt    243,156 chars ->    73,875 tokens
+  [train] granadapoemaorientalprecedidodelaleyenda58275.txt    249,988 chars ->    76,384 tokens
+  [train] insolacionymorrina.txt                      485,450 chars ->   143,921 tokens
+  [train] juanitalalarga.txt                          413,708 chars ->   117,284 tokens
+  [train] lagaviota.txt                               530,805 chars ->   152,914 tokens
+  [train] lamontalvez.txt                             602,297 chars ->   168,830 tokens
+  [train] laperfectacasada.txt                        231,884 chars ->    67,520 tokens
+  [train] lapuchera.txt                               693,932 chars ->   199,376 tokens
+  [train] laregenta.txt                             1,786,173 chars ->   502,850 tokens
+  [train] lasparedesoyen.txt                          112,803 chars ->    35,815 tokens
+  [train] latiatulanovela.txt                         172,378 chars ->    52,174 tokens
+  [train] laverdadsospechosa.txt                      127,722 chars ->    42,076 tokens
+  [train] librodepoemas.txt                           104,415 chars ->    32,324 tokens
+  [train] losargonautas.txt                         1,223,629 chars ->   341,877 tokens
+  [train] loscuatrojinetesdelapocalipsis.txt          801,678 chars ->   221,432 tokens
+  [train] losentremeses.txt                           227,823 chars ->    76,978 tokens
+  [train] losfavoresdelmundo.txt                      142,204 chars ->    45,452 tokens
+  [train] lospazosdeulloa.txt                         493,595 chars ->   144,231 tokens
+  [train] losraros.txt                                385,853 chars ->   118,931 tokens
+  [train] lossuenosvolumei.txt                        422,495 chars ->   135,418 tokens
+  [train] lossuenosvolumeii.txt                       373,646 chars ->   120,544 tokens
+  [train] marenostrum.txt                             873,370 chars ->   245,999 tokens
+  [train] marianela.txt                               293,980 chars ->    83,679 tokens
+  [train] novelasejemplares.txt                     1,035,130 chars ->   290,629 tokens
+  [train] obrascompletasdefigarotomo1.txt           1,019,509 chars ->   279,704 tokens
+  [train] obrascompletasdefigarotomo2.txt             815,086 chars ->   228,408 tokens
+  [train] obrasescogidas.txt                          552,338 chars ->   156,375 tokens
+  [train] pepitajimenez.txt                           315,000 chars ->    89,749 tokens
+  [train] prosasprofanas.txt                           96,316 chars ->    30,812 tokens
+  [train] recuerdosdeltiempoviejo.txt                 426,337 chars ->   123,792 tokens
+  [train] romancedeloboscomediabarbara.txt            131,554 chars ->    43,902 tokens
+  [train] romancerogitano.txt                          36,477 chars ->    12,142 tokens
+  [train] sonatadeestiomemoriasdelmarquesdebradomi.txt    134,704 chars ->    39,805 tokens
+  [train] sonatadeotonosonatadeinviernomemoriasdel.txt    265,022 chars ->    77,734 tokens
+  [train] sonatadeprimaveramemoriasdelmarquesdebra.txt    115,605 chars ->    33,532 tokens
+  [train] sotileza.txt                                663,874 chars ->   194,719 tokens
+  [train] suunicohijo.txt                             515,816 chars ->   146,345 tokens
+  [train] teatroselectotomo1de4.txt                   507,467 chars ->   169,669 tokens
+  [train] teatroselectotomo2de4.txt                   529,364 chars ->   185,321 tokens
+  [train] teatroselectotomo3de4.txt                   417,114 chars ->   145,328 tokens
+  [train] teatroselectotomo4de4.txt                   548,167 chars ->   195,892 tokens
+  [train] tiranobanderasnoveladetierracaliente.txt    304,754 chars ->    98,030 tokens
+  [train] tormento.txt                                477,885 chars ->   136,326 tokens
+  [train] trafalgar.txt                               300,188 chars ->    84,080 tokens
+  [train] traidorinconfesoymartir.txt                 155,673 chars ->    47,366 tokens
+  [train] tresnovelasejemplaresyunprologo.txt         156,307 chars ->    48,044 tokens
+  [train] viagealparnaso.txt                          313,278 chars ->   100,940 tokens
+  [train] vidadedonquijoteysancho.txt                 555,144 chars ->   156,383 tokens
+  [val] azul.txt                                    190,266 chars ->    57,641 tokens
+  [val] canasybarro.txt                             443,419 chars ->   128,027 tokens
+  [val] cuentosydialogos.txt                        223,940 chars ->    67,228 tokens
+  [val] donalvaroolafuerzadelsino.txt               149,028 chars ->    49,631 tokens
+  [val] fuenteovejuna.txt                            96,469 chars ->    35,394 tokens
+  [val] historiadelavidadelbusconllamadodonpablo.txt    234,726 chars ->    69,671 tokens
+  [val] latribuna.txt                               382,827 chars ->   113,983 tokens
+  [val] lucesdebohemiaesperpento.txt                120,379 chars ->    44,439 tokens
+  [val] misericordia.txt                            480,278 chars ->   142,070 tokens
+  [val] nieblanivola.txt                            319,661 chars ->    98,048 tokens
+  [val] poesiascompletas.txt                        230,628 chars ->    66,531 tokens
+  [val] sabnovelaoriginal.txt                       326,485 chars ->    89,822 tokens
+------------------------------------------------------------
+train:   9,069,382 tokens   69 docs   30.13 MB text  3.397 chars/token
+val  :     962,497 tokens   12 docs    3.13 MB text  3.323 chars/token
+tiny :   1,500,000 tokens  (2.86 MB)
+[DONE] wrote train.bin, val.bin, tiny.bin, meta.json to /home/hpca15/mini-llm/data/tokenized in 12.4s
+[OK] train.bin: 9,069,382 tokens, max id 8191 < 8192
+[OK] val.bin: 962,497 tokens, max id 8191 < 8192
+[OK] tiny.bin: 1,500,000 tokens, max id 8191 < 8192
+[OK] tiny.bin is a prefix of train.bin
+[OK] train: all 69 documents decode back to the clean text exactly
+[OK] val: all 12 documents decode back to the clean text exactly
+[OK] 5 edge-case strings round-trip
+[PASS] all round-trip checks passed
+c7bd45cacc83eab4f4cbbf5cc1eedb616ed2daa9a05b24a327b8ac48e531abc4  data/tokenized/tiny.bin
+ddcd5f142de7c244e9f7a9d8041a3a85ddeea786505238706e2effe802aa1447  data/tokenized/train.bin
+2bd6a17076e1a9467413b0e8f221c8940a764ac2cd56d4d909606f9716b38af6  data/tokenized/val.bin
+33d0978a6ed49fdc5ea1cc0c65c8760087a996ba29de9cf618cb25a7165ffab2  data/tokenized/tokenizer.json
+==================================================
+Finished: Wed Nov 11 08:57:40 AM CET 2026
+==================================================
