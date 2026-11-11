@@ -1,5 +1,3 @@
-# Data
-
 # Spanish Literary Corpus (`data/`)
 
 This directory contains raw, cleaned, and tokenized datasets for training and evaluating the Spanish Mini-GPT model.
