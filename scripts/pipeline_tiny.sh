@@ -15,7 +15,7 @@
 #   OUT_DIR       tokenizer / .bin output directory    [data/tokenized_smoke]
 #   RUNS_CSV      where train.py appends its row       [results/smoke_runs.csv]
 #   THREADS       CPU threads for torch                [$SLURM_CPUS_PER_TASK or 4]
-#   EXPECTED_RAW  raw Gutenberg files that must exist  [30]
+#   EXPECTED_RAW  raw Gutenberg files that must exist  [81]
 #   RUN_DDP       1 = also run a 2-process gloo DDP    [0]
 #                 check after the single-process run
 
@@ -29,7 +29,7 @@ STEPS="${STEPS:-50}"
 OUT_DIR="${OUT_DIR:-data/tokenized_smoke}"
 RUNS_CSV="${RUNS_CSV:-results/smoke_runs.csv}"
 THREADS="${THREADS:-${SLURM_CPUS_PER_TASK:-4}}"
-EXPECTED_RAW="${EXPECTED_RAW:-30}"
+EXPECTED_RAW="${EXPECTED_RAW:-81}"
 RUN_DDP="${RUN_DDP:-0}"
 TAG="${SLURM_JOB_ID:-local}"
 
