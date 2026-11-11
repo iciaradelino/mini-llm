@@ -50,7 +50,7 @@ Cluster hardware and partitions: `env/cluster.md`.
 |---------|-------|
 | Random seed | 1337 in every run (`train.py --seed`, default) |
 | Model | 6 layers, 6 heads, width 384, 13.87M parameters, vocabulary 8,192 |
-| Data | 30 Project Gutenberg works, 5 held out for validation (`data/README.md`) |
+| Data | 81 Project Gutenberg works, 12 held out for validation (`data/README.md`) |
 | Pipeline contract | `docs/interfaces.md` (file formats, `train.py` flags, `runs.csv` rules) |
 
 ### Environment variables set by the Slurm scripts
@@ -72,21 +72,27 @@ sbatch slurm/prep_data.sbatch
 |-----------|---------|-----|
 | cpu, 1 task, 4 cores, 8 GB, 30 min limit | ~30 s | `slurm/logs/prep_data_<jobid>.out` |
 
-`src/prepare_corpus.py` (standard library only) downloads 30 public-domain works from
-`https://www.gutenberg.org/cache/epub/<id>/pg<id>.txt` into `data/raw/` (cached:
+`src/prepare_corpus.py` (standard library only) downloads 81 public-domain works from
+Project Gutenberg's mirror, `https://gutenberg.pglaf.org/cache/epub/<id>/pg<id>.txt`
+(Gutenberg asks automated downloads to use a mirror), into `data/raw/` (cached:
 existing files are not downloaded again), strips the Gutenberg header, footer and
 licence text, normalises to UTF-8 and writes:
 
-- `data/clean/train/` — 25 works, 16.59 MB
-- `data/clean/val/` — 5 works held out whole, 1.72 MB:
+- `data/clean/train/` — 69 works, 30.13 MB
+- `data/clean/val/` — 12 works held out whole, 3.13 MB:
   *Poesías completas* (Machado), *Misericordia* (Galdós), *La Tribuna* (Pardo Bazán),
-  *Cañas y barro* (Blasco Ibáñez), *Cuentos y diálogos* (Valera)
+  *Cañas y barro* (Blasco Ibáñez), *Cuentos y diálogos* (Valera), *Don Álvaro*
+  (Duque de Rivas), *Sab* (Gómez de Avellaneda), *El Buscón* (Quevedo),
+  *Fuente Ovejuna* (Lope de Vega), *Niebla* (Unamuno), *Luces de bohemia*
+  (Valle-Inclán), *Azul...* (Darío)
+- `data/clean/catalog.csv` — one row per work with its literary movement and genre
 
-The full list of works with Gutenberg IDs and their split is in `data/README.md`.
+The full list of works with Gutenberg IDs, movement, genre and split is in `data/README.md`.
 Compute nodes reach gutenberg.org (verified in jobs 25843 and 26989). If a node has
-no internet, copy the 30 files into `data/raw/` first and the script uses them.
+no internet, copy the 81 files into `data/raw/` first and the script uses them.
 
-Check: the log ends with `Train Corpus Size: 16.59 MB`, `Val Corpus Size: 1.72 MB`.
+Check: the log ends with `Train Corpus Size: 30.13 MB`, `Val Corpus Size: 3.13 MB`
+and `catalog.csv (81 works)`.
 
 ## 2. Tokenizer and encoding (cpu partition)
 
@@ -113,8 +119,8 @@ Outputs in `data/tokenized/`:
 
 | File | Tokens |
 |------|--------|
-| `train.bin` | 4,761,128 |
-| `val.bin` | 518,383 |
+| `train.bin` | 9,069,382 |
+| `val.bin` | 962,497 |
 | `tiny.bin` | 1,500,000 (prefix of `train.bin`) |
 | `tokenizer.json`, `meta.json` | — |
 
@@ -126,7 +132,7 @@ match `meta.json`. Reruns produce byte-identical files.
 
 ## 3. CPU smoke test (cpu partition)
 
-Needs `data/raw/` from step 1 (the pipeline stops if fewer than 30 raw files exist).
+Needs `data/raw/` from step 1 (the pipeline stops if fewer than 81 raw files exist).
 
 ```bash
 sbatch slurm/cpu_smoke.sbatch
@@ -210,3 +216,5 @@ Every submitted job (job ID, script, dates, outcome). Raw logs are in `slurm/log
 | 26102 | `slurm/train_check.sbatch` | fortran | 2026-11-01 14:22 | completed, 3.5 min; 200 steps, val loss 6.67 → 6.06 |
 | 26989 | `slurm/prep_data.sbatch` | fortran | 2026-11-04 12:07 | completed, 30 s; corpus rebuilt, 18.30 MB clean |
 | 26995 | `slurm/cpu_smoke.sbatch` | fortran | 2026-11-04 12:13 | completed, 1 min 12 s; `[PIPELINE OK]` |
+| 28436 | `slurm/prep_data.sbatch` | fortran | 2026-11-11 08:57 | completed, <1 s (raw files cached); 81-work corpus, 33.26 MB clean |
+| 28437 | `slurm/tokenize.sbatch` | fortran | 2026-11-11 08:57 | completed, 18 s; 81-work corpus, round-trip test passed |

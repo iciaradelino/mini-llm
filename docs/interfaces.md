@@ -44,7 +44,7 @@ The parts other code depends on:
 
 | Item | Value |
 |------|-------|
-| Clean text | UTF-8, one `.txt` per work; `data/clean/train/` (25 works), `data/clean/val/` (5 works, held out whole) |
+| Clean text | UTF-8, one `.txt` per work; `data/clean/train/` (69 works), `data/clean/val/` (12 works, held out whole); per-work metadata in `data/clean/catalog.csv` |
 | Tokenizer | Byte-level BPE, Hugging Face `tokenizers`, trained on the train split only |
 | Vocabulary | **8,192** (not 8,000), including one special token |
 | Special token | `<\|endoftext\|>` = id **0**, appended after every work |
