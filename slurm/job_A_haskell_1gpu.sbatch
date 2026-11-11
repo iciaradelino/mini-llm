@@ -18,7 +18,7 @@
 #   fp32 baseline x3 (500 steps, gives val_loss_500 for the 2% rule)
 #   seq-len sweep 128/512/1024 x3 (fp32, 100 steps; 256 = baseline above)
 #   bf16 x3 (500 steps)
-#   profiler run
+#   profiler run (fp32, 50 steps; row marked PROFILED, not comparable)
 #
 # NOT READY TO SUBMIT until: (1) the smoke test passes, (2) the TODOs above are filled,
 # (3) full data/tokenized/ exists (slurm/tokenize.sbatch).
@@ -76,14 +76,14 @@ for r in $(seq 1 $REPEATS); do
   run "baseline_bf16_r$r" --precision bf16 --seq_len 256 --max_steps 500 --eval_interval 100
 done
 
-# 4) profiler run. src/train.py has NO profiler flag yet. Ask Persons 3/4 for one (or a
-#    wrapper script) and set PROFILE_CMD; until then this is recorded as SKIPPED.
-if [ -n "${PROFILE_CMD:-}" ]; then
-  echo; echo "=== [RUN] profiler ==="
-  eval "$PROFILE_CMD" || { echo "=== [FAILED] profiler ==="; FAILED=$((FAILED + 1)); }
-else
-  echo; echo "=== [SKIPPED] profiler: train.py has no profiler option and PROFILE_CMD is not set ==="
-fi
+# 4) profiler run: baseline fp32 config, trace of 5 steps after the 20-step timing
+#    warm-up (+2 profiler warm-up steps), so it needs >= 27 steps. Writes
+#    results/profiles/A_profile_fp32_<time>_ops.txt (commit it) and a .pt.trace.json
+#    timeline (git-ignored; open in ui.perfetto.dev). Its runs.csv row is marked
+#    PROFILED in `notes`: profiler overhead distorts its timings, so never compare
+#    it with the runs above.
+run "profile_fp32" --precision fp32 --seq_len 256 --max_steps 50 --eval_interval 50 \
+  --profile --profile_steps 5 --profile_dir results/profiles
 
 echo "=================================================="
 echo "Job A finished: $(date) | failed runs: $FAILED"
