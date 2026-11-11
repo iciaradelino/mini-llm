@@ -57,10 +57,16 @@ if ! torch-python src/train.py --device cuda --seed "$SEED" --job smoke \
 fi
 
 # run <label> <train.py args...>   (continues on failure, counts failures)
+# Every run gets its own empty Inductor/Triton cache directory (and the Inductor caches
+# are disabled), so each compiled run pays the full cold compile cost and its wall_s
+# shows it. Without this, the compile_check run above would warm the cache for them.
 run() {
   local label="$1"; shift
+  local cache; cache=$(mktemp -d)
   echo; echo "=== [RUN] $label | $(date '+%F %T') ==="
-  if torch-python src/train.py --device cuda --seed "$SEED" --job "$JOB" \
+  if env TORCHINDUCTOR_FORCE_DISABLE_CACHES=1 TORCHINDUCTOR_CACHE_DIR="$cache/inductor" \
+        TRITON_CACHE_DIR="$cache/triton" \
+        torch-python src/train.py --device cuda --seed "$SEED" --job "$JOB" \
         --experiment "$label" --data_dir data/tokenized \
         --precision fp32 --seq_len 256 --max_steps 500 --eval_interval 100 \
         --summary_json "slurm/logs/job_opt_${SLURM_JOB_ID:-local}_${label}.json" "$@"; then
@@ -68,6 +74,7 @@ run() {
   else
     echo "=== [FAILED] $label (exit $?) ==="; FAILED=$((FAILED + 1))
   fi
+  rm -rf "$cache"
 }
 
 for r in $(seq 1 $REPEATS); do

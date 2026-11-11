@@ -38,7 +38,7 @@ seq 256, `--max_steps 500`, seed 1337:
 | `val_loss_500` | within 0.5 % of the uncompiled run (the 2 % rule should pass easily) |
 | `peak_mem_mb` | similar (within ±10 %); compilation usually lowers it, but this is uncertain |
 | first steps | much slower (compile time, tens of seconds), excluded by the 20-step timing warm-up |
-| `wall_s` (total run time) | **higher** for the compiled run: the compile time is paid once and, at 500 steps, probably exceeds the time saved per step. The saving only pays off beyond roughly `compile time / saving per step` steps |
+| `wall_s` (total run time) | **higher** for the compiled run: every compiled run pays the full cold compile time (caches are disabled and each run has its own empty cache directory) and, at 500 steps, this probably exceeds the time saved per step. The saving only pays off beyond roughly `compile time / saving per step` steps |
 
 On the cpu partition I expect a smaller gain than on GPU (the step there is
 dominated by matrix multiplications: about 98 % of the step in the 200-step
@@ -56,7 +56,9 @@ check, job 28297), so I will not use CPU to judge this optimization.
   `--job opt`.
 - Compare the **median over the 3 repeats** of `t_step_ms` and `tokens_per_s`.
 - Also report the total run time, `wall_s`, of every run, so the compile cost
-  shows up. It is in the `SUMMARY` line of the Slurm log and in the per-run
+  shows up. Every run starts with an empty Inductor/Triton cache, so the compile
+  cost is cold in each compiled run (the 30-step `compile_check` that runs first
+  does not warm anything for them). It is in the `SUMMARY` line of the Slurm log and in the per-run
   summary JSON (it is not a `runs.csv` column).
 - Correctness: `src/check_correctness.py` on the compiled rows against the fp32
   single-GPU baseline.
