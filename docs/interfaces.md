@@ -1,6 +1,6 @@
 # Interfaces
 
-> **Status: FROZEN** at commit `<commit>` (approved by Persons 2, 3, 4 on `<date>`).
+> **Status: FROZEN** since PR #7 (approved by Persons 2, 3, 4; merged 2026-11-09).
 > Any change to this file, or to anything it specifies, goes through Person 6 in a
 > PR that edits this file first. Code that disagrees with this file is a bug in the code.
 
@@ -100,7 +100,7 @@ These flag names and defaults are frozen. Defaults equal the baseline
 | `--device` | `auto` | `auto`, `cpu`, `cuda`, `cuda:N` |
 | `--seed` | 1337 | |
 | `--num_threads` | torch default | CPU threads (job E) |
-| `--compile` | off | wrap the model in `torch.compile` for training (step 12). Validation and checkpoints use the plain model. The first steps include compile time, which `--timing_warmup` excludes. The row's `notes` say `COMPILED`; give the run an `--experiment` label ending in `_compile` |
+| `--compile` | off | wrap the model in `torch.compile` for training (step 12). Validation and checkpoints use the plain model. The first steps include compile time, which `--timing_warmup` excludes. The row's `notes` say `COMPILED`; give the run an `--experiment` label containing `_compile` (repeat index last, e.g. `opt_fp32_compile_r1`). Compiled runs are never baselines (§5) |
 | `--eval_interval` | 100 | validation every N steps; step 500 is always evaluated |
 | `--eval_iters` | 20 | validation batches per evaluation |
 | `--eval_batch` | `global_batch` | sequences per validation batch, independent of world size |
@@ -194,7 +194,9 @@ it, so `results/README.md` and `runlog.COLUMNS` always change together.
 Operational definition used by `src/check_correctness.py`:
 
 - **Baseline rows:** `precision = fp32`, `world_size = 1`, `status = ok`, non-empty
-  `val_loss_500`.
+  `val_loss_500`, and **not compiled**: no `COMPILED` in `notes` and no `_compile`
+  in `experiment`. `torch.compile` is the optimization under test (step 12), so a
+  compiled run is judged against the baselines but never becomes one.
 - **Matching:** a run is compared with the baseline rows that share `n_layer`,
   `n_embd`, `n_head`, `seq_len`, `global_batch`, `seed`, `steps`, `device` and
   `gpu_model`. `steps` is `--max_steps`: the cosine learning-rate schedule ends at
@@ -217,6 +219,8 @@ Consequences for the experiment plan:
 - Job B needs its own fp32 baseline on julia; it is not judged against haskell.
 - The Job A sequence-length sweep (100 steps) gets `n/a`: it is a timing
   measurement, not a correctness check.
+- Compiled runs (`--compile`) need an uncompiled fp32 baseline with the same
+  settings; `slurm/job_opt_compile.sbatch` runs both in the same job.
 - The final run (job `final`) is longer than 500 steps, so it gets `n/a`; it is
   judged by its loss curve and its samples, not by the 2% rule.
 
@@ -226,7 +230,7 @@ Consequences for the experiment plan:
 |------|------------|
 | Seed | 1337 for every run unless an experiment varies it on purpose |
 | Repeats | 3 per configuration; analysis uses the median |
-| `experiment` labels | lowercase, `_`-separated, repeat index last: `baseline_fp32_r1`, `baseline_bf16_r2`, `seqlen512_fp32_r3`, `ddp_ws2_r1`, `ddp_p2p_off_r1`, `crossnode_ws2_r1`, `cpu_threads16_r1`, `opt_<name>_r1`, `final` |
+| `experiment` labels | lowercase, `_`-separated, repeat index last: `baseline_fp32_r1`, `baseline_bf16_r2`, `seqlen512_fp32_r3`, `ddp_ws2_r1`, `ddp_p2p_off_r1`, `crossnode_ws2_r1`, `cpu_threads16_r1`, `opt_<name>_r1`, `opt_fp32_compile_r1`, `final` |
 | Checkpoints | `checkpoints/<experiment>.pt` (git-ignored); only the final run and deliberate tests save one |
 | Python on the cluster | `module load pytorch/2.8.0`, then run every script with `torch-python` |
 | Where to run | Slurm jobs only; never on the login node |

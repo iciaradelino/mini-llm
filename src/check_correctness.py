@@ -4,7 +4,8 @@ Rule (README): a run is valid if its validation loss after 500 steps is within 2
 of the single-GPU fp32 baseline, same seed, same global batch. The operational
 definition is frozen in docs/interfaces.md section 5:
 
-- Baseline rows: precision fp32, world_size 1, status ok, non-empty val_loss_500.
+- Baseline rows: precision fp32, world_size 1, status ok, non-empty val_loss_500,
+  and not compiled (torch.compile is an optimization under test, not the reference).
 - A run is compared with the baseline rows that share every column in MATCH_KEYS;
   the reference is the median val_loss_500 of those rows.
 - |val_loss_500 - reference| / reference <= tolerance  ->  yes, otherwise no.
@@ -25,6 +26,7 @@ import argparse
 import csv
 import math
 import os
+import re
 import statistics
 import sys
 import tempfile
@@ -42,6 +44,13 @@ NUMERIC_KEYS = {"n_layer", "n_embd", "n_head", "seq_len", "global_batch", "seed"
 REQUIRED_COLUMNS = set(MATCH_KEYS) | {"run_id", "job", "experiment", "precision",
                                       "world_size", "val_loss_500", "valid", "status"}
 NON_EXPERIMENT_JOBS = {"smoke", "dev"}  # these belong in results/smoke_runs.csv
+
+# A compiled run (train.py --compile) is an optimization being tested, so it must never
+# become part of the reference it is judged against. runs.csv has no column for it;
+# train.py writes "COMPILED" into `notes`, and interfaces.md asks for "_compile" in the
+# `experiment` label. Either marker excludes the row from the baselines.
+COMPILED_NOTE = "COMPILED"
+COMPILED_LABEL = re.compile(r"(^|_)compiled?(_|$)")
 
 
 def norm(key, value):
@@ -70,9 +79,16 @@ def parse_loss(value):
         return float("nan")
 
 
+def is_compiled(row):
+    """True if the run used torch.compile (marker in `notes` or in the `experiment` label)."""
+    return (COMPILED_NOTE in (row.get("notes") or "")
+            or bool(COMPILED_LABEL.search((row.get("experiment") or "").strip().lower())))
+
+
 def is_baseline(row):
     loss = parse_loss(row.get("val_loss_500"))
-    return (row.get("precision", "").strip() == "fp32"
+    return (not is_compiled(row)
+            and row.get("precision", "").strip() == "fp32"
             and norm("world_size", row.get("world_size")) in ("1", "1.0")
             and row.get("status", "").strip() == "ok"
             and row.get("job", "").strip() not in NON_EXPERIMENT_JOBS
