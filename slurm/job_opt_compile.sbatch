@@ -33,6 +33,12 @@ echo "=================================================="
 module load pytorch/2.8.0
 export OMP_NUM_THREADS=${SLURM_CPUS_PER_TASK:-8}
 
+# torch.compile (Triton) needs a C compiler and the container has none (jobs 28658, 28778:
+# "Failed to find C compiler"). The host has gcc 10.4.1 on CVMFS; bind /cvmfs into the
+# container and point CC at it. Applies to every run of this job, baseline included.
+export APPTAINER_BIND="${APPTAINER_BIND:+$APPTAINER_BIND,}/cvmfs"
+export CC=/cvmfs/software.eessi.io/versions/2023.06/compat/linux/x86_64/usr/bin/gcc
+
 JOB=opt
 SEED=1337                 # same seed everywhere: required by the correctness rule
 REPEATS=3
