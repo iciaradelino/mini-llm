@@ -3,7 +3,9 @@
 Every command below is copy-pasteable on the SciTech cluster. Submit everything
 with `sbatch` from the repository root; **never run training on the login node**.
 Phase 1 (sections 0–3) takes under 3 minutes of compute in three CPU jobs and
-ends with a 50-step training run on the tiny subset.
+ends with a 50-step training run on the tiny subset. Each job needs the output of
+the previous one: either wait for each job to finish (`squeue --me` is empty)
+before submitting the next, or chain them as shown in "Run Phase 1 in one go".
 
 ## 0. Environment
 
@@ -31,9 +33,9 @@ plain `python`, so the module's interpreter is used. torch is never pip-installe
 
 | Item | Version / value | Source |
 |------|-----------------|--------|
-| Module | `pytorch/2.8.0` (only module loaded) | `env/modules.md`, job 26995 |
-| Python | 3.11.13 | jobs 26101, 26995 |
-| PyTorch | 2.8.0+cu128 | job 26995 |
+| Module | `pytorch/2.8.0` (only module loaded) | `env/modules.md`, `slurm/logs/env_snapshot_27921.txt` |
+| Python | 3.11.13 | jobs 26101, 27921 |
+| PyTorch | 2.8.0+cu128 | job 27921 |
 | CUDA | 12.8 (bundled with the PyTorch build) | `+cu128` suffix |
 | NCCL | bundled with PyTorch; recorded by the first GPU job (`torch.cuda.nccl.version()`) | TODO after job A |
 | numpy | 2.3.2 (provided by the module) | job 26101 |
@@ -62,6 +64,23 @@ Cluster hardware and partitions: `env/cluster.md`.
 | `RAYON_NUM_THREADS` | `$SLURM_CPUS_PER_TASK` | `tokenize` |
 | `NCCL_P2P_DISABLE` | `1` only in the P2P-off runs of job C | job C |
 
+### Run Phase 1 in one go
+
+Each step reads the files the previous step writes, so submitting all jobs at once
+fails (jobs 27914–27916 did exactly that). `--dependency=afterok:<id>` makes Slurm
+start a job only after the previous one has finished successfully:
+
+```bash
+J1=$(sbatch --parsable slurm/prep_data.sbatch)
+J2=$(sbatch --parsable --dependency=afterok:$J1 slurm/tokenize.sbatch)
+J3=$(sbatch --parsable --dependency=afterok:$J2 slurm/cpu_smoke.sbatch)
+echo "submitted $J1 -> $J2 -> $J3"
+```
+
+`squeue --me` shows the waiting jobs with reason `(Dependency)`. If one job fails,
+the jobs after it are never started; check its log in `slurm/logs/`. Sections 1–3
+describe each job and how to check its result.
+
 ## 1. Data (cpu partition)
 
 ```bash
@@ -88,7 +107,7 @@ licence text, normalises to UTF-8 and writes:
 - `data/clean/catalog.csv` — one row per work with its literary movement and genre
 
 The full list of works with Gutenberg IDs, movement, genre and split is in `data/README.md`.
-Compute nodes reach gutenberg.org (verified in jobs 25843 and 26989). If a node has
+Compute nodes reach Project Gutenberg (verified in jobs 25843, 26989 and 27918). If a node has
 no internet, copy the 81 files into `data/raw/` first and the script uses them.
 
 Check: the log ends with `Train Corpus Size: 30.13 MB`, `Val Corpus Size: 3.13 MB`
@@ -158,10 +177,15 @@ torch-python src/train.py --data_dir data/tokenized_smoke --dataset tiny --devic
 Smoke outputs go to `data/tokenized_smoke/` and `results/smoke_runs.csv` (both
 git-ignored), so the test never touches `data/tokenized/` or `results/runs.csv`.
 
-Expected result (reference: job 26995):
+Expected result:
 - the log ends with `[PIPELINE OK]`;
-- training loss falls from 9.07 to about 6.6, validation loss at step 50 is about 6.79;
+- training loss falls from about 9.07 (≈ ln 8192, a model that has learned nothing)
+  to about 6.6, and the validation loss at step 50 is below 7;
 - one row with `status = ok` is appended to `results/smoke_runs.csv`.
+
+Reference runs: jobs 26995 and 27921 (validation loss at step 50: 6.79 and 6.80),
+both on the earlier 30-work corpus. The 81-work corpus changes `tiny.bin`, so the
+exact values differ slightly; the checks above still apply.
 
 To also test 2-process DDP with the gloo backend:
 
@@ -176,22 +200,36 @@ sbatch --export=ALL,RUN_DDP=1 slurm/cpu_smoke.sbatch
 only and takes milliseconds, so it can run on the login node:
 
 ```bash
-python3 tests/test_check_correctness.py     # expected: PASSED: 18 rows ...
+python3 tests/test_check_correctness.py     # expected: last line starts with PASSED
 python3 src/check_correctness.py            # after every job that adds rows
 ```
 
 ## 4. Experiments
 
-| Job | Script | Seeds | Notes |
-|-----|--------|-------|-------|
-| A | `slurm/job_A_haskell_1gpu.sbatch` | 1337 | template; GPU partition TODO |
-| B | TODO | 1337 | |
-| C | TODO | 1337 | |
-| D | TODO | 1337 | |
-| E | TODO | 1337 | |
+All experiment jobs need `data/tokenized/` from sections 1–2 and append their rows
+to `results/runs.csv`.
 
-After each job: `python3 src/check_correctness.py`, then commit `results/runs.csv`
-and the job's logs.
+| Job | Script | Resources | Seed | What it runs | Status |
+|-----|--------|-----------|------|--------------|--------|
+| A | `slurm/job_A_haskell_1gpu.sbatch` | gpu, 1 GPU on haskell, 8 cores, 32 GB, 2 h | 1337 | fp32 ×3, seq-len sweep 128/512/1024 ×3, bf16 ×3, profiler run | script ready; `--partition` still `TODO_GPU_PARTITION` (should be `gpu`, see `env/cluster.md`); not run yet |
+| B | TODO | 1 GPU on julia | 1337 | fp32 ×3, bf16 ×3 | no script yet |
+| C | TODO | 2 GPUs on haskell | 1337 | DDP ×3, DDP with `NCCL_P2P_DISABLE=1` ×3, profiler | no script yet |
+| D | TODO | 1 GPU on each node | 1337 | cross-node DDP ×3 | no script yet |
+| E | `slurm/job_E_cpu_threads.sbatch` | cpu, 64 cores, one thread per core (`--hint=nomultithread`), 32 GB, 6 h | 1337 | 1–64 threads ×3, 50 steps each (timing only, `valid = n/a`) | script ready; not run yet |
+| opt | `slurm/job_opt_compile.sbatch` | gpu, 1 GPU on haskell, 8 cores, 32 GB, 45 min | 1337 | fp32 ×3 and fp32 `--compile` ×3, interleaved (step 12) | script ready; prediction in `docs/optimization.md`; not run yet |
+
+Submit each one from the repository root, e.g. `sbatch slurm/job_E_cpu_threads.sbatch`.
+If a GPU job stays pending, save the queue state as evidence:
+`squeue --me --start > slurm/logs/queue_$(date +%Y%m%d_%H%M).txt`.
+
+After each job:
+
+```bash
+python3 src/check_correctness.py     # fills `valid` for the new rows
+git add results/runs.csv slurm/logs/ results/profiles/
+```
+
+then commit, open a PR, and add the job to the job log index below.
 
 ## 5. Analysis
 
@@ -216,5 +254,14 @@ Every submitted job (job ID, script, dates, outcome). Raw logs are in `slurm/log
 | 26102 | `slurm/train_check.sbatch` | fortran | 2026-11-01 14:22 | completed, 3.5 min; 200 steps, val loss 6.67 → 6.06 |
 | 26989 | `slurm/prep_data.sbatch` | fortran | 2026-11-04 12:07 | completed, 30 s; corpus rebuilt, 18.30 MB clean |
 | 26995 | `slurm/cpu_smoke.sbatch` | fortran | 2026-11-04 12:13 | completed, 1 min 12 s; `[PIPELINE OK]` |
+| 27913 | `slurm/prep_data.sbatch` | fortran | 2026-11-09 16:37 | completed, 30 s; fresh clone (Phase 1 reproduction by another team member) |
+| 27914 | `slurm/tokenize.sbatch` | fortran | 2026-11-09 16:37 | failed: submitted together with 27913, `data/clean/` did not exist yet |
+| 27915 | `slurm/cpu_smoke.sbatch` | fortran | 2026-11-09 16:37 | failed: submitted together with 27913, only 3/30 raw files present |
+| 27916 | `slurm/ddp_cpu_check.sbatch` | fortran | 2026-11-09 16:37 | failed: submitted together with 27913, `tiny.bin` did not exist yet |
+| 27918 | `slurm/prep_data.sbatch` | fortran | 2026-11-09 16:37 | completed, <1 s (raw files cached); resubmission, with 27919–27921 chained after it via `--dependency` |
+| 27919 | `slurm/tokenize.sbatch` | fortran | 2026-11-09 16:37 | completed, 11 s; round-trip test passed |
+| 27920 | `slurm/ddp_cpu_check.sbatch` | fortran | 2026-11-09 16:38 | completed, 4.5 min; 1 vs 2 gloo processes, val loss at step 100: 6.4359 vs 6.4229 (0.2 %) |
+| 27921 | `slurm/cpu_smoke.sbatch` | fortran | 2026-11-09 16:44 | completed, 1 min 11 s; `[PIPELINE OK]`; `env_snapshot_27921.txt` |
+| 28297 | `slurm/train_check.sbatch` | fortran | 2026-11-10 19:54 | completed, 3.5 min; 200 steps, val loss 6.67 → 6.06, identical to job 26102 (same seed, same data) |
 | 28436 | `slurm/prep_data.sbatch` | fortran | 2026-11-11 08:57 | completed, <1 s (raw files cached); 81-work corpus, 33.26 MB clean |
 | 28437 | `slurm/tokenize.sbatch` | fortran | 2026-11-11 08:57 | completed, 18 s; 81-work corpus, round-trip test passed |
