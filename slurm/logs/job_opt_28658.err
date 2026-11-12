@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "/home/hpca21/mini-llm/src/train.py", line 539, in <module>
+    main()
+  File "/home/hpca21/mini-llm/src/train.py", line 359, in main
+    torch.cuda.set_device(info.device)
+  File "/opt/conda/lib/python3.11/site-packages/torch/cuda/__init__.py", line 567, in set_device
+    device = _get_device_index(device)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/torch/cuda/_utils.py", line 363, in _get_device_index
+    return _torch_get_device_index(device, optional, allow_cpu)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/torch/_utils.py", line 872, in _get_device_index
+    raise ValueError(
+ValueError: Expected a torch.device with a specified index or an integer, but got:cuda

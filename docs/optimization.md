@@ -80,3 +80,71 @@ without launch gaps.
 
 *(to be filled in after the measurements, below this line, without editing the
 sections above)*
+
+### Measurement
+
+Job 28862 (`slurm/job_opt_compile.sbatch`): 1 GPU on haskell (RTX 6000 Ada), fp32,
+baseline model, global batch 64, seq 256, `--max_steps 500`, seed 1337. Three
+interleaved pairs (baseline, compiled), every compiled run with a cold cache. All
+six runs finished (`failed runs: 0`). Raw data: `results/runs.csv` (`job = opt`),
+`slurm/logs/job_opt_28862*`.
+
+| Run | `t_step_ms` | `t_fwd_bwd_ms` | `tokens_per_s` | `peak_mem_mb` | `val_loss_500` | `wall_s` |
+|-----|-------------|----------------|----------------|---------------|----------------|----------|
+| `opt_fp32_r1` | 80.02 | 77.79 | 204743 | 4580 | 4.9729 | 43.15 |
+| `opt_fp32_compile_r1` | 79.86 | 77.63 | 205163 | 4179 | 4.9724 | 48.07 |
+| `opt_fp32_r2` | 80.53 | 78.27 | 203455 | 4580 | 4.9721 | 43.67 |
+| `opt_fp32_compile_r2` | 79.93 | 77.67 | 204989 | 4179 | 4.9737 | 48.17 |
+| `opt_fp32_r3` | 80.72 | 78.49 | 202984 | 4580 | 4.9727 | 43.77 |
+| `opt_fp32_compile_r3` | 79.94 | 77.69 | 204958 | 4179 | 4.9713 | 48.24 |
+| **median, baseline** | **80.53** | 78.27 | 203455 | 4580 | 4.9727 | 43.67 |
+| **median, compiled** | **79.93** | 77.67 | 204989 | 4179 | 4.9724 | 48.17 |
+
+`t_data_ms` (about 0.51) and `t_optim_ms` (about 1.7) are the same in both variants.
+The `wall_s` values are from the `SUMMARY` lines of the Slurm log.
+
+### Against the prediction
+
+| Quantity | Predicted | Measured | |
+|----------|-----------|----------|---|
+| `t_step_ms` (median) | 10–30 % lower | **0.75 % lower** (80.53 → 79.93 ms) | missed |
+| `tokens_per_s` | 11–43 % higher | 0.75 % higher | missed |
+| `t_fwd_bwd_ms` | carries the gain | carries all of it (−0.60 ms of −0.60 ms) | held |
+| `t_data_ms`, `t_optim_ms` | unchanged | unchanged | held |
+| `val_loss_500` | within 0.5 % | within 0.03 % of the baseline median; `valid = yes` for all six runs | held |
+| `peak_mem_mb` | within ±10 % | 8.8 % lower (4580 → 4179 MB) | held |
+| `wall_s` | higher | 4.5 s higher (43.67 → 48.17 s, +10 %) | held |
+
+**The prediction is refuted** by two of the criteria set above: the gain is below
+5 %, and it is smaller than the spread of the three baseline runs (0.60 ms against
+0.69 ms, max − min). The three compiled runs are all slightly faster than the three
+baseline runs and are very consistent with each other (spread 0.08 ms), so the
+effect is probably real, but it is about 0.75 %, not the 10–30 % predicted.
+
+The compile cost is about 5 s per run (the `wall_s` difference, which also contains
+the small per-step saving). Saving 0.6 ms per step, it would take roughly 8000 steps
+to pay for itself.
+
+### Interpretation
+
+This is a hypothesis, not yet checked against the profiler. One step moves 16384
+tokens through 13.9M parameters in 78 ms, about 17 TFLOP/s in fp32. That is close to
+what the large matrix multiplications (attention and MLP projections, and the
+8192-wide output layer) can sustain on this GPU in fp32, so the step is probably
+compute-bound in them. `torch.compile` fuses the small operations (layer norm, GELU,
+residual additions), which are a small share of the step here, so there is little for
+it to win. This is the case the "Why it should help" section warned about. The lower
+peak memory is consistent with fusion removing intermediate activations.
+
+Not tested: bf16, where the matrix multiplications are much faster and the small
+operations weigh more, and larger models. Either would be a different optimization
+with its own prediction written before running it.
+
+### Runs that did not produce results
+
+Two earlier submissions of the same job failed in the 30-step `compile_check` and are
+kept as evidence (`slurm/logs/job_opt_28658.*`, `job_opt_28778.*`). Job 28658:
+`--device cuda` without an index crashed in `torch.cuda.set_device` (fixed in
+PR #27). Job 28778: Triton found no C compiler in the container (fixed in PR #28 by
+binding `/cvmfs` and setting `CC`). Queue waits before each run are in
+`slurm/logs/queue_*.txt`.

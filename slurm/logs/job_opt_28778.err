@@ -1,0 +1,92 @@
+/opt/conda/lib/python3.11/site-packages/torch/_inductor/compile_fx.py:282: UserWarning: TensorFloat32 tensor cores for float32 matrix multiplication available but not enabled. Consider setting `torch.set_float32_matmul_precision('high')` for better performance.
+  warnings.warn(
+Traceback (most recent call last):
+  File "/home/hpca21/mini-llm/src/train.py", line 541, in <module>
+    main()
+  File "/home/hpca21/mini-llm/src/train.py", line 456, in main
+    loss = fwd_bwd(batches)
+           ^^^^^^^^^^^^^^^^
+  File "/home/hpca21/mini-llm/src/train.py", line 424, in fwd_bwd
+    _, loss = model(x, y)
+              ^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/eval_frame.py", line 375, in __call__
+    return super().__call__(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/eval_frame.py", line 749, in compile_wrapper
+    raise e.remove_dynamo_frames() from None  # see TORCHDYNAMO_VERBOSE=1
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/compile_fx.py", line 923, in _compile_fx_inner
+    raise InductorError(e, currentframe()).with_traceback(
+  File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/compile_fx.py", line 907, in _compile_fx_inner
+    mb_compiled_graph = fx_codegen_and_compile(
+                        ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/compile_fx.py", line 1578, in fx_codegen_and_compile
+    return scheme.codegen_and_compile(gm, example_inputs, inputs_to_check, graph_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/compile_fx.py", line 1456, in codegen_and_compile
+    compiled_module = graph.compile_to_module()
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/graph.py", line 2293, in compile_to_module
+    return self._compile_to_module()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/graph.py", line 2299, in _compile_to_module
+    self.codegen_with_cpp_wrapper() if self.cpp_wrapper else self.codegen()
+                                                             ^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/graph.py", line 2238, in codegen
+    self.scheduler.codegen()
+  File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/scheduler.py", line 4598, in codegen
+    else self._codegen(self.nodes)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/scheduler.py", line 4750, in _codegen
+    self.get_backend(device).codegen_node(node)
+  File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/codegen/cuda_combined_scheduling.py", line 107, in codegen_node
+    return self._triton_scheduling.codegen_node(node)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/codegen/simd.py", line 1371, in codegen_node
+    return self.codegen_node_schedule(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/codegen/simd.py", line 1424, in codegen_node_schedule
+    src_code = kernel.codegen_kernel()
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/codegen/triton.py", line 3677, in codegen_kernel
+    **self.inductor_meta_common(),
+      ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/codegen/triton.py", line 3501, in inductor_meta_common
+    "backend_hash": torch.utils._triton.triton_hash_with_backend(),
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/torch/utils/_triton.py", line 165, in triton_hash_with_backend
+    backend = triton_backend()
+              ^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/torch/utils/_triton.py", line 157, in triton_backend
+    target = driver.active.get_current_target()
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/triton/runtime/driver.py", line 30, in __getattr__
+    return getattr(self._initialize_obj(), name)
+                   ^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/triton/runtime/driver.py", line 26, in _initialize_obj
+    self._obj = self._init_fn()
+                ^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/triton/runtime/driver.py", line 12, in _create_driver
+    return active_drivers[0]()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/triton/backends/nvidia/driver.py", line 715, in __init__
+    self.utils = CudaUtils()  # TODO: make static
+                 ^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/triton/backends/nvidia/driver.py", line 62, in __init__
+    mod = compile_module_from_src(
+          ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/triton/runtime/build.py", line 88, in compile_module_from_src
+    so = _build(name, src_path, tmpdir, library_dirs or [], include_dirs or [], libraries or [])
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/triton/runtime/build.py", line 32, in _build
+    raise RuntimeError(
+torch._inductor.exc.InductorError: RuntimeError: Failed to find C compiler. Please specify via CC environment variable or set triton.knobs.build.impl.
+
+Set TORCHDYNAMO_VERBOSE=1 for the internal stack trace (please do this especially if you're reporting a bug to PyTorch). For even more developer context, set TORCH_LOGS="+dynamo"
+
