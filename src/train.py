@@ -356,6 +356,8 @@ def main(argv=None):
     if not info.enabled:  # single process: honour an explicit cuda:N
         info.device = torch.device(a.device)
         if device_type == "cuda":
+            if info.device.index is None:  # plain "cuda": set_device needs an index
+                info.device = torch.device("cuda", 0)
             torch.cuda.set_device(info.device)
     a.device = str(info.device)
     log = print if info.is_master else (lambda *args, **kwargs: None)
