@@ -1,0 +1,409 @@
+==================================================
+Job ID: 28862 | Node: haskell | Start: Thu Nov 12 05:03:18 PM CET 2026
+==================================================
+Thu Nov 12 17:03:18 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.09             Driver Version: 580.126.09     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA RTX 6000 Ada Gene...    On  |   00000000:11:00.0 Off |                  Off |
+| 30%   33C    P0             83W /  300W |       4MiB /  49140MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+torch 2.8.0+cu128 | cuda True | NVIDIA RTX 6000 Ada Generation
+
+=== [CHECK] torch.compile, 30 steps | 2026-11-12 17:03:22 ===
+[INFO] params 13.87M (13.77M excl. positions) | device cuda:0 | world 1 (no DDP) | fp32 | data train.bin | batch 64 (per rank 64 = micro 64 x accum 1) | seq 256 | seed 1337
+step     1 | loss 9.0505 | lr 6.00e-06 | 6378 ms/step
+step    10 | loss 8.2773 | lr 6.00e-05 | 704 ms/step
+step    20 | loss 7.9439 | lr 1.20e-04 | 390 ms/step
+step    30 | loss 7.5014 | lr 1.80e-04 | 285 ms/step
+step    30 | VAL loss 7.4556
+SUMMARY {"n_params": 13865856, "steps": 30, "seed": 1337, "precision": "fp32", "global_batch": 64, "seq_len": 256, "device": "cuda:0", "data": "train.bin", "world_size": 1, "backend": null, "first_train_loss": 9.050528526306152, "final_train_loss": 7.50141716003418, "val_loss_500": null, "final_val_loss": 7.455620741844178, "timing_ms": {"data": 0.5062154959887266, "fwd_bwd": 73.6747169867158, "optim": 1.6283183358609676, "step": 75.83148451521993}, "timed_steps": 10, "comm": {"fwd_bwd_sync_ms": 0.0, "fwd_bwd_nosync_ms": 0.0, "comm_ms": 0.0}, "wall_s": 9.15}
+[INFO] appended run to results/smoke_runs.csv
+
+=== [RUN] opt_fp32_r1 | 2026-11-12 17:03:39 ===
+[INFO] params 13.87M (13.77M excl. positions) | device cuda:0 | world 1 (no DDP) | fp32 | data train.bin | batch 64 (per rank 64 = micro 64 x accum 1) | seq 256 | seed 1337
+step     1 | loss 9.0505 | lr 6.00e-06 | 530 ms/step
+step    10 | loss 8.2773 | lr 6.00e-05 | 122 ms/step
+step    20 | loss 7.9439 | lr 1.20e-04 | 99 ms/step
+step    30 | loss 7.5014 | lr 1.80e-04 | 92 ms/step
+step    40 | loss 7.0068 | lr 2.40e-04 | 88 ms/step
+step    50 | loss 6.7258 | lr 3.00e-04 | 86 ms/step
+step    60 | loss 6.5418 | lr 3.60e-04 | 85 ms/step
+step    70 | loss 6.4230 | lr 4.20e-04 | 84 ms/step
+step    80 | loss 6.2120 | lr 4.80e-04 | 84 ms/step
+step    90 | loss 6.0566 | lr 5.40e-04 | 83 ms/step
+step   100 | loss 5.9669 | lr 6.00e-04 | 83 ms/step
+step   100 | VAL loss 6.0142
+step   110 | loss 5.8918 | lr 5.99e-04 | 88 ms/step
+step   120 | loss 5.7794 | lr 5.97e-04 | 87 ms/step
+step   130 | loss 5.7486 | lr 5.93e-04 | 87 ms/step
+step   140 | loss 5.6499 | lr 5.87e-04 | 86 ms/step
+step   150 | loss 5.6349 | lr 5.80e-04 | 86 ms/step
+step   160 | loss 5.5973 | lr 5.72e-04 | 85 ms/step
+step   170 | loss 5.5020 | lr 5.61e-04 | 85 ms/step
+step   180 | loss 5.5165 | lr 5.50e-04 | 85 ms/step
+step   190 | loss 5.4327 | lr 5.37e-04 | 84 ms/step
+step   200 | loss 5.3447 | lr 5.22e-04 | 84 ms/step
+step   200 | VAL loss 5.4892
+step   210 | loss 5.3528 | lr 5.07e-04 | 87 ms/step
+step   220 | loss 5.3244 | lr 4.90e-04 | 86 ms/step
+step   230 | loss 5.2419 | lr 4.73e-04 | 86 ms/step
+step   240 | loss 5.2401 | lr 4.54e-04 | 86 ms/step
+step   250 | loss 5.2121 | lr 4.35e-04 | 86 ms/step
+step   260 | loss 5.2246 | lr 4.15e-04 | 85 ms/step
+step   270 | loss 5.1333 | lr 3.95e-04 | 85 ms/step
+step   280 | loss 5.1006 | lr 3.74e-04 | 85 ms/step
+step   290 | loss 5.0630 | lr 3.53e-04 | 85 ms/step
+step   300 | loss 5.0657 | lr 3.32e-04 | 85 ms/step
+step   300 | VAL loss 5.2020
+step   310 | loss 5.0516 | lr 3.11e-04 | 86 ms/step
+step   320 | loss 5.0550 | lr 2.90e-04 | 86 ms/step
+step   330 | loss 5.0601 | lr 2.69e-04 | 86 ms/step
+step   340 | loss 4.9982 | lr 2.49e-04 | 86 ms/step
+step   350 | loss 4.9893 | lr 2.29e-04 | 86 ms/step
+step   360 | loss 4.9931 | lr 2.09e-04 | 85 ms/step
+step   370 | loss 4.9873 | lr 1.91e-04 | 85 ms/step
+step   380 | loss 4.9357 | lr 1.73e-04 | 85 ms/step
+step   390 | loss 4.9478 | lr 1.56e-04 | 85 ms/step
+step   400 | loss 4.8605 | lr 1.41e-04 | 85 ms/step
+step   400 | VAL loss 5.0469
+step   410 | loss 4.9234 | lr 1.26e-04 | 86 ms/step
+step   420 | loss 4.9013 | lr 1.13e-04 | 86 ms/step
+step   430 | loss 4.8234 | lr 1.01e-04 | 86 ms/step
+step   440 | loss 4.8306 | lr 9.04e-05 | 86 ms/step
+step   450 | loss 4.8485 | lr 8.14e-05 | 86 ms/step
+step   460 | loss 4.8611 | lr 7.39e-05 | 86 ms/step
+step   470 | loss 4.8929 | lr 6.80e-05 | 85 ms/step
+step   480 | loss 4.8633 | lr 6.37e-05 | 85 ms/step
+step   490 | loss 4.8288 | lr 6.10e-05 | 85 ms/step
+step   500 | loss 4.8583 | lr 6.00e-05 | 85 ms/step
+step   500 | VAL loss 4.9729  <- step 500
+SUMMARY {"n_params": 13865856, "steps": 500, "seed": 1337, "precision": "fp32", "global_batch": 64, "seq_len": 256, "device": "cuda:0", "data": "train.bin", "world_size": 1, "backend": null, "first_train_loss": 9.050528526306152, "final_train_loss": 4.858297348022461, "val_loss_500": 4.972891020774842, "final_val_loss": 4.972891020774842, "timing_ms": {"data": 0.5058348178863525, "fwd_bwd": 77.79262028634548, "optim": 1.677496125921607, "step": 80.02227451652288}, "timed_steps": 480, "comm": {"fwd_bwd_sync_ms": 0.0, "fwd_bwd_nosync_ms": 0.0, "comm_ms": 0.0}, "wall_s": 43.15}
+[INFO] appended run to /home/hpca21/mini-llm/results/runs.csv
+=== [OK] opt_fp32_r1 ===
+
+=== [RUN] opt_fp32_compile_r1 | 2026-11-12 17:04:28 ===
+[INFO] params 13.87M (13.77M excl. positions) | device cuda:0 | world 1 (no DDP) | fp32 | data train.bin | batch 64 (per rank 64 = micro 64 x accum 1) | seq 256 | seed 1337
+step     1 | loss 9.0505 | lr 6.00e-06 | 5496 ms/step
+step    10 | loss 8.2773 | lr 6.00e-05 | 616 ms/step
+step    20 | loss 7.9439 | lr 1.20e-04 | 347 ms/step
+step    30 | loss 7.5014 | lr 1.80e-04 | 257 ms/step
+step    40 | loss 7.0068 | lr 2.40e-04 | 212 ms/step
+step    50 | loss 6.7258 | lr 3.00e-04 | 186 ms/step
+step    60 | loss 6.5418 | lr 3.60e-04 | 168 ms/step
+step    70 | loss 6.4230 | lr 4.20e-04 | 155 ms/step
+step    80 | loss 6.2120 | lr 4.80e-04 | 146 ms/step
+step    90 | loss 6.0566 | lr 5.40e-04 | 138 ms/step
+step   100 | loss 5.9669 | lr 6.00e-04 | 133 ms/step
+step   100 | VAL loss 6.0142
+step   110 | loss 5.8918 | lr 5.99e-04 | 133 ms/step
+step   120 | loss 5.7794 | lr 5.97e-04 | 129 ms/step
+step   130 | loss 5.7486 | lr 5.93e-04 | 125 ms/step
+step   140 | loss 5.6500 | lr 5.87e-04 | 122 ms/step
+step   150 | loss 5.6349 | lr 5.80e-04 | 119 ms/step
+step   160 | loss 5.5973 | lr 5.72e-04 | 116 ms/step
+step   170 | loss 5.5020 | lr 5.61e-04 | 114 ms/step
+step   180 | loss 5.5165 | lr 5.50e-04 | 112 ms/step
+step   190 | loss 5.4328 | lr 5.37e-04 | 111 ms/step
+step   200 | loss 5.3446 | lr 5.22e-04 | 109 ms/step
+step   200 | VAL loss 5.4892
+step   210 | loss 5.3524 | lr 5.07e-04 | 110 ms/step
+step   220 | loss 5.3244 | lr 4.90e-04 | 109 ms/step
+step   230 | loss 5.2373 | lr 4.73e-04 | 108 ms/step
+step   240 | loss 5.2405 | lr 4.54e-04 | 107 ms/step
+step   250 | loss 5.2067 | lr 4.35e-04 | 106 ms/step
+step   260 | loss 5.2268 | lr 4.15e-04 | 105 ms/step
+step   270 | loss 5.1359 | lr 3.95e-04 | 104 ms/step
+step   280 | loss 5.0999 | lr 3.74e-04 | 103 ms/step
+step   290 | loss 5.0639 | lr 3.53e-04 | 102 ms/step
+step   300 | loss 5.0625 | lr 3.32e-04 | 101 ms/step
+step   300 | VAL loss 5.2007
+step   310 | loss 5.0367 | lr 3.11e-04 | 102 ms/step
+step   320 | loss 5.0520 | lr 2.90e-04 | 102 ms/step
+step   330 | loss 5.0581 | lr 2.69e-04 | 101 ms/step
+step   340 | loss 4.9948 | lr 2.49e-04 | 100 ms/step
+step   350 | loss 4.9895 | lr 2.29e-04 | 100 ms/step
+step   360 | loss 4.9924 | lr 2.09e-04 | 99 ms/step
+step   370 | loss 4.9865 | lr 1.91e-04 | 99 ms/step
+step   380 | loss 4.9332 | lr 1.73e-04 | 98 ms/step
+step   390 | loss 4.9447 | lr 1.56e-04 | 98 ms/step
+step   400 | loss 4.8591 | lr 1.41e-04 | 97 ms/step
+step   400 | VAL loss 5.0455
+step   410 | loss 4.9200 | lr 1.26e-04 | 98 ms/step
+step   420 | loss 4.9022 | lr 1.13e-04 | 98 ms/step
+step   430 | loss 4.8227 | lr 1.01e-04 | 97 ms/step
+step   440 | loss 4.8307 | lr 9.04e-05 | 97 ms/step
+step   450 | loss 4.8462 | lr 8.14e-05 | 97 ms/step
+step   460 | loss 4.8596 | lr 7.39e-05 | 96 ms/step
+step   470 | loss 4.8922 | lr 6.80e-05 | 96 ms/step
+step   480 | loss 4.8627 | lr 6.37e-05 | 96 ms/step
+step   490 | loss 4.8277 | lr 6.10e-05 | 95 ms/step
+step   500 | loss 4.8587 | lr 6.00e-05 | 95 ms/step
+step   500 | VAL loss 4.9724  <- step 500
+SUMMARY {"n_params": 13865856, "steps": 500, "seed": 1337, "precision": "fp32", "global_batch": 64, "seq_len": 256, "device": "cuda:0", "data": "train.bin", "world_size": 1, "backend": null, "first_train_loss": 9.050528526306152, "final_train_loss": 4.85869026184082, "val_loss_500": 4.9724355936050415, "final_val_loss": 4.9724355936050415, "timing_ms": {"data": 0.5117189139127731, "fwd_bwd": 77.62827258557081, "optim": 1.692262478172779, "step": 79.85841273330152}, "timed_steps": 480, "comm": {"fwd_bwd_sync_ms": 0.0, "fwd_bwd_nosync_ms": 0.0, "comm_ms": 0.0}, "wall_s": 48.07}
+[INFO] appended run to /home/hpca21/mini-llm/results/runs.csv
+=== [OK] opt_fp32_compile_r1 ===
+
+=== [RUN] opt_fp32_r2 | 2026-11-12 17:05:23 ===
+[INFO] params 13.87M (13.77M excl. positions) | device cuda:0 | world 1 (no DDP) | fp32 | data train.bin | batch 64 (per rank 64 = micro 64 x accum 1) | seq 256 | seed 1337
+step     1 | loss 9.0505 | lr 6.00e-06 | 529 ms/step
+step    10 | loss 8.2773 | lr 6.00e-05 | 122 ms/step
+step    20 | loss 7.9439 | lr 1.20e-04 | 101 ms/step
+step    30 | loss 7.5014 | lr 1.80e-04 | 94 ms/step
+step    40 | loss 7.0068 | lr 2.40e-04 | 91 ms/step
+step    50 | loss 6.7258 | lr 3.00e-04 | 88 ms/step
+step    60 | loss 6.5418 | lr 3.60e-04 | 87 ms/step
+step    70 | loss 6.4230 | lr 4.20e-04 | 86 ms/step
+step    80 | loss 6.2120 | lr 4.80e-04 | 85 ms/step
+step    90 | loss 6.0566 | lr 5.40e-04 | 85 ms/step
+step   100 | loss 5.9669 | lr 6.00e-04 | 84 ms/step
+step   100 | VAL loss 6.0142
+step   110 | loss 5.8918 | lr 5.99e-04 | 89 ms/step
+step   120 | loss 5.7794 | lr 5.97e-04 | 88 ms/step
+step   130 | loss 5.7486 | lr 5.93e-04 | 88 ms/step
+step   140 | loss 5.6499 | lr 5.87e-04 | 87 ms/step
+step   150 | loss 5.6349 | lr 5.80e-04 | 87 ms/step
+step   160 | loss 5.5973 | lr 5.72e-04 | 86 ms/step
+step   170 | loss 5.5020 | lr 5.61e-04 | 86 ms/step
+step   180 | loss 5.5165 | lr 5.50e-04 | 86 ms/step
+step   190 | loss 5.4327 | lr 5.37e-04 | 85 ms/step
+step   200 | loss 5.3447 | lr 5.22e-04 | 85 ms/step
+step   200 | VAL loss 5.4892
+step   210 | loss 5.3527 | lr 5.07e-04 | 88 ms/step
+step   220 | loss 5.3244 | lr 4.90e-04 | 87 ms/step
+step   230 | loss 5.2418 | lr 4.73e-04 | 87 ms/step
+step   240 | loss 5.2402 | lr 4.54e-04 | 87 ms/step
+step   250 | loss 5.2136 | lr 4.35e-04 | 87 ms/step
+step   260 | loss 5.2244 | lr 4.15e-04 | 86 ms/step
+step   270 | loss 5.1296 | lr 3.95e-04 | 86 ms/step
+step   280 | loss 5.1038 | lr 3.74e-04 | 86 ms/step
+step   290 | loss 5.0671 | lr 3.53e-04 | 86 ms/step
+step   300 | loss 5.0661 | lr 3.32e-04 | 86 ms/step
+step   300 | VAL loss 5.2002
+step   310 | loss 5.0536 | lr 3.11e-04 | 87 ms/step
+step   320 | loss 5.0557 | lr 2.90e-04 | 87 ms/step
+step   330 | loss 5.0619 | lr 2.69e-04 | 87 ms/step
+step   340 | loss 4.9973 | lr 2.49e-04 | 87 ms/step
+step   350 | loss 4.9894 | lr 2.29e-04 | 87 ms/step
+step   360 | loss 4.9954 | lr 2.09e-04 | 86 ms/step
+step   370 | loss 4.9869 | lr 1.91e-04 | 86 ms/step
+step   380 | loss 4.9359 | lr 1.73e-04 | 86 ms/step
+step   390 | loss 4.9472 | lr 1.56e-04 | 86 ms/step
+step   400 | loss 4.8595 | lr 1.41e-04 | 86 ms/step
+step   400 | VAL loss 5.0480
+step   410 | loss 4.9226 | lr 1.26e-04 | 87 ms/step
+step   420 | loss 4.9012 | lr 1.13e-04 | 87 ms/step
+step   430 | loss 4.8203 | lr 1.01e-04 | 87 ms/step
+step   440 | loss 4.8290 | lr 9.04e-05 | 87 ms/step
+step   450 | loss 4.8483 | lr 8.14e-05 | 87 ms/step
+step   460 | loss 4.8604 | lr 7.39e-05 | 87 ms/step
+step   470 | loss 4.8921 | lr 6.80e-05 | 87 ms/step
+step   480 | loss 4.8630 | lr 6.37e-05 | 86 ms/step
+step   490 | loss 4.8279 | lr 6.10e-05 | 86 ms/step
+step   500 | loss 4.8564 | lr 6.00e-05 | 86 ms/step
+step   500 | VAL loss 4.9721  <- step 500
+SUMMARY {"n_params": 13865856, "steps": 500, "seed": 1337, "precision": "fp32", "global_batch": 64, "seq_len": 256, "device": "cuda:0", "data": "train.bin", "world_size": 1, "backend": null, "first_train_loss": 9.050528526306152, "final_train_loss": 4.856437683105469, "val_loss_500": 4.972101879119873, "final_val_loss": 4.972101879119873, "timing_ms": {"data": 0.5127300973981619, "fwd_bwd": 78.27345351688564, "optim": 1.6958336345851421, "step": 80.52904554642737}, "timed_steps": 480, "comm": {"fwd_bwd_sync_ms": 0.0, "fwd_bwd_nosync_ms": 0.0, "comm_ms": 0.0}, "wall_s": 43.67}
+[INFO] appended run to /home/hpca21/mini-llm/results/runs.csv
+=== [OK] opt_fp32_r2 ===
+
+=== [RUN] opt_fp32_compile_r2 | 2026-11-12 17:06:12 ===
+[INFO] params 13.87M (13.77M excl. positions) | device cuda:0 | world 1 (no DDP) | fp32 | data train.bin | batch 64 (per rank 64 = micro 64 x accum 1) | seq 256 | seed 1337
+step     1 | loss 9.0505 | lr 6.00e-06 | 5499 ms/step
+step    10 | loss 8.2773 | lr 6.00e-05 | 617 ms/step
+step    20 | loss 7.9439 | lr 1.20e-04 | 348 ms/step
+step    30 | loss 7.5014 | lr 1.80e-04 | 258 ms/step
+step    40 | loss 7.0068 | lr 2.40e-04 | 213 ms/step
+step    50 | loss 6.7258 | lr 3.00e-04 | 187 ms/step
+step    60 | loss 6.5418 | lr 3.60e-04 | 169 ms/step
+step    70 | loss 6.4230 | lr 4.20e-04 | 156 ms/step
+step    80 | loss 6.2120 | lr 4.80e-04 | 147 ms/step
+step    90 | loss 6.0566 | lr 5.40e-04 | 139 ms/step
+step   100 | loss 5.9669 | lr 6.00e-04 | 133 ms/step
+step   100 | VAL loss 6.0142
+step   110 | loss 5.8918 | lr 5.99e-04 | 134 ms/step
+step   120 | loss 5.7794 | lr 5.97e-04 | 129 ms/step
+step   130 | loss 5.7486 | lr 5.93e-04 | 125 ms/step
+step   140 | loss 5.6500 | lr 5.87e-04 | 122 ms/step
+step   150 | loss 5.6349 | lr 5.80e-04 | 119 ms/step
+step   160 | loss 5.5973 | lr 5.72e-04 | 117 ms/step
+step   170 | loss 5.5020 | lr 5.61e-04 | 115 ms/step
+step   180 | loss 5.5165 | lr 5.50e-04 | 113 ms/step
+step   190 | loss 5.4328 | lr 5.37e-04 | 111 ms/step
+step   200 | loss 5.3446 | lr 5.22e-04 | 110 ms/step
+step   200 | VAL loss 5.4892
+step   210 | loss 5.3524 | lr 5.07e-04 | 111 ms/step
+step   220 | loss 5.3244 | lr 4.90e-04 | 109 ms/step
+step   230 | loss 5.2374 | lr 4.73e-04 | 108 ms/step
+step   240 | loss 5.2404 | lr 4.54e-04 | 107 ms/step
+step   250 | loss 5.2066 | lr 4.35e-04 | 106 ms/step
+step   260 | loss 5.2283 | lr 4.15e-04 | 105 ms/step
+step   270 | loss 5.1321 | lr 3.95e-04 | 104 ms/step
+step   280 | loss 5.1023 | lr 3.74e-04 | 103 ms/step
+step   290 | loss 5.0630 | lr 3.53e-04 | 102 ms/step
+step   300 | loss 5.0633 | lr 3.32e-04 | 102 ms/step
+step   300 | VAL loss 5.2025
+step   310 | loss 5.0454 | lr 3.11e-04 | 103 ms/step
+step   320 | loss 5.0562 | lr 2.90e-04 | 102 ms/step
+step   330 | loss 5.0601 | lr 2.69e-04 | 101 ms/step
+step   340 | loss 4.9981 | lr 2.49e-04 | 101 ms/step
+step   350 | loss 4.9894 | lr 2.29e-04 | 100 ms/step
+step   360 | loss 4.9952 | lr 2.09e-04 | 100 ms/step
+step   370 | loss 4.9886 | lr 1.91e-04 | 99 ms/step
+step   380 | loss 4.9344 | lr 1.73e-04 | 99 ms/step
+step   390 | loss 4.9472 | lr 1.56e-04 | 98 ms/step
+step   400 | loss 4.8598 | lr 1.41e-04 | 98 ms/step
+step   400 | VAL loss 5.0465
+step   410 | loss 4.9220 | lr 1.26e-04 | 99 ms/step
+step   420 | loss 4.9045 | lr 1.13e-04 | 98 ms/step
+step   430 | loss 4.8256 | lr 1.01e-04 | 98 ms/step
+step   440 | loss 4.8308 | lr 9.04e-05 | 97 ms/step
+step   450 | loss 4.8469 | lr 8.14e-05 | 97 ms/step
+step   460 | loss 4.8616 | lr 7.39e-05 | 97 ms/step
+step   470 | loss 4.8931 | lr 6.80e-05 | 96 ms/step
+step   480 | loss 4.8635 | lr 6.37e-05 | 96 ms/step
+step   490 | loss 4.8297 | lr 6.10e-05 | 96 ms/step
+step   500 | loss 4.8600 | lr 6.00e-05 | 95 ms/step
+step   500 | VAL loss 4.9737  <- step 500
+SUMMARY {"n_params": 13865856, "steps": 500, "seed": 1337, "precision": "fp32", "global_batch": 64, "seq_len": 256, "device": "cuda:0", "data": "train.bin", "world_size": 1, "backend": null, "first_train_loss": 9.050528526306152, "final_train_loss": 4.860044479370117, "val_loss_500": 4.973661971092224, "final_val_loss": 4.973661971092224, "timing_ms": {"data": 0.5158749409019947, "fwd_bwd": 77.67216209322214, "optim": 1.7046360298991203, "step": 79.92626260966063}, "timed_steps": 480, "comm": {"fwd_bwd_sync_ms": 0.0, "fwd_bwd_nosync_ms": 0.0, "comm_ms": 0.0}, "wall_s": 48.17}
+[INFO] appended run to /home/hpca21/mini-llm/results/runs.csv
+=== [OK] opt_fp32_compile_r2 ===
+
+=== [RUN] opt_fp32_r3 | 2026-11-12 17:07:08 ===
+[INFO] params 13.87M (13.77M excl. positions) | device cuda:0 | world 1 (no DDP) | fp32 | data train.bin | batch 64 (per rank 64 = micro 64 x accum 1) | seq 256 | seed 1337
+step     1 | loss 9.0505 | lr 6.00e-06 | 539 ms/step
+step    10 | loss 8.2773 | lr 6.00e-05 | 124 ms/step
+step    20 | loss 7.9439 | lr 1.20e-04 | 102 ms/step
+step    30 | loss 7.5014 | lr 1.80e-04 | 95 ms/step
+step    40 | loss 7.0068 | lr 2.40e-04 | 91 ms/step
+step    50 | loss 6.7258 | lr 3.00e-04 | 89 ms/step
+step    60 | loss 6.5418 | lr 3.60e-04 | 87 ms/step
+step    70 | loss 6.4230 | lr 4.20e-04 | 86 ms/step
+step    80 | loss 6.2120 | lr 4.80e-04 | 86 ms/step
+step    90 | loss 6.0566 | lr 5.40e-04 | 85 ms/step
+step   100 | loss 5.9669 | lr 6.00e-04 | 84 ms/step
+step   100 | VAL loss 6.0142
+step   110 | loss 5.8918 | lr 5.99e-04 | 89 ms/step
+step   120 | loss 5.7794 | lr 5.97e-04 | 89 ms/step
+step   130 | loss 5.7486 | lr 5.93e-04 | 88 ms/step
+step   140 | loss 5.6499 | lr 5.87e-04 | 87 ms/step
+step   150 | loss 5.6349 | lr 5.80e-04 | 87 ms/step
+step   160 | loss 5.5973 | lr 5.72e-04 | 87 ms/step
+step   170 | loss 5.5020 | lr 5.61e-04 | 86 ms/step
+step   180 | loss 5.5165 | lr 5.50e-04 | 86 ms/step
+step   190 | loss 5.4327 | lr 5.37e-04 | 86 ms/step
+step   200 | loss 5.3447 | lr 5.22e-04 | 85 ms/step
+step   200 | VAL loss 5.4892
+step   210 | loss 5.3528 | lr 5.07e-04 | 88 ms/step
+step   220 | loss 5.3244 | lr 4.90e-04 | 88 ms/step
+step   230 | loss 5.2419 | lr 4.73e-04 | 87 ms/step
+step   240 | loss 5.2402 | lr 4.54e-04 | 87 ms/step
+step   250 | loss 5.2129 | lr 4.35e-04 | 87 ms/step
+step   260 | loss 5.2243 | lr 4.15e-04 | 87 ms/step
+step   270 | loss 5.1305 | lr 3.95e-04 | 86 ms/step
+step   280 | loss 5.1024 | lr 3.74e-04 | 86 ms/step
+step   290 | loss 5.0646 | lr 3.53e-04 | 86 ms/step
+step   300 | loss 5.0679 | lr 3.32e-04 | 86 ms/step
+step   300 | VAL loss 5.2018
+step   310 | loss 5.0438 | lr 3.11e-04 | 88 ms/step
+step   320 | loss 5.0561 | lr 2.90e-04 | 87 ms/step
+step   330 | loss 5.0625 | lr 2.69e-04 | 87 ms/step
+step   340 | loss 4.9960 | lr 2.49e-04 | 87 ms/step
+step   350 | loss 4.9925 | lr 2.29e-04 | 87 ms/step
+step   360 | loss 4.9942 | lr 2.09e-04 | 87 ms/step
+step   370 | loss 4.9897 | lr 1.91e-04 | 87 ms/step
+step   380 | loss 4.9376 | lr 1.73e-04 | 86 ms/step
+step   390 | loss 4.9468 | lr 1.56e-04 | 86 ms/step
+step   400 | loss 4.8621 | lr 1.41e-04 | 86 ms/step
+step   400 | VAL loss 5.0476
+step   410 | loss 4.9222 | lr 1.26e-04 | 88 ms/step
+step   420 | loss 4.9029 | lr 1.13e-04 | 87 ms/step
+step   430 | loss 4.8209 | lr 1.01e-04 | 87 ms/step
+step   440 | loss 4.8303 | lr 9.04e-05 | 87 ms/step
+step   450 | loss 4.8492 | lr 8.14e-05 | 87 ms/step
+step   460 | loss 4.8604 | lr 7.39e-05 | 87 ms/step
+step   470 | loss 4.8935 | lr 6.80e-05 | 87 ms/step
+step   480 | loss 4.8639 | lr 6.37e-05 | 87 ms/step
+step   490 | loss 4.8283 | lr 6.10e-05 | 87 ms/step
+step   500 | loss 4.8570 | lr 6.00e-05 | 86 ms/step
+step   500 | VAL loss 4.9727  <- step 500
+SUMMARY {"n_params": 13865856, "steps": 500, "seed": 1337, "precision": "fp32", "global_batch": 64, "seq_len": 256, "device": "cuda:0", "data": "train.bin", "world_size": 1, "backend": null, "first_train_loss": 9.050528526306152, "final_train_loss": 4.856999397277832, "val_loss_500": 4.972688460350037, "final_val_loss": 4.972688460350037, "timing_ms": {"data": 0.5067212041467428, "fwd_bwd": 78.48840998485684, "optim": 1.693980535492301, "step": 80.71565115824342}, "timed_steps": 480, "comm": {"fwd_bwd_sync_ms": 0.0, "fwd_bwd_nosync_ms": 0.0, "comm_ms": 0.0}, "wall_s": 43.77}
+[INFO] appended run to /home/hpca21/mini-llm/results/runs.csv
+=== [OK] opt_fp32_r3 ===
+
+=== [RUN] opt_fp32_compile_r3 | 2026-11-12 17:07:58 ===
+[INFO] params 13.87M (13.77M excl. positions) | device cuda:0 | world 1 (no DDP) | fp32 | data train.bin | batch 64 (per rank 64 = micro 64 x accum 1) | seq 256 | seed 1337
+step     1 | loss 9.0505 | lr 6.00e-06 | 5513 ms/step
+step    10 | loss 8.2773 | lr 6.00e-05 | 620 ms/step
+step    20 | loss 7.9439 | lr 1.20e-04 | 350 ms/step
+step    30 | loss 7.5014 | lr 1.80e-04 | 259 ms/step
+step    40 | loss 7.0068 | lr 2.40e-04 | 214 ms/step
+step    50 | loss 6.7258 | lr 3.00e-04 | 188 ms/step
+step    60 | loss 6.5418 | lr 3.60e-04 | 170 ms/step
+step    70 | loss 6.4230 | lr 4.20e-04 | 157 ms/step
+step    80 | loss 6.2120 | lr 4.80e-04 | 147 ms/step
+step    90 | loss 6.0566 | lr 5.40e-04 | 140 ms/step
+step   100 | loss 5.9669 | lr 6.00e-04 | 134 ms/step
+step   100 | VAL loss 6.0142
+step   110 | loss 5.8918 | lr 5.99e-04 | 134 ms/step
+step   120 | loss 5.7794 | lr 5.97e-04 | 130 ms/step
+step   130 | loss 5.7486 | lr 5.93e-04 | 126 ms/step
+step   140 | loss 5.6500 | lr 5.87e-04 | 123 ms/step
+step   150 | loss 5.6349 | lr 5.80e-04 | 120 ms/step
+step   160 | loss 5.5973 | lr 5.72e-04 | 117 ms/step
+step   170 | loss 5.5020 | lr 5.61e-04 | 115 ms/step
+step   180 | loss 5.5165 | lr 5.50e-04 | 113 ms/step
+step   190 | loss 5.4328 | lr 5.37e-04 | 111 ms/step
+step   200 | loss 5.3446 | lr 5.22e-04 | 110 ms/step
+step   200 | VAL loss 5.4892
+step   210 | loss 5.3524 | lr 5.07e-04 | 111 ms/step
+step   220 | loss 5.3244 | lr 4.90e-04 | 110 ms/step
+step   230 | loss 5.2372 | lr 4.73e-04 | 108 ms/step
+step   240 | loss 5.2405 | lr 4.54e-04 | 107 ms/step
+step   250 | loss 5.2067 | lr 4.35e-04 | 106 ms/step
+step   260 | loss 5.2269 | lr 4.15e-04 | 105 ms/step
+step   270 | loss 5.1357 | lr 3.95e-04 | 104 ms/step
+step   280 | loss 5.1001 | lr 3.74e-04 | 103 ms/step
+step   290 | loss 5.0637 | lr 3.53e-04 | 102 ms/step
+step   300 | loss 5.0621 | lr 3.32e-04 | 102 ms/step
+step   300 | VAL loss 5.2003
+step   310 | loss 5.0357 | lr 3.11e-04 | 103 ms/step
+step   320 | loss 5.0522 | lr 2.90e-04 | 102 ms/step
+step   330 | loss 5.0575 | lr 2.69e-04 | 101 ms/step
+step   340 | loss 4.9938 | lr 2.49e-04 | 101 ms/step
+step   350 | loss 4.9897 | lr 2.29e-04 | 100 ms/step
+step   360 | loss 4.9927 | lr 2.09e-04 | 100 ms/step
+step   370 | loss 4.9859 | lr 1.91e-04 | 99 ms/step
+step   380 | loss 4.9337 | lr 1.73e-04 | 99 ms/step
+step   390 | loss 4.9441 | lr 1.56e-04 | 98 ms/step
+step   400 | loss 4.8600 | lr 1.41e-04 | 98 ms/step
+step   400 | VAL loss 5.0456
+step   410 | loss 4.9215 | lr 1.26e-04 | 99 ms/step
+step   420 | loss 4.9026 | lr 1.13e-04 | 98 ms/step
+step   430 | loss 4.8197 | lr 1.01e-04 | 98 ms/step
+step   440 | loss 4.8297 | lr 9.04e-05 | 97 ms/step
+step   450 | loss 4.8466 | lr 8.14e-05 | 97 ms/step
+step   460 | loss 4.8595 | lr 7.39e-05 | 97 ms/step
+step   470 | loss 4.8918 | lr 6.80e-05 | 96 ms/step
+step   480 | loss 4.8627 | lr 6.37e-05 | 96 ms/step
+step   490 | loss 4.8271 | lr 6.10e-05 | 96 ms/step
+step   500 | loss 4.8561 | lr 6.00e-05 | 95 ms/step
+step   500 | VAL loss 4.9713  <- step 500
+SUMMARY {"n_params": 13865856, "steps": 500, "seed": 1337, "precision": "fp32", "global_batch": 64, "seq_len": 256, "device": "cuda:0", "data": "train.bin", "world_size": 1, "backend": null, "first_train_loss": 9.050528526306152, "final_train_loss": 4.856136322021484, "val_loss_500": 4.97126226425171, "final_val_loss": 4.97126226425171, "timing_ms": {"data": 0.5138767883181572, "fwd_bwd": 77.68809050321579, "optim": 1.699754036962986, "step": 79.93843546137214}, "timed_steps": 480, "comm": {"fwd_bwd_sync_ms": 0.0, "fwd_bwd_nosync_ms": 0.0, "comm_ms": 0.0}, "wall_s": 48.24}
+[INFO] appended run to /home/hpca21/mini-llm/results/runs.csv
+=== [OK] opt_fp32_compile_r3 ===
+==================================================
+Job opt finished: Thu Nov 12 05:08:54 PM CET 2026 | failed runs: 0
+==================================================

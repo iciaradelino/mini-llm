@@ -1,0 +1,28 @@
+==================================================
+Job ID: 28778 | Node: haskell | Start: Thu Nov 12 12:51:40 PM CET 2026
+==================================================
+Thu Nov 12 12:51:40 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.09             Driver Version: 580.126.09     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA RTX 6000 Ada Gene...    On  |   00000000:11:00.0 Off |                  Off |
+| 30%   33C    P0             84W /  300W |       4MiB /  49140MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+torch 2.8.0+cu128 | cuda True | NVIDIA RTX 6000 Ada Generation
+
+=== [CHECK] torch.compile, 30 steps | 2026-11-12 12:51:44 ===
+[INFO] params 13.87M (13.77M excl. positions) | device cuda:0 | world 1 (no DDP) | fp32 | data train.bin | batch 64 (per rank 64 = micro 64 x accum 1) | seq 256 | seed 1337
+[ERROR] torch.compile does not work here: report as 'could not run' with this log
