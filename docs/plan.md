@@ -16,7 +16,7 @@ deliverables before **Session 29**.
 - [x] 8. Correctness rule in README — operational definition in `docs/interfaces.md` §5; `src/check_correctness.py` with test `tests/test_check_correctness.py`
 
 ## Phase 2 — First GPU results (Session 25)
-- [ ] 9. Submit first bundled GPU job as soon as CPU test passes; save `squeue --start` output if blocked — `slurm/job_A_haskell_1gpu.sbatch` ready except `--partition` (should be `gpu`)
+- [x] 9. Submit first bundled GPU job as soon as CPU test passes; save `squeue --start` output if blocked — first GPU job: job opt, submitted 2026-11-11 (28658), first successful run 28862 on 2026-11-12; queue state in `slurm/logs/queue_*.txt`. `slurm/job_A_haskell_1gpu.sbatch` still has `--partition` TODO (should be `gpu`)
 - [ ] 10. CPU/OpenMP thread sweep: 1,2,4,8,16,32,64 threads × 3 repeats — `slurm/job_E_cpu_threads.sbatch` ready, not run yet
 
 ## Phase 3 — GPU experiments
@@ -28,7 +28,7 @@ deliverables before **Session 29**.
 
 ## Phase 4 — Bottleneck and optimization
 - [ ] 11. Analyse profiler output (A, C); save table/screenshot to `results/profiles/` — `train.py --profile` ready
-- [ ] 12. One optimization with predicted effect; before/after on same workload; apply correctness rule — `torch.compile`: prediction in `docs/optimization.md`, job `slurm/job_opt_compile.sbatch` ready, not run yet
+- [x] 12. One optimization with predicted effect; before/after on same workload; apply correctness rule — `torch.compile`, job 28862: prediction refuted (0.75 % faster instead of 10–30 %), all 6 runs `valid = yes`; `docs/optimization.md`
 
 ## Phase 5 — Final model and analysis
 - [ ] 13. Long run (1–3 h) with best config; samples from "En un lugar de la Mancha" — checkpoints (`--save_checkpoint`) and `src/sample.py` ready
@@ -37,7 +37,7 @@ deliverables before **Session 29**.
 ## Phase 6 — Deliverables (before Session 29)
 - [ ] 15. Technical report (5–7 pages, nine sections, technology matrix)
 - [ ] 16. EuroHPC scale-up plan (1–2 pages, Leonardo/LUMI, node-hours)
-- [ ] 17. REPRODUCE.md complete; all logs and raw CSV committed — Phase 1 (sections 0–3) and job index done; sections 4–6 filled in as the jobs run
+- [ ] 17. REPRODUCE.md complete; all logs and raw CSV committed — Phase 1 (sections 0–3) and job index done; job opt recorded; sections 4–6 filled in as the remaining jobs run
 - [ ] 18. Presentation (5 slides, 5 minutes)
 
 ## Risks and fallbacks
