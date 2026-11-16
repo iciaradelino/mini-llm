@@ -37,7 +37,8 @@ plain `python`, so the module's interpreter is used. torch is never pip-installe
 | Python | 3.11.13 | jobs 26101, 27921 |
 | PyTorch | 2.8.0+cu128 | job 27921 |
 | CUDA | 12.8 (bundled with the PyTorch build) | `+cu128` suffix |
-| NCCL | bundled with PyTorch; recorded by the first GPU job (`torch.cuda.nccl.version()`) | TODO after job A |
+| NCCL | bundled with PyTorch; not printed by the single-GPU job 28862, to be recorded by the first multi-GPU job (`torch.cuda.nccl.version()`) | TODO after job C |
+| NVIDIA driver (haskell) | 580.126.09 (driver supports CUDA up to 13.0; PyTorch uses its bundled CUDA 12.8) | `nvidia-smi` in job 28862 |
 | numpy | 2.3.2 (provided by the module) | job 26101 |
 | tokenizers | 0.23.3 | `env/requirements.txt` |
 | pandas / matplotlib | 3.1.0 / 3.11.2 (analysis only) | `env/requirements.txt` |
@@ -63,6 +64,9 @@ Cluster hardware and partitions: `env/cluster.md`.
 | `TOKENIZERS_PARALLELISM` | `true` | `tokenize` |
 | `RAYON_NUM_THREADS` | `$SLURM_CPUS_PER_TASK` | `tokenize` |
 | `NCCL_P2P_DISABLE` | `1` only in the P2P-off runs of job C | job C |
+| `APPTAINER_BIND` | adds `/cvmfs`, so the container can see the host's gcc | `job_opt_compile` |
+| `CC` | `/cvmfs/software.eessi.io/versions/2023.06/compat/linux/x86_64/usr/bin/gcc` (gcc 10.4.1): C compiler that Triton needs for `torch.compile` | `job_opt_compile` |
+| `TORCHINDUCTOR_FORCE_DISABLE_CACHES` | `1` in the compiled runs, so each one pays the full (cold) compile cost | `job_opt_compile` |
 
 ### Run Phase 1 in one go
 
@@ -216,9 +220,11 @@ to `results/runs.csv`.
 | C | TODO | 2 GPUs on haskell | 1337 | DDP ×3, DDP with `NCCL_P2P_DISABLE=1` ×3, profiler | no script yet |
 | D | TODO | 1 GPU on each node | 1337 | cross-node DDP ×3 | no script yet |
 | E | `slurm/job_E_cpu_threads.sbatch` | cpu, 64 cores, one thread per core (`--hint=nomultithread`), 32 GB, 6 h | 1337 | 1–64 threads ×3, 50 steps each (timing only, `valid = n/a`) | script ready; not run yet |
-| opt | `slurm/job_opt_compile.sbatch` | gpu, 1 GPU on haskell, 8 cores, 32 GB, 45 min | 1337 | fp32 ×3 and fp32 `--compile` ×3, interleaved (step 12) | script ready; prediction in `docs/optimization.md`; not run yet |
+| opt | `slurm/job_opt_compile.sbatch` | gpu, 1 GPU on haskell, 8 cores, 32 GB, 45 min | 1337 | fp32 ×3 and fp32 `--compile` ×3, interleaved (step 12) | **done**: job 28862, 6 rows, all `valid = yes`; prediction refuted (0.75 % faster, not 10–30 %); results in `docs/optimization.md` |
 
 Submit each one from the repository root, e.g. `sbatch slurm/job_E_cpu_threads.sbatch`.
+Job 28862 confirmed the GPU setup: partition `gpu`, `--gres=gpu:1`, node haskell
+(NVIDIA RTX 6000 Ada Generation).
 If a GPU job stays pending, save the queue state as evidence:
 `squeue --me --start > slurm/logs/queue_$(date +%Y%m%d_%H%M).txt`.
 
@@ -265,3 +271,6 @@ Every submitted job (job ID, script, dates, outcome). Raw logs are in `slurm/log
 | 28297 | `slurm/train_check.sbatch` | fortran | 2026-11-10 19:54 | completed, 3.5 min; 200 steps, val loss 6.67 → 6.06, identical to job 26102 (same seed, same data) |
 | 28436 | `slurm/prep_data.sbatch` | fortran | 2026-11-11 08:57 | completed, <1 s (raw files cached); 81-work corpus, 33.26 MB clean |
 | 28437 | `slurm/tokenize.sbatch` | fortran | 2026-11-11 08:57 | completed, 18 s; 81-work corpus, round-trip test passed |
+| 28658 | `slurm/job_opt_compile.sbatch` | haskell | 2026-11-11 19:53 | failed in the 30-step compile check: `--device cuda` without an index crashed in `torch.cuda.set_device` (fixed in PR #27) |
+| 28778 | `slurm/job_opt_compile.sbatch` | haskell | 2026-11-12 12:51 | failed in the 30-step compile check: Triton found no C compiler in the container (fixed in PR #28: bind `/cvmfs`, set `CC`) |
+| 28862 | `slurm/job_opt_compile.sbatch` | haskell | 2026-11-12 17:03 | completed, 5.5 min; first successful GPU job; 6 runs, all `valid = yes`; `torch.compile` 0.75 % faster (prediction refuted, see `docs/optimization.md`); queue state in `slurm/logs/queue_*.txt` |
