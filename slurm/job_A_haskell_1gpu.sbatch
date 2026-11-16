@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=job_A
 # TODO(cluster.md): fill in the GPU partition and account before submitting.
-#SBATCH --partition=TODO_GPU_PARTITION
+#SBATCH --partition=gpu
 ##SBATCH --account=TODO_ACCOUNT
 #SBATCH --nodelist=haskell
 #SBATCH --nodes=1
