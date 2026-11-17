@@ -4,7 +4,7 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=64
-#SBATCH --hint=nomultithread
+
 
 #SBATCH --mem=32G
 #SBATCH --time=06:00:00
@@ -17,8 +17,11 @@
 
 # Job E: CPU-only strong scaling of the baseline model (no GPU).
 #   threads 1, 2, 4, 8, 16, 32, 64, x3 repeats, all in ONE job on ONE node,
-#   so every run uses the same CPU model. Since the October maintenance Slurm
-#   gives the job exactly --cpus-per-task cores (ConstrainCores), so 64 is real.
+#   so every run uses the same CPU model.
+#   The QoS caps CPUs per user at 64, so the job gets 64 logical CPUs = 32
+#   physical cores x 2 SMT threads. OMP_PLACES=cores + OMP_PROC_BIND=close give
+#   each thread its own physical core up to 32 threads; the 64-thread run puts 2
+#   threads on each core and measures the SMT gain, not 64 cores.
 #
 # Timing only: 50 steps per run, the first 10 not timed (40 timed steps for the
 # median). A step with batch 64 takes ~25-30 s on 1 thread, so 500 steps would not
