@@ -1,0 +1,462 @@
+==================================================
+Job ID: 32368 | Node: haskell | Start: Wed Nov 18 19:23:18 CET 2026
+==================================================
+Wed Nov 18 19:23:18 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.09             Driver Version: 580.126.09     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA RTX 6000 Ada Gene...    On  |   00000000:11:00.0 Off |                  Off |
+| 30%   26C    P8             26W /  300W |       1MiB /  49140MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA RTX 6000 Ada Gene...    On  |   00000000:61:00.0 Off |                  Off |
+| 30%   27C    P8             26W /  300W |       1MiB /  49140MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+name, memory.total [MiB], driver_version
+NVIDIA RTX 6000 Ada Generation, 49140 MiB, 580.126.09
+NVIDIA RTX 6000 Ada Generation, 49140 MiB, 580.126.09
+	[4mGPU0	GPU1	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	NODE	0-3,256-259	0		N/A
+GPU1	NODE	 X 	0-3,256-259	0		N/A
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks
+torch 2.8.0+cu128 | cuda True | gpus 2 | nccl (2, 27, 3)
+
+=== [PROBE] nccl_p2p_off | 2026-11-18 19:23:29 ===
+haskell:611170:611170 [0] NCCL INFO NCCL version 2.27.3+cuda12.9
+haskell:611170:611234 [0] NCCL INFO Using network Socket
+haskell:611170:611247 [0] NCCL INFO Channel 00 : 0[0] -> 1[1] via SHM/direct/direct
+haskell:611170:611247 [0] NCCL INFO Channel 01 : 0[0] -> 1[1] via SHM/direct/direct
+haskell:611170:611247 [0] NCCL INFO Channel 02 : 0[0] -> 1[1] via SHM/direct/direct
+haskell:611170:611247 [0] NCCL INFO Channel 03 : 0[0] -> 1[1] via SHM/direct/direct
+haskell:611171:611171 [1] NCCL INFO NCCL version 2.27.3+cuda12.9
+haskell:611171:611235 [1] NCCL INFO Using network Socket
+full NCCL log: slurm/logs/job_C_32368_nccl_p2p_off.log
+
+=== [PROBE] nccl_p2p_on | 2026-11-18 19:23:43 ===
+haskell:611388:611388 [0] NCCL INFO NCCL version 2.27.3+cuda12.9
+haskell:611388:611431 [0] NCCL INFO Using network Socket
+haskell:611388:611439 [0] NCCL INFO Channel 00/0 : 0[0] -> 1[1] via P2P/CUMEM
+haskell:611388:611439 [0] NCCL INFO Channel 01/0 : 0[0] -> 1[1] via P2P/CUMEM
+haskell:611388:611439 [0] NCCL INFO Channel 02/0 : 0[0] -> 1[1] via P2P/CUMEM
+haskell:611388:611439 [0] NCCL INFO Channel 03/0 : 0[0] -> 1[1] via P2P/CUMEM
+haskell:611389:611389 [1] NCCL INFO NCCL version 2.27.3+cuda12.9
+haskell:611389:611432 [1] NCCL INFO Using network Socket
+full NCCL log: slurm/logs/job_C_32368_nccl_p2p_on.log
+
+=== [RUN] ddp2_p2p_off_r1 | 2026-11-18 19:23:54 ===
+NCCL version 2.27.3+cuda12.9
+[INFO] params 13.87M (13.77M excl. positions) | device cuda:0 | world 2 (nccl) | fp32 | data train.bin | batch 64 (per rank 32 = micro 32 x accum 1) | seq 256 | seed 1337
+step     1 | loss 9.0368 | lr 6.00e-06 | 454 ms/step
+step    10 | loss 8.1976 | lr 6.00e-05 | 81 ms/step
+step    20 | loss 7.8664 | lr 1.20e-04 | 61 ms/step
+step    30 | loss 7.3712 | lr 1.80e-04 | 54 ms/step
+step    40 | loss 6.9780 | lr 2.40e-04 | 50 ms/step
+step    50 | loss 6.6662 | lr 3.00e-04 | 48 ms/step
+step    60 | loss 6.5645 | lr 3.60e-04 | 47 ms/step
+step    70 | loss 6.3002 | lr 4.20e-04 | 46 ms/step
+step    80 | loss 6.1503 | lr 4.80e-04 | 45 ms/step
+step    90 | loss 6.0404 | lr 5.40e-04 | 45 ms/step
+step   100 | loss 5.9613 | lr 6.00e-04 | 44 ms/step
+step   100 | VAL loss 5.9589
+step   110 | loss 5.8434 | lr 5.99e-04 | 46 ms/step
+step   120 | loss 5.8221 | lr 5.97e-04 | 46 ms/step
+step   130 | loss 5.6836 | lr 5.93e-04 | 46 ms/step
+step   140 | loss 5.6526 | lr 5.87e-04 | 45 ms/step
+step   150 | loss 5.6072 | lr 5.80e-04 | 45 ms/step
+step   160 | loss 5.5498 | lr 5.72e-04 | 45 ms/step
+step   170 | loss 5.4437 | lr 5.61e-04 | 44 ms/step
+step   180 | loss 5.4052 | lr 5.50e-04 | 44 ms/step
+step   190 | loss 5.4487 | lr 5.37e-04 | 44 ms/step
+step   200 | loss 5.4401 | lr 5.22e-04 | 44 ms/step
+step   200 | VAL loss 5.4627
+step   210 | loss 5.3214 | lr 5.07e-04 | 45 ms/step
+step   220 | loss 5.2933 | lr 4.90e-04 | 45 ms/step
+step   230 | loss 5.2568 | lr 4.73e-04 | 45 ms/step
+step   240 | loss 5.2274 | lr 4.54e-04 | 45 ms/step
+step   250 | loss 5.2278 | lr 4.35e-04 | 44 ms/step
+step   260 | loss 5.1438 | lr 4.15e-04 | 44 ms/step
+step   270 | loss 5.1319 | lr 3.95e-04 | 44 ms/step
+step   280 | loss 5.1383 | lr 3.74e-04 | 44 ms/step
+step   290 | loss 5.0793 | lr 3.53e-04 | 44 ms/step
+step   300 | loss 5.1702 | lr 3.32e-04 | 44 ms/step
+step   300 | VAL loss 5.1510
+step   310 | loss 5.0962 | lr 3.11e-04 | 45 ms/step
+step   320 | loss 5.0046 | lr 2.90e-04 | 45 ms/step
+step   330 | loss 4.9718 | lr 2.69e-04 | 44 ms/step
+step   340 | loss 4.9245 | lr 2.49e-04 | 44 ms/step
+step   350 | loss 5.0333 | lr 2.29e-04 | 44 ms/step
+step   360 | loss 4.9834 | lr 2.09e-04 | 44 ms/step
+step   370 | loss 4.9543 | lr 1.91e-04 | 44 ms/step
+step   380 | loss 4.8670 | lr 1.73e-04 | 44 ms/step
+step   390 | loss 4.7914 | lr 1.56e-04 | 44 ms/step
+step   400 | loss 4.8538 | lr 1.41e-04 | 44 ms/step
+step   400 | VAL loss 4.9903
+step   410 | loss 4.8785 | lr 1.26e-04 | 45 ms/step
+step   420 | loss 4.9045 | lr 1.13e-04 | 44 ms/step
+step   430 | loss 4.8545 | lr 1.01e-04 | 44 ms/step
+step   440 | loss 4.8720 | lr 9.04e-05 | 44 ms/step
+step   450 | loss 4.7722 | lr 8.14e-05 | 44 ms/step
+step   460 | loss 4.8224 | lr 7.39e-05 | 44 ms/step
+step   470 | loss 4.7964 | lr 6.80e-05 | 44 ms/step
+step   480 | loss 4.8103 | lr 6.37e-05 | 44 ms/step
+step   490 | loss 4.7581 | lr 6.10e-05 | 44 ms/step
+step   500 | loss 4.8381 | lr 6.00e-05 | 44 ms/step
+step   500 | VAL loss 4.9155  <- step 500
+SUMMARY {"n_params": 13865856, "steps": 500, "seed": 1337, "precision": "fp32", "global_batch": 64, "seq_len": 256, "device": "cuda:0", "data": "train.bin", "world_size": 2, "backend": "nccl", "first_train_loss": 9.036768436431885, "final_train_loss": 4.838099241256714, "val_loss_500": 4.915532493591309, "final_val_loss": 4.915532493591309, "timing_ms": {"data": 0.33402699045836926, "fwd_bwd": 38.94191491417587, "optim": 1.5777666121721268, "step": 40.88801355101168}, "timed_steps": 480, "comm": {"fwd_bwd_sync_ms": 41.390993632376194, "fwd_bwd_nosync_ms": 38.54930214583874, "comm_ms": 2.8416914865374565}, "wall_s": 22.27}
+[INFO] appended run to /home/hpca06/hpc_group_project/mini-llm/results/runs.csv
+=== [OK] ddp2_p2p_off_r1 ===
+
+=== [RUN] ddp2_p2p_off_r2 | 2026-11-18 19:24:26 ===
+NCCL version 2.27.3+cuda12.9
+[INFO] params 13.87M (13.77M excl. positions) | device cuda:0 | world 2 (nccl) | fp32 | data train.bin | batch 64 (per rank 32 = micro 32 x accum 1) | seq 256 | seed 1337
+step     1 | loss 9.0368 | lr 6.00e-06 | 465 ms/step
+step    10 | loss 8.1976 | lr 6.00e-05 | 82 ms/step
+step    20 | loss 7.8664 | lr 1.20e-04 | 61 ms/step
+step    30 | loss 7.3712 | lr 1.80e-04 | 54 ms/step
+step    40 | loss 6.9780 | lr 2.40e-04 | 51 ms/step
+step    50 | loss 6.6662 | lr 3.00e-04 | 49 ms/step
+step    60 | loss 6.5645 | lr 3.60e-04 | 48 ms/step
+step    70 | loss 6.3002 | lr 4.20e-04 | 47 ms/step
+step    80 | loss 6.1503 | lr 4.80e-04 | 46 ms/step
+step    90 | loss 6.0404 | lr 5.40e-04 | 45 ms/step
+step   100 | loss 5.9613 | lr 6.00e-04 | 45 ms/step
+step   100 | VAL loss 5.9589
+step   110 | loss 5.8434 | lr 5.99e-04 | 47 ms/step
+step   120 | loss 5.8221 | lr 5.97e-04 | 47 ms/step
+step   130 | loss 5.6836 | lr 5.93e-04 | 46 ms/step
+step   140 | loss 5.6526 | lr 5.87e-04 | 46 ms/step
+step   150 | loss 5.6072 | lr 5.80e-04 | 46 ms/step
+step   160 | loss 5.5498 | lr 5.72e-04 | 45 ms/step
+step   170 | loss 5.4437 | lr 5.61e-04 | 45 ms/step
+step   180 | loss 5.4052 | lr 5.50e-04 | 45 ms/step
+step   190 | loss 5.4487 | lr 5.37e-04 | 45 ms/step
+step   200 | loss 5.4401 | lr 5.22e-04 | 45 ms/step
+step   200 | VAL loss 5.4627
+step   210 | loss 5.3214 | lr 5.07e-04 | 46 ms/step
+step   220 | loss 5.2933 | lr 4.90e-04 | 46 ms/step
+step   230 | loss 5.2568 | lr 4.73e-04 | 46 ms/step
+step   240 | loss 5.2274 | lr 4.54e-04 | 45 ms/step
+step   250 | loss 5.2278 | lr 4.35e-04 | 45 ms/step
+step   260 | loss 5.1438 | lr 4.15e-04 | 45 ms/step
+step   270 | loss 5.1319 | lr 3.95e-04 | 45 ms/step
+step   280 | loss 5.1384 | lr 3.74e-04 | 45 ms/step
+step   290 | loss 5.0795 | lr 3.53e-04 | 45 ms/step
+step   300 | loss 5.1697 | lr 3.32e-04 | 45 ms/step
+step   300 | VAL loss 5.1509
+step   310 | loss 5.0962 | lr 3.11e-04 | 45 ms/step
+step   320 | loss 5.0051 | lr 2.90e-04 | 45 ms/step
+step   330 | loss 4.9719 | lr 2.69e-04 | 45 ms/step
+step   340 | loss 4.9243 | lr 2.49e-04 | 45 ms/step
+step   350 | loss 5.0339 | lr 2.29e-04 | 45 ms/step
+step   360 | loss 4.9862 | lr 2.09e-04 | 45 ms/step
+step   370 | loss 4.9558 | lr 1.91e-04 | 45 ms/step
+step   380 | loss 4.8694 | lr 1.73e-04 | 45 ms/step
+step   390 | loss 4.7928 | lr 1.56e-04 | 45 ms/step
+step   400 | loss 4.8535 | lr 1.41e-04 | 45 ms/step
+step   400 | VAL loss 4.9900
+step   410 | loss 4.8792 | lr 1.26e-04 | 45 ms/step
+step   420 | loss 4.9050 | lr 1.13e-04 | 45 ms/step
+step   430 | loss 4.8563 | lr 1.01e-04 | 45 ms/step
+step   440 | loss 4.8736 | lr 9.04e-05 | 45 ms/step
+step   450 | loss 4.7731 | lr 8.14e-05 | 45 ms/step
+step   460 | loss 4.8230 | lr 7.39e-05 | 45 ms/step
+step   470 | loss 4.7966 | lr 6.80e-05 | 45 ms/step
+step   480 | loss 4.8114 | lr 6.37e-05 | 45 ms/step
+step   490 | loss 4.7586 | lr 6.10e-05 | 45 ms/step
+step   500 | loss 4.8385 | lr 6.00e-05 | 45 ms/step
+step   500 | VAL loss 4.9164  <- step 500
+SUMMARY {"n_params": 13865856, "steps": 500, "seed": 1337, "precision": "fp32", "global_batch": 64, "seq_len": 256, "device": "cuda:0", "data": "train.bin", "world_size": 2, "backend": "nccl", "first_train_loss": 9.036768436431885, "final_train_loss": 4.838527202606201, "val_loss_500": 4.916380906105042, "final_val_loss": 4.916380906105042, "timing_ms": {"data": 0.3395751118659973, "fwd_bwd": 39.516750955954194, "optim": 1.612562919035554, "step": 41.49598861113191}, "timed_steps": 480, "comm": {"fwd_bwd_sync_ms": 41.78410302847624, "fwd_bwd_nosync_ms": 39.0022792853415, "comm_ms": 2.781823743134737}, "wall_s": 22.61}
+[INFO] appended run to /home/hpca06/hpc_group_project/mini-llm/results/runs.csv
+=== [OK] ddp2_p2p_off_r2 ===
+
+=== [RUN] ddp2_p2p_off_r3 | 2026-11-18 19:24:59 ===
+NCCL version 2.27.3+cuda12.9
+[INFO] params 13.87M (13.77M excl. positions) | device cuda:0 | world 2 (nccl) | fp32 | data train.bin | batch 64 (per rank 32 = micro 32 x accum 1) | seq 256 | seed 1337
+step     1 | loss 9.0368 | lr 6.00e-06 | 452 ms/step
+step    10 | loss 8.1976 | lr 6.00e-05 | 81 ms/step
+step    20 | loss 7.8664 | lr 1.20e-04 | 61 ms/step
+step    30 | loss 7.3712 | lr 1.80e-04 | 54 ms/step
+step    40 | loss 6.9780 | lr 2.40e-04 | 51 ms/step
+step    50 | loss 6.6662 | lr 3.00e-04 | 49 ms/step
+step    60 | loss 6.5645 | lr 3.60e-04 | 48 ms/step
+step    70 | loss 6.3002 | lr 4.20e-04 | 47 ms/step
+step    80 | loss 6.1503 | lr 4.80e-04 | 46 ms/step
+step    90 | loss 6.0404 | lr 5.40e-04 | 46 ms/step
+step   100 | loss 5.9613 | lr 6.00e-04 | 45 ms/step
+step   100 | VAL loss 5.9589
+step   110 | loss 5.8434 | lr 5.99e-04 | 48 ms/step
+step   120 | loss 5.8221 | lr 5.97e-04 | 47 ms/step
+step   130 | loss 5.6836 | lr 5.93e-04 | 47 ms/step
+step   140 | loss 5.6526 | lr 5.87e-04 | 46 ms/step
+step   150 | loss 5.6072 | lr 5.80e-04 | 46 ms/step
+step   160 | loss 5.5498 | lr 5.72e-04 | 46 ms/step
+step   170 | loss 5.4437 | lr 5.61e-04 | 46 ms/step
+step   180 | loss 5.4052 | lr 5.50e-04 | 45 ms/step
+step   190 | loss 5.4487 | lr 5.37e-04 | 45 ms/step
+step   200 | loss 5.4401 | lr 5.22e-04 | 45 ms/step
+step   200 | VAL loss 5.4627
+step   210 | loss 5.3214 | lr 5.07e-04 | 46 ms/step
+step   220 | loss 5.2933 | lr 4.90e-04 | 46 ms/step
+step   230 | loss 5.2568 | lr 4.73e-04 | 46 ms/step
+step   240 | loss 5.2275 | lr 4.54e-04 | 46 ms/step
+step   250 | loss 5.2278 | lr 4.35e-04 | 46 ms/step
+step   260 | loss 5.1439 | lr 4.15e-04 | 45 ms/step
+step   270 | loss 5.1320 | lr 3.95e-04 | 45 ms/step
+step   280 | loss 5.1377 | lr 3.74e-04 | 45 ms/step
+step   290 | loss 5.0792 | lr 3.53e-04 | 45 ms/step
+step   300 | loss 5.1709 | lr 3.32e-04 | 45 ms/step
+step   300 | VAL loss 5.1512
+step   310 | loss 5.0967 | lr 3.11e-04 | 46 ms/step
+step   320 | loss 5.0038 | lr 2.90e-04 | 46 ms/step
+step   330 | loss 4.9732 | lr 2.69e-04 | 46 ms/step
+step   340 | loss 4.9249 | lr 2.49e-04 | 45 ms/step
+step   350 | loss 5.0326 | lr 2.29e-04 | 45 ms/step
+step   360 | loss 4.9872 | lr 2.09e-04 | 45 ms/step
+step   370 | loss 4.9534 | lr 1.91e-04 | 45 ms/step
+step   380 | loss 4.8650 | lr 1.73e-04 | 45 ms/step
+step   390 | loss 4.7911 | lr 1.56e-04 | 45 ms/step
+step   400 | loss 4.8537 | lr 1.41e-04 | 45 ms/step
+step   400 | VAL loss 4.9903
+step   410 | loss 4.8781 | lr 1.26e-04 | 46 ms/step
+step   420 | loss 4.9051 | lr 1.13e-04 | 45 ms/step
+step   430 | loss 4.8545 | lr 1.01e-04 | 45 ms/step
+step   440 | loss 4.8720 | lr 9.04e-05 | 45 ms/step
+step   450 | loss 4.7718 | lr 8.14e-05 | 45 ms/step
+step   460 | loss 4.8223 | lr 7.39e-05 | 45 ms/step
+step   470 | loss 4.7965 | lr 6.80e-05 | 45 ms/step
+step   480 | loss 4.8099 | lr 6.37e-05 | 45 ms/step
+step   490 | loss 4.7580 | lr 6.10e-05 | 45 ms/step
+step   500 | loss 4.8382 | lr 6.00e-05 | 45 ms/step
+step   500 | VAL loss 4.9154  <- step 500
+SUMMARY {"n_params": 13865856, "steps": 500, "seed": 1337, "precision": "fp32", "global_batch": 64, "seq_len": 256, "device": "cuda:0", "data": "train.bin", "world_size": 2, "backend": "nccl", "first_train_loss": 9.036768436431885, "final_train_loss": 4.838190317153931, "val_loss_500": 4.915413117408753, "final_val_loss": 4.915413117408753, "timing_ms": {"data": 0.3451376687735319, "fwd_bwd": 39.7216675337404, "optim": 1.6201441176235676, "step": 41.72060894779861}, "timed_steps": 480, "comm": {"fwd_bwd_sync_ms": 41.84898245148361, "fwd_bwd_nosync_ms": 39.05189782381058, "comm_ms": 2.79708462767303}, "wall_s": 22.75}
+[INFO] appended run to /home/hpca06/hpc_group_project/mini-llm/results/runs.csv
+=== [OK] ddp2_p2p_off_r3 ===
+
+=== [RUN] ddp2_profile_fp32 | 2026-11-18 19:25:32 ===
+NCCL version 2.27.3+cuda12.9
+[INFO] params 13.87M (13.77M excl. positions) | device cuda:0 | world 2 (nccl) | fp32 | data train.bin | batch 64 (per rank 32 = micro 32 x accum 1) | seq 256 | seed 1337
+step     1 | loss 9.0368 | lr 6.00e-06 | 458 ms/step
+step    10 | loss 8.1976 | lr 6.00e-05 | 82 ms/step
+step    20 | loss 7.8664 | lr 1.20e-04 | 65 ms/step
+step    30 | loss 7.3712 | lr 1.80e-04 | 59 ms/step
+step    40 | loss 6.9780 | lr 2.40e-04 | 55 ms/step
+step    50 | loss 6.6662 | lr 3.00e-04 | 52 ms/step
+step    50 | VAL loss 6.6728
+[INFO] profiler: results/profiles/C_ddp2_profile_fp32_20261118-192540_ops.txt and C_ddp2_profile_fp32_20261118-192540.pt.trace.json
+SUMMARY {"n_params": 13865856, "steps": 50, "seed": 1337, "precision": "fp32", "global_batch": 64, "seq_len": 256, "device": "cuda:0", "data": "train.bin", "world_size": 2, "backend": "nccl", "first_train_loss": 9.036768436431885, "final_train_loss": 6.666226863861084, "val_loss_500": null, "final_val_loss": 6.672841477394105, "timing_ms": {"data": 0.36017014645040035, "fwd_bwd": 38.824853487312794, "optim": 1.7429247964173555, "step": 40.950726019218564}, "timed_steps": 30, "comm": {"fwd_bwd_sync_ms": 41.12055595032871, "fwd_bwd_nosync_ms": 38.30305999144912, "comm_ms": 2.81749595887959}, "wall_s": 2.88}
+[INFO] appended run to /home/hpca06/hpc_group_project/mini-llm/results/runs.csv
+=== [OK] ddp2_profile_fp32 ===
+
+=== [RUN] ddp2_p2p_on_r1 | 2026-11-18 19:25:45 ===
+NCCL version 2.27.3+cuda12.9
+[INFO] params 13.87M (13.77M excl. positions) | device cuda:0 | world 2 (nccl) | fp32 | data train.bin | batch 64 (per rank 32 = micro 32 x accum 1) | seq 256 | seed 1337
+step     1 | loss 9.0368 | lr 6.00e-06 | 466 ms/step
+step    10 | loss 8.1976 | lr 6.00e-05 | 82 ms/step
+step    20 | loss 7.8664 | lr 1.20e-04 | 62 ms/step
+step    30 | loss 7.3712 | lr 1.80e-04 | 55 ms/step
+step    40 | loss 6.9780 | lr 2.40e-04 | 51 ms/step
+step    50 | loss 6.6662 | lr 3.00e-04 | 49 ms/step
+step    60 | loss 6.5645 | lr 3.60e-04 | 48 ms/step
+step    70 | loss 6.3002 | lr 4.20e-04 | 47 ms/step
+step    80 | loss 6.1503 | lr 4.80e-04 | 46 ms/step
+step    90 | loss 6.0404 | lr 5.40e-04 | 46 ms/step
+step   100 | loss 5.9613 | lr 6.00e-04 | 45 ms/step
+step   100 | VAL loss 5.9589
+step   110 | loss 5.8434 | lr 5.99e-04 | 48 ms/step
+step   120 | loss 5.8221 | lr 5.97e-04 | 47 ms/step
+step   130 | loss 5.6836 | lr 5.93e-04 | 47 ms/step
+step   140 | loss 5.6526 | lr 5.87e-04 | 46 ms/step
+step   150 | loss 5.6072 | lr 5.80e-04 | 46 ms/step
+step   160 | loss 5.5498 | lr 5.72e-04 | 46 ms/step
+step   170 | loss 5.4437 | lr 5.61e-04 | 45 ms/step
+step   180 | loss 5.4052 | lr 5.50e-04 | 45 ms/step
+step   190 | loss 5.4487 | lr 5.37e-04 | 45 ms/step
+step   200 | loss 5.4401 | lr 5.22e-04 | 45 ms/step
+step   200 | VAL loss 5.4627
+step   210 | loss 5.3214 | lr 5.07e-04 | 46 ms/step
+step   220 | loss 5.2933 | lr 4.90e-04 | 46 ms/step
+step   230 | loss 5.2568 | lr 4.73e-04 | 46 ms/step
+step   240 | loss 5.2274 | lr 4.54e-04 | 46 ms/step
+step   250 | loss 5.2278 | lr 4.35e-04 | 45 ms/step
+step   260 | loss 5.1438 | lr 4.15e-04 | 45 ms/step
+step   270 | loss 5.1319 | lr 3.95e-04 | 45 ms/step
+step   280 | loss 5.1384 | lr 3.74e-04 | 45 ms/step
+step   290 | loss 5.0796 | lr 3.53e-04 | 45 ms/step
+step   300 | loss 5.1697 | lr 3.32e-04 | 45 ms/step
+step   300 | VAL loss 5.1508
+step   310 | loss 5.0962 | lr 3.11e-04 | 46 ms/step
+step   320 | loss 5.0051 | lr 2.90e-04 | 46 ms/step
+step   330 | loss 4.9718 | lr 2.69e-04 | 46 ms/step
+step   340 | loss 4.9244 | lr 2.49e-04 | 45 ms/step
+step   350 | loss 5.0338 | lr 2.29e-04 | 45 ms/step
+step   360 | loss 4.9851 | lr 2.09e-04 | 45 ms/step
+step   370 | loss 4.9549 | lr 1.91e-04 | 45 ms/step
+step   380 | loss 4.8659 | lr 1.73e-04 | 45 ms/step
+step   390 | loss 4.7919 | lr 1.56e-04 | 45 ms/step
+step   400 | loss 4.8540 | lr 1.41e-04 | 45 ms/step
+step   400 | VAL loss 4.9898
+step   410 | loss 4.8793 | lr 1.26e-04 | 46 ms/step
+step   420 | loss 4.9038 | lr 1.13e-04 | 46 ms/step
+step   430 | loss 4.8555 | lr 1.01e-04 | 45 ms/step
+step   440 | loss 4.8733 | lr 9.04e-05 | 45 ms/step
+step   450 | loss 4.7730 | lr 8.14e-05 | 45 ms/step
+step   460 | loss 4.8231 | lr 7.39e-05 | 45 ms/step
+step   470 | loss 4.7967 | lr 6.80e-05 | 45 ms/step
+step   480 | loss 4.8110 | lr 6.37e-05 | 45 ms/step
+step   490 | loss 4.7585 | lr 6.10e-05 | 45 ms/step
+step   500 | loss 4.8385 | lr 6.00e-05 | 45 ms/step
+step   500 | VAL loss 4.9162  <- step 500
+SUMMARY {"n_params": 13865856, "steps": 500, "seed": 1337, "precision": "fp32", "global_batch": 64, "seq_len": 256, "device": "cuda:0", "data": "train.bin", "world_size": 2, "backend": "nccl", "first_train_loss": 9.036768436431885, "final_train_loss": 4.838534832000732, "val_loss_500": 4.916229486465454, "final_val_loss": 4.916229486465454, "timing_ms": {"data": 0.33753691241145134, "fwd_bwd": 39.590479573234916, "optim": 1.6178661026060581, "step": 41.57826956361532}, "timed_steps": 480, "comm": {"fwd_bwd_sync_ms": 41.87801037915051, "fwd_bwd_nosync_ms": 39.195352932438254, "comm_ms": 2.6826574467122555}, "wall_s": 22.76}
+[INFO] appended run to /home/hpca06/hpc_group_project/mini-llm/results/runs.csv
+=== [OK] ddp2_p2p_on_r1 ===
+
+=== [RUN] ddp2_p2p_on_r2 | 2026-11-18 19:26:20 ===
+NCCL version 2.27.3+cuda12.9
+[INFO] params 13.87M (13.77M excl. positions) | device cuda:0 | world 2 (nccl) | fp32 | data train.bin | batch 64 (per rank 32 = micro 32 x accum 1) | seq 256 | seed 1337
+step     1 | loss 9.0368 | lr 6.00e-06 | 464 ms/step
+step    10 | loss 8.1976 | lr 6.00e-05 | 82 ms/step
+step    20 | loss 7.8664 | lr 1.20e-04 | 61 ms/step
+step    30 | loss 7.3712 | lr 1.80e-04 | 55 ms/step
+step    40 | loss 6.9780 | lr 2.40e-04 | 51 ms/step
+step    50 | loss 6.6662 | lr 3.00e-04 | 49 ms/step
+step    60 | loss 6.5645 | lr 3.60e-04 | 48 ms/step
+step    70 | loss 6.3002 | lr 4.20e-04 | 47 ms/step
+step    80 | loss 6.1503 | lr 4.80e-04 | 46 ms/step
+step    90 | loss 6.0404 | lr 5.40e-04 | 46 ms/step
+step   100 | loss 5.9613 | lr 6.00e-04 | 46 ms/step
+step   100 | VAL loss 5.9589
+step   110 | loss 5.8434 | lr 5.99e-04 | 48 ms/step
+step   120 | loss 5.8221 | lr 5.97e-04 | 47 ms/step
+step   130 | loss 5.6836 | lr 5.93e-04 | 47 ms/step
+step   140 | loss 5.6526 | lr 5.87e-04 | 46 ms/step
+step   150 | loss 5.6072 | lr 5.80e-04 | 46 ms/step
+step   160 | loss 5.5498 | lr 5.72e-04 | 46 ms/step
+step   170 | loss 5.4437 | lr 5.61e-04 | 46 ms/step
+step   180 | loss 5.4052 | lr 5.50e-04 | 45 ms/step
+step   190 | loss 5.4487 | lr 5.37e-04 | 45 ms/step
+step   200 | loss 5.4401 | lr 5.22e-04 | 45 ms/step
+step   200 | VAL loss 5.4627
+step   210 | loss 5.3214 | lr 5.07e-04 | 46 ms/step
+step   220 | loss 5.2933 | lr 4.90e-04 | 46 ms/step
+step   230 | loss 5.2568 | lr 4.73e-04 | 46 ms/step
+step   240 | loss 5.2273 | lr 4.54e-04 | 46 ms/step
+step   250 | loss 5.2279 | lr 4.35e-04 | 46 ms/step
+step   260 | loss 5.1438 | lr 4.15e-04 | 45 ms/step
+step   270 | loss 5.1321 | lr 3.95e-04 | 45 ms/step
+step   280 | loss 5.1379 | lr 3.74e-04 | 45 ms/step
+step   290 | loss 5.0803 | lr 3.53e-04 | 45 ms/step
+step   300 | loss 5.1676 | lr 3.32e-04 | 45 ms/step
+step   300 | VAL loss 5.1509
+step   310 | loss 5.0982 | lr 3.11e-04 | 46 ms/step
+step   320 | loss 5.0034 | lr 2.90e-04 | 46 ms/step
+step   330 | loss 4.9706 | lr 2.69e-04 | 46 ms/step
+step   340 | loss 4.9246 | lr 2.49e-04 | 45 ms/step
+step   350 | loss 5.0323 | lr 2.29e-04 | 45 ms/step
+step   360 | loss 4.9836 | lr 2.09e-04 | 45 ms/step
+step   370 | loss 4.9547 | lr 1.91e-04 | 45 ms/step
+step   380 | loss 4.8652 | lr 1.73e-04 | 45 ms/step
+step   390 | loss 4.7925 | lr 1.56e-04 | 45 ms/step
+step   400 | loss 4.8542 | lr 1.41e-04 | 45 ms/step
+step   400 | VAL loss 4.9908
+step   410 | loss 4.8781 | lr 1.26e-04 | 46 ms/step
+step   420 | loss 4.9051 | lr 1.13e-04 | 46 ms/step
+step   430 | loss 4.8552 | lr 1.01e-04 | 45 ms/step
+step   440 | loss 4.8724 | lr 9.04e-05 | 45 ms/step
+step   450 | loss 4.7713 | lr 8.14e-05 | 45 ms/step
+step   460 | loss 4.8225 | lr 7.39e-05 | 45 ms/step
+step   470 | loss 4.7972 | lr 6.80e-05 | 45 ms/step
+step   480 | loss 4.8101 | lr 6.37e-05 | 45 ms/step
+step   490 | loss 4.7587 | lr 6.10e-05 | 45 ms/step
+step   500 | loss 4.8383 | lr 6.00e-05 | 45 ms/step
+step   500 | VAL loss 4.9156  <- step 500
+SUMMARY {"n_params": 13865856, "steps": 500, "seed": 1337, "precision": "fp32", "global_batch": 64, "seq_len": 256, "device": "cuda:0", "data": "train.bin", "world_size": 2, "backend": "nccl", "first_train_loss": 9.036768436431885, "final_train_loss": 4.83829927444458, "val_loss_500": 4.9156083345413215, "final_val_loss": 4.9156083345413215, "timing_ms": {"data": 0.34026592038571835, "fwd_bwd": 39.780955063179135, "optim": 1.625716919079423, "step": 41.76759859547019}, "timed_steps": 480, "comm": {"fwd_bwd_sync_ms": 41.99957940727472, "fwd_bwd_nosync_ms": 39.47066352702677, "comm_ms": 2.5289158802479506}, "wall_s": 22.78}
+[INFO] appended run to /home/hpca06/hpc_group_project/mini-llm/results/runs.csv
+=== [OK] ddp2_p2p_on_r2 ===
+
+=== [RUN] ddp2_p2p_on_r3 | 2026-11-18 19:26:52 ===
+NCCL version 2.27.3+cuda12.9
+[INFO] params 13.87M (13.77M excl. positions) | device cuda:0 | world 2 (nccl) | fp32 | data train.bin | batch 64 (per rank 32 = micro 32 x accum 1) | seq 256 | seed 1337
+step     1 | loss 9.0368 | lr 6.00e-06 | 479 ms/step
+step    10 | loss 8.1976 | lr 6.00e-05 | 84 ms/step
+step    20 | loss 7.8664 | lr 1.20e-04 | 63 ms/step
+step    30 | loss 7.3712 | lr 1.80e-04 | 56 ms/step
+step    40 | loss 6.9780 | lr 2.40e-04 | 52 ms/step
+step    50 | loss 6.6662 | lr 3.00e-04 | 50 ms/step
+step    60 | loss 6.5645 | lr 3.60e-04 | 49 ms/step
+step    70 | loss 6.3002 | lr 4.20e-04 | 48 ms/step
+step    80 | loss 6.1503 | lr 4.80e-04 | 47 ms/step
+step    90 | loss 6.0404 | lr 5.40e-04 | 46 ms/step
+step   100 | loss 5.9613 | lr 6.00e-04 | 46 ms/step
+step   100 | VAL loss 5.9589
+step   110 | loss 5.8434 | lr 5.99e-04 | 48 ms/step
+step   120 | loss 5.8221 | lr 5.97e-04 | 48 ms/step
+step   130 | loss 5.6836 | lr 5.93e-04 | 47 ms/step
+step   140 | loss 5.6526 | lr 5.87e-04 | 47 ms/step
+step   150 | loss 5.6072 | lr 5.80e-04 | 46 ms/step
+step   160 | loss 5.5498 | lr 5.72e-04 | 46 ms/step
+step   170 | loss 5.4437 | lr 5.61e-04 | 46 ms/step
+step   180 | loss 5.4052 | lr 5.50e-04 | 46 ms/step
+step   190 | loss 5.4487 | lr 5.37e-04 | 45 ms/step
+step   200 | loss 5.4401 | lr 5.22e-04 | 45 ms/step
+step   200 | VAL loss 5.4627
+step   210 | loss 5.3214 | lr 5.07e-04 | 48 ms/step
+step   220 | loss 5.2933 | lr 4.90e-04 | 48 ms/step
+step   230 | loss 5.2568 | lr 4.73e-04 | 48 ms/step
+step   240 | loss 5.2274 | lr 4.54e-04 | 47 ms/step
+step   250 | loss 5.2278 | lr 4.35e-04 | 47 ms/step
+step   260 | loss 5.1438 | lr 4.15e-04 | 47 ms/step
+step   270 | loss 5.1319 | lr 3.95e-04 | 47 ms/step
+step   280 | loss 5.1382 | lr 3.74e-04 | 47 ms/step
+step   290 | loss 5.0792 | lr 3.53e-04 | 46 ms/step
+step   300 | loss 5.1705 | lr 3.32e-04 | 46 ms/step
+step   300 | VAL loss 5.1511
+step   310 | loss 5.0964 | lr 3.11e-04 | 47 ms/step
+step   320 | loss 5.0043 | lr 2.90e-04 | 47 ms/step
+step   330 | loss 4.9721 | lr 2.69e-04 | 47 ms/step
+step   340 | loss 4.9249 | lr 2.49e-04 | 47 ms/step
+step   350 | loss 5.0328 | lr 2.29e-04 | 46 ms/step
+step   360 | loss 4.9832 | lr 2.09e-04 | 46 ms/step
+step   370 | loss 4.9538 | lr 1.91e-04 | 46 ms/step
+step   380 | loss 4.8663 | lr 1.73e-04 | 46 ms/step
+step   390 | loss 4.7912 | lr 1.56e-04 | 46 ms/step
+step   400 | loss 4.8538 | lr 1.41e-04 | 46 ms/step
+step   400 | VAL loss 4.9904
+step   410 | loss 4.8783 | lr 1.26e-04 | 47 ms/step
+step   420 | loss 4.9049 | lr 1.13e-04 | 46 ms/step
+step   430 | loss 4.8550 | lr 1.01e-04 | 46 ms/step
+step   440 | loss 4.8723 | lr 9.04e-05 | 46 ms/step
+step   450 | loss 4.7715 | lr 8.14e-05 | 46 ms/step
+step   460 | loss 4.8222 | lr 7.39e-05 | 46 ms/step
+step   470 | loss 4.7970 | lr 6.80e-05 | 46 ms/step
+step   480 | loss 4.8099 | lr 6.37e-05 | 46 ms/step
+step   490 | loss 4.7580 | lr 6.10e-05 | 46 ms/step
+step   500 | loss 4.8382 | lr 6.00e-05 | 46 ms/step
+step   500 | VAL loss 4.9151  <- step 500
+SUMMARY {"n_params": 13865856, "steps": 500, "seed": 1337, "precision": "fp32", "global_batch": 64, "seq_len": 256, "device": "cuda:0", "data": "train.bin", "world_size": 2, "backend": "nccl", "first_train_loss": 9.036768436431885, "final_train_loss": 4.838224172592163, "val_loss_500": 4.915105700492859, "final_val_loss": 4.915105700492859, "timing_ms": {"data": 0.3357490058988333, "fwd_bwd": 39.85598450526595, "optim": 1.629807986319065, "step": 41.85417550615966}, "timed_steps": 480, "comm": {"fwd_bwd_sync_ms": 42.19781165011227, "fwd_bwd_nosync_ms": 39.46518525481224, "comm_ms": 2.7326263953000307}, "wall_s": 23.17}
+[INFO] appended run to /home/hpca06/hpc_group_project/mini-llm/results/runs.csv
+=== [OK] ddp2_p2p_on_r3 ===
+==================================================
+Job C finished: Wed Nov 18 19:27:26 CET 2026 | failed runs: 0
+==================================================
