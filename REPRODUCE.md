@@ -101,7 +101,7 @@ Project Gutenberg's mirror, `https://gutenberg.pglaf.org/cache/epub/<id>/pg<id>.
 existing files are not downloaded again), strips the Gutenberg header, footer and
 licence text, normalises to UTF-8 and writes:
 
-- `data/clean/train/` — 69 works, 30.13 MB
+- `data/clean/train/` — 69 works, 29.80 MB
 - `data/clean/val/` — 12 works held out whole, 3.13 MB:
   *Poesías completas* (Machado), *Misericordia* (Galdós), *La Tribuna* (Pardo Bazán),
   *Cañas y barro* (Blasco Ibáñez), *Cuentos y diálogos* (Valera), *Don Álvaro*
@@ -114,7 +114,7 @@ The full list of works with Gutenberg IDs, movement, genre and split is in `data
 Compute nodes reach Project Gutenberg (verified in jobs 25843, 26989 and 27918). If a node has
 no internet, copy the 81 files into `data/raw/` first and the script uses them.
 
-Check: the log ends with `Train Corpus Size: 30.13 MB`, `Val Corpus Size: 3.13 MB`
+Check: the log ends with `Train Corpus Size: 29.80 MB`, `Val Corpus Size: 3.13 MB`
 and `catalog.csv (81 works)`.
 
 ## 2. Tokenizer and encoding (cpu partition)
@@ -142,8 +142,8 @@ Outputs in `data/tokenized/`:
 
 | File | Tokens |
 |------|--------|
-| `train.bin` | 9,069,382 |
-| `val.bin` | 962,497 |
+| `train.bin` | 8,952,876 |
+| `val.bin` | 960,245|
 | `tiny.bin` | 1,500,000 (prefix of `train.bin`) |
 | `tokenizer.json`, `meta.json` | — |
 
@@ -219,7 +219,8 @@ to `results/runs.csv`.
 | B | TODO | 1 GPU on julia | 1337 | fp32 ×3, bf16 ×3 | no script yet |
 | C | TODO | 2 GPUs on haskell | 1337 | DDP ×3, DDP with `NCCL_P2P_DISABLE=1` ×3, profiler | no script yet |
 | D | TODO | 1 GPU on each node | 1337 | cross-node DDP ×3 | no script yet |
-| E | `slurm/job_E_cpu_threads.sbatch` | cpu, 64 cores, one thread per core (`--hint=nomultithread`), 32 GB, 6 h | 1337 | 1–64 threads ×3, 50 steps each (timing only, `valid = n/a`) | script ready; not run yet |
+| E | `slurm/job_E_cpu_threads.sbatch` | Section 4, Job E row: resources become 64 logical CPUs = 32 physical cores; threads pinned with OMP_PLACES=cores; what it runs becomes 1–32 threads on physical cores + 64 threads on 32 cores (SMT), ×3; and status becomes done: job 31986, 21 rows; speed-up 15.8× at 32 cores; SMT 6 % slower.
+
 | opt | `slurm/job_opt_compile.sbatch` | gpu, 1 GPU on haskell, 8 cores, 32 GB, 45 min | 1337 | fp32 ×3 and fp32 `--compile` ×3, interleaved (step 12) | **done**: job 28862, 6 rows, all `valid = yes`; prediction refuted (0.75 % faster, not 10–30 %); results in `docs/optimization.md` |
 
 Submit each one from the repository root, e.g. `sbatch slurm/job_E_cpu_threads.sbatch`.
