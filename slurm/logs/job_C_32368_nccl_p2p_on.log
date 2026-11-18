@@ -1,0 +1,75 @@
+haskell:611388:611388 [0] NCCL INFO Bootstrap: Using vmbr0:10.205.10.23<0>
+haskell:611388:611388 [0] NCCL INFO cudaDriverVersion 13000
+haskell:611388:611388 [0] NCCL INFO NCCL version 2.27.3+cuda12.9
+haskell:611388:611388 [0] NCCL INFO Comm config Blocking set to 1
+haskell:611389:611389 [1] NCCL INFO cudaDriverVersion 13000
+haskell:611389:611389 [1] NCCL INFO Bootstrap: Using vmbr0:10.205.10.23<0>
+haskell:611389:611389 [1] NCCL INFO NCCL version 2.27.3+cuda12.9
+haskell:611389:611389 [1] NCCL INFO Comm config Blocking set to 1
+haskell:611389:611432 [1] NCCL INFO NET/Plugin: Could not find: libnccl-net.so. 
+haskell:611388:611431 [0] NCCL INFO NET/Plugin: Could not find: libnccl-net.so. 
+haskell:611388:611431 [0] NCCL INFO Failed to open libibverbs.so[.1]
+haskell:611389:611432 [1] NCCL INFO Failed to open libibverbs.so[.1]
+haskell:611389:611432 [1] NCCL INFO NET/Socket : Using [0]vmbr0:10.205.10.23<0> [1]vmbr1:10.205.20.30<0>
+haskell:611388:611431 [0] NCCL INFO NET/Socket : Using [0]vmbr0:10.205.10.23<0> [1]vmbr1:10.205.20.30<0>
+haskell:611389:611432 [1] NCCL INFO Initialized NET plugin Socket
+haskell:611388:611431 [0] NCCL INFO Initialized NET plugin Socket
+haskell:611388:611431 [0] NCCL INFO Assigned NET plugin Socket to comm
+haskell:611388:611431 [0] NCCL INFO Using network Socket
+haskell:611388:611431 [0] NCCL INFO ncclCommInitRankConfig comm 0x57971ad84340 rank 0 nranks 2 cudaDev 0 nvmlDev 0 busId 11000 commId 0x51c30ab0278065ec - Init START
+haskell:611389:611432 [1] NCCL INFO Assigned NET plugin Socket to comm
+haskell:611389:611432 [1] NCCL INFO Using network Socket
+haskell:611389:611432 [1] NCCL INFO ncclCommInitRankConfig comm 0x5a0a88f98f40 rank 1 nranks 2 cudaDev 1 nvmlDev 1 busId 61000 commId 0x51c30ab0278065ec - Init START
+haskell:611389:611432 [1] NCCL INFO RAS client listening socket at 127.0.0.1<28028>
+haskell:611388:611431 [0] NCCL INFO RAS client listening socket at 127.0.0.1<28028>
+haskell:611388:611431 [0] NCCL INFO Bootstrap timings total 0.002429 (create 0.000035, send 0.000136, recv 0.001965, ring 0.000013, delay 0.000000)
+haskell:611389:611432 [1] NCCL INFO Bootstrap timings total 0.000450 (create 0.000024, send 0.000092, recv 0.000078, ring 0.000010, delay 0.000000)
+haskell:611389:611432 [1] NCCL INFO Setting affinity for GPU 1 to 0-3,256-259
+haskell:611388:611431 [0] NCCL INFO Setting affinity for GPU 0 to 0-3,256-259
+haskell:611388:611431 [0] NCCL INFO comm 0x57971ad84340 rank 0 nRanks 2 nNodes 1 localRanks 2 localRank 0 MNNVL 0
+haskell:611389:611432 [1] NCCL INFO comm 0x5a0a88f98f40 rank 1 nRanks 2 nNodes 1 localRanks 2 localRank 1 MNNVL 0
+haskell:611388:611431 [0] NCCL INFO Channel 00/04 : 0 1
+haskell:611388:611431 [0] NCCL INFO Channel 01/04 : 0 1
+haskell:611389:611432 [1] NCCL INFO Trees [0] -1/-1/-1->1->0 [1] 0/-1/-1->1->-1 [2] -1/-1/-1->1->0 [3] 0/-1/-1->1->-1
+haskell:611388:611431 [0] NCCL INFO Channel 02/04 : 0 1
+haskell:611388:611431 [0] NCCL INFO Channel 03/04 : 0 1
+haskell:611389:611432 [1] NCCL INFO P2P Chunksize set to 131072
+haskell:611388:611431 [0] NCCL INFO Trees [0] 1/-1/-1->0->-1 [1] -1/-1/-1->0->1 [2] 1/-1/-1->0->-1 [3] -1/-1/-1->0->1
+haskell:611388:611431 [0] NCCL INFO P2P Chunksize set to 131072
+haskell:611388:611431 [0] NCCL INFO PROFILER/Plugin: Could not find: libnccl-profiler.so. 
+haskell:611389:611432 [1] NCCL INFO PROFILER/Plugin: Could not find: libnccl-profiler.so. 
+haskell:611388:611431 [0] NCCL INFO Check P2P Type isAllDirectP2p 1 directMode 0
+haskell:611389:611435 [1] NCCL INFO [Proxy Service] Device 1 CPU core 258
+haskell:611388:611436 [0] NCCL INFO [Proxy Service] Device 0 CPU core 3
+haskell:611389:611437 [1] NCCL INFO [Proxy Service UDS] Device 1 CPU core 0
+haskell:611388:611438 [0] NCCL INFO [Proxy Service UDS] Device 0 CPU core 1
+haskell:611389:611432 [1] NCCL INFO threadThresholds 8/8/64 | 16/8/64 | 512 | 512
+haskell:611389:611432 [1] NCCL INFO 4 coll channels, 4 collnet channels, 0 nvls channels, 4 p2p channels, 2 p2p channels per peer
+haskell:611388:611431 [0] NCCL INFO threadThresholds 8/8/64 | 16/8/64 | 512 | 512
+haskell:611388:611431 [0] NCCL INFO 4 coll channels, 4 collnet channels, 0 nvls channels, 4 p2p channels, 2 p2p channels per peer
+haskell:611388:611431 [0] NCCL INFO CC Off, workFifoBytes 1048576
+haskell:611388:611431 [0] NCCL INFO TUNER/Plugin: Could not find: libnccl-tuner.so. Using internal tuner plugin.
+haskell:611389:611432 [1] NCCL INFO TUNER/Plugin: Could not find: libnccl-tuner.so. Using internal tuner plugin.
+haskell:611388:611431 [0] NCCL INFO ncclCommInitRankConfig comm 0x57971ad84340 rank 0 nranks 2 cudaDev 0 nvmlDev 0 busId 11000 commId 0x51c30ab0278065ec - Init COMPLETE
+haskell:611389:611432 [1] NCCL INFO ncclCommInitRankConfig comm 0x5a0a88f98f40 rank 1 nranks 2 cudaDev 1 nvmlDev 1 busId 61000 commId 0x51c30ab0278065ec - Init COMPLETE
+haskell:611388:611431 [0] NCCL INFO Init timings - ncclCommInitRankConfig: rank 0 nranks 2 total 0.21 (kernels 0.18, alloc 0.01, bootstrap 0.00, allgathers 0.00, topo 0.01, graphs 0.00, connections 0.00, rest 0.00)
+haskell:611389:611432 [1] NCCL INFO Init timings - ncclCommInitRankConfig: rank 1 nranks 2 total 0.21 (kernels 0.18, alloc 0.01, bootstrap 0.00, allgathers 0.00, topo 0.01, graphs 0.00, connections 0.00, rest 0.00)
+haskell:611388:611439 [0] NCCL INFO Channel 00/0 : 0[0] -> 1[1] via P2P/CUMEM
+haskell:611389:611440 [1] NCCL INFO Channel 00/0 : 1[1] -> 0[0] via P2P/CUMEM
+haskell:611389:611440 [1] NCCL INFO Channel 01/0 : 1[1] -> 0[0] via P2P/CUMEM
+haskell:611388:611439 [0] NCCL INFO Channel 01/0 : 0[0] -> 1[1] via P2P/CUMEM
+haskell:611388:611439 [0] NCCL INFO Channel 02/0 : 0[0] -> 1[1] via P2P/CUMEM
+haskell:611389:611440 [1] NCCL INFO Channel 02/0 : 1[1] -> 0[0] via P2P/CUMEM
+haskell:611389:611440 [1] NCCL INFO Channel 03/0 : 1[1] -> 0[0] via P2P/CUMEM
+haskell:611388:611439 [0] NCCL INFO Channel 03/0 : 0[0] -> 1[1] via P2P/CUMEM
+haskell:611388:611439 [0] NCCL INFO Connected all rings, use ring PXN 0 GDR 1
+haskell:611389:611440 [1] NCCL INFO Connected all rings, use ring PXN 0 GDR 1
+[INFO] params 13.87M (13.77M excl. positions) | device cuda:0 | world 2 (nccl) | fp32 | data train.bin | batch 64 (per rank 32 = micro 32 x accum 1) | seq 256 | seed 1337
+step     1 | loss 9.0368 | lr 6.00e-06 | 509 ms/step
+step    10 | loss 8.1976 | lr 6.00e-05 | 85 ms/step
+step    20 | loss 7.8664 | lr 1.20e-04 | 63 ms/step
+step    30 | loss 7.3712 | lr 1.80e-04 | 55 ms/step
+step    30 | VAL loss 7.3878
+SUMMARY {"n_params": 13865856, "steps": 30, "seed": 1337, "precision": "fp32", "global_batch": 64, "seq_len": 256, "device": "cuda:0", "data": "train.bin", "world_size": 2, "backend": "nccl", "first_train_loss": 9.036768436431885, "final_train_loss": 7.371159791946411, "val_loss_500": null, "final_val_loss": 7.387759709358216, "timing_ms": {"data": 0.3368654288351536, "fwd_bwd": 38.35587250068784, "optim": 1.6021181363612413, "step": 40.328520350158215}, "timed_steps": 10, "comm": {"fwd_bwd_sync_ms": 0.0, "fwd_bwd_nosync_ms": 0.0, "comm_ms": 0.0}, "wall_s": 1.93}
+haskell:611389:611389 [1] NCCL INFO comm 0x5a0a88f98f40 rank 1 nranks 2 cudaDev 1 busId 61000 - Destroy COMPLETE
+haskell:611388:611388 [0] NCCL INFO comm 0x57971ad84340 rank 0 nranks 2 cudaDev 0 busId 11000 - Destroy COMPLETE
