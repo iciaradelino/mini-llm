@@ -1,0 +1,308 @@
+==================================================
+Job ID: 31986 | Node: fortran | Start: Tue Nov 17 06:55:44 PM CET 2026
+Cores granted: 64 | threads: 1 2 4 8 16 32 64 | repeats: 3
+Steps per run: 50 (10 not timed) | global batch: 64 | runs.csv: results/runs.csv
+==================================================
+
+---- lscpu ----
+CPU(s):                                  512
+Model name:                              AMD EPYC 9755 128-Core Processor
+Thread(s) per core:                      2
+Core(s) per socket:                      128
+Socket(s):                               2
+CPU(s) scaling MHz:                      53%
+L3 cache:                                1 GiB (32 instances)
+NUMA node(s):                            2
+---- cores visible to this job (nproc): 64
+---- CPUs allowed: 10-41,266-297
+torch 2.8.0+cu128
+ATen/Parallel:
+	at::get_num_threads() : 64
+	at::get_num_interop_threads() : 256
+OpenMP 201511 (a.k.a. OpenMP 4.5)
+	omp_get_max_threads() : 64
+Intel(R) oneAPI Math Kernel Library Version 2024.2-Product Build 20240605 for Intel(R) 64 architecture applications
+	mkl_get_max_threads() : 64
+Intel(R) MKL-DNN v3.7.1 (Git Hash 8d263e693366ef8db40acc569cc7d8edf644556d)
+std::thread::hardware_concurrency() : 512
+Environment variables:
+	OMP_NUM_THREADS : [not set]
+	MKL_NUM_THREADS : [not set]
+ATen parallel backend: OpenMP
+
+
+=== [RUN] cpu_threads1_r1 | 2026-11-17 18:55:48 ===
+[INFO] params 13.87M (13.77M excl. positions) | device cpu | world 1 (no DDP) | fp32 | data train.bin | batch 64 (per rank 64 = micro 64 x accum 1) | seq 256 | seed 1337
+step     1 | loss 9.0456 | lr 6.00e-06 | 15948 ms/step
+step    10 | loss 8.2294 | lr 6.00e-05 | 15450 ms/step
+step    20 | loss 7.8787 | lr 1.20e-04 | 15298 ms/step
+step    30 | loss 7.4542 | lr 1.80e-04 | 15248 ms/step
+step    40 | loss 6.8881 | lr 2.40e-04 | 15232 ms/step
+step    50 | loss 6.7203 | lr 3.00e-04 | 15246 ms/step
+step    50 | VAL loss 6.6520
+SUMMARY {"n_params": 13865856, "steps": 50, "seed": 1337, "precision": "fp32", "global_batch": 64, "seq_len": 256, "device": "cpu", "data": "train.bin", "world_size": 1, "backend": null, "first_train_loss": 9.045601844787598, "final_train_loss": 6.720256805419922, "val_loss_500": null, "final_val_loss": 6.651964426040649, "timing_ms": {"data": 0.6141811609268188, "fwd_bwd": 15147.1891135443, "optim": 25.956374127417803, "step": 15175.426136236638}, "timed_steps": 40, "comm": {"fwd_bwd_sync_ms": 0.0, "fwd_bwd_nosync_ms": 0.0, "comm_ms": 0.0}, "wall_s": 772.48}
+[INFO] appended run to results/runs.csv
+=== [OK] cpu_threads1_r1 ===
+
+=== [RUN] cpu_threads2_r1 | 2026-11-17 19:08:46 ===
+[INFO] params 13.87M (13.77M excl. positions) | device cpu | world 1 (no DDP) | fp32 | data train.bin | batch 64 (per rank 64 = micro 64 x accum 1) | seq 256 | seed 1337
+step     1 | loss 9.0456 | lr 6.00e-06 | 8597 ms/step
+step    10 | loss 8.2294 | lr 6.00e-05 | 8014 ms/step
+step    20 | loss 7.8787 | lr 1.20e-04 | 7914 ms/step
+step    30 | loss 7.4542 | lr 1.80e-04 | 7862 ms/step
+step    40 | loss 6.8881 | lr 2.40e-04 | 7846 ms/step
+step    50 | loss 6.7203 | lr 3.00e-04 | 7839 ms/step
+step    50 | VAL loss 6.6520
+SUMMARY {"n_params": 13865856, "steps": 50, "seed": 1337, "precision": "fp32", "global_batch": 64, "seq_len": 256, "device": "cpu", "data": "train.bin", "world_size": 1, "backend": null, "first_train_loss": 9.045601844787598, "final_train_loss": 6.720256805419922, "val_loss_500": null, "final_val_loss": 6.65196418762207, "timing_ms": {"data": 0.5690844263881445, "fwd_bwd": 7769.308904185891, "optim": 16.206213971599936, "step": 7787.537590134889}, "timed_steps": 40, "comm": {"fwd_bwd_sync_ms": 0.0, "fwd_bwd_nosync_ms": 0.0, "comm_ms": 0.0}, "wall_s": 396.91}
+[INFO] appended run to results/runs.csv
+=== [OK] cpu_threads2_r1 ===
+
+=== [RUN] cpu_threads4_r1 | 2026-11-17 19:15:31 ===
+[INFO] params 13.87M (13.77M excl. positions) | device cpu | world 1 (no DDP) | fp32 | data train.bin | batch 64 (per rank 64 = micro 64 x accum 1) | seq 256 | seed 1337
+step     1 | loss 9.0456 | lr 6.00e-06 | 5972 ms/step
+step    10 | loss 8.2294 | lr 6.00e-05 | 5706 ms/step
+step    20 | loss 7.8787 | lr 1.20e-04 | 5646 ms/step
+step    30 | loss 7.4542 | lr 1.80e-04 | 5584 ms/step
+step    40 | loss 6.8881 | lr 2.40e-04 | 5575 ms/step
+step    50 | loss 6.7203 | lr 3.00e-04 | 5586 ms/step
+step    50 | VAL loss 6.6520
+SUMMARY {"n_params": 13865856, "steps": 50, "seed": 1337, "precision": "fp32", "global_batch": 64, "seq_len": 256, "device": "cpu", "data": "train.bin", "world_size": 1, "backend": null, "first_train_loss": 9.045601844787598, "final_train_loss": 6.720256805419922, "val_loss_500": null, "final_val_loss": 6.651964426040649, "timing_ms": {"data": 2.5358779821544886, "fwd_bwd": 5507.3240452911705, "optim": 14.357751235365868, "step": 5553.314515622333}, "timed_steps": 40, "comm": {"fwd_bwd_sync_ms": 0.0, "fwd_bwd_nosync_ms": 0.0, "comm_ms": 0.0}, "wall_s": 282.8}
+[INFO] appended run to results/runs.csv
+=== [OK] cpu_threads4_r1 ===
+
+=== [RUN] cpu_threads8_r1 | 2026-11-17 19:20:19 ===
+[INFO] params 13.87M (13.77M excl. positions) | device cpu | world 1 (no DDP) | fp32 | data train.bin | batch 64 (per rank 64 = micro 64 x accum 1) | seq 256 | seed 1337
+step     1 | loss 9.0456 | lr 6.00e-06 | 2917 ms/step
+step    10 | loss 8.2294 | lr 6.00e-05 | 2592 ms/step
+step    20 | loss 7.8787 | lr 1.20e-04 | 2507 ms/step
+step    30 | loss 7.4542 | lr 1.80e-04 | 2505 ms/step
+step    40 | loss 6.8881 | lr 2.40e-04 | 2506 ms/step
+step    50 | loss 6.7203 | lr 3.00e-04 | 2502 ms/step
+step    50 | VAL loss 6.6520
+SUMMARY {"n_params": 13865856, "steps": 50, "seed": 1337, "precision": "fp32", "global_batch": 64, "seq_len": 256, "device": "cpu", "data": "train.bin", "world_size": 1, "backend": null, "first_train_loss": 9.045601844787598, "final_train_loss": 6.720256805419922, "val_loss_500": null, "final_val_loss": 6.651964426040649, "timing_ms": {"data": 0.5912098567932844, "fwd_bwd": 2439.9804016575217, "optim": 12.397266691550612, "step": 2469.5863127708435}, "timed_steps": 40, "comm": {"fwd_bwd_sync_ms": 0.0, "fwd_bwd_nosync_ms": 0.0, "comm_ms": 0.0}, "wall_s": 126.59}
+[INFO] appended run to results/runs.csv
+=== [OK] cpu_threads8_r1 ===
+
+=== [RUN] cpu_threads16_r1 | 2026-11-17 19:22:30 ===
+[INFO] params 13.87M (13.77M excl. positions) | device cpu | world 1 (no DDP) | fp32 | data train.bin | batch 64 (per rank 64 = micro 64 x accum 1) | seq 256 | seed 1337
+step     1 | loss 9.0456 | lr 6.00e-06 | 1881 ms/step
+step    10 | loss 8.2294 | lr 6.00e-05 | 1682 ms/step
+step    20 | loss 7.8787 | lr 1.20e-04 | 1662 ms/step
+step    30 | loss 7.4542 | lr 1.80e-04 | 1647 ms/step
+step    40 | loss 6.8881 | lr 2.40e-04 | 1612 ms/step
+step    50 | loss 6.7203 | lr 3.00e-04 | 1600 ms/step
+step    50 | VAL loss 6.6520
+SUMMARY {"n_params": 13865856, "steps": 50, "seed": 1337, "precision": "fp32", "global_batch": 64, "seq_len": 256, "device": "cpu", "data": "train.bin", "world_size": 1, "backend": null, "first_train_loss": 9.045601844787598, "final_train_loss": 6.720256805419922, "val_loss_500": null, "final_val_loss": 6.651964426040649, "timing_ms": {"data": 5.693547427654266, "fwd_bwd": 1553.9661785587668, "optim": 11.177689535543323, "step": 1578.788984566927}, "timed_steps": 40, "comm": {"fwd_bwd_sync_ms": 0.0, "fwd_bwd_nosync_ms": 0.0, "comm_ms": 0.0}, "wall_s": 80.92}
+[INFO] appended run to results/runs.csv
+=== [OK] cpu_threads16_r1 ===
+
+=== [RUN] cpu_threads32_r1 | 2026-11-17 19:23:56 ===
+[INFO] params 13.87M (13.77M excl. positions) | device cpu | world 1 (no DDP) | fp32 | data train.bin | batch 64 (per rank 64 = micro 64 x accum 1) | seq 256 | seed 1337
+step     1 | loss 9.0456 | lr 6.00e-06 | 1199 ms/step
+step    10 | loss 8.2294 | lr 6.00e-05 | 1020 ms/step
+step    20 | loss 7.8787 | lr 1.20e-04 | 961 ms/step
+step    30 | loss 7.4542 | lr 1.80e-04 | 938 ms/step
+step    40 | loss 6.8881 | lr 2.40e-04 | 927 ms/step
+step    50 | loss 6.7203 | lr 3.00e-04 | 923 ms/step
+step    50 | VAL loss 6.6520
+SUMMARY {"n_params": 13865856, "steps": 50, "seed": 1337, "precision": "fp32", "global_batch": 64, "seq_len": 256, "device": "cpu", "data": "train.bin", "world_size": 1, "backend": null, "first_train_loss": 9.045601844787598, "final_train_loss": 6.720256805419922, "val_loss_500": null, "final_val_loss": 6.651964426040649, "timing_ms": {"data": 0.5718879401683807, "fwd_bwd": 877.8906227089465, "optim": 12.188551714643836, "step": 891.0332010127604}, "timed_steps": 40, "comm": {"fwd_bwd_sync_ms": 0.0, "fwd_bwd_nosync_ms": 0.0, "comm_ms": 0.0}, "wall_s": 46.65}
+[INFO] appended run to results/runs.csv
+=== [OK] cpu_threads32_r1 ===
+
+=== [RUN] cpu_threads64_r1 | 2026-11-17 19:24:48 ===
+[INFO] params 13.87M (13.77M excl. positions) | device cpu | world 1 (no DDP) | fp32 | data train.bin | batch 64 (per rank 64 = micro 64 x accum 1) | seq 256 | seed 1337
+step     1 | loss 9.0456 | lr 6.00e-06 | 1361 ms/step
+step    10 | loss 8.2294 | lr 6.00e-05 | 1088 ms/step
+step    20 | loss 7.8787 | lr 1.20e-04 | 1054 ms/step
+step    30 | loss 7.4542 | lr 1.80e-04 | 1046 ms/step
+step    40 | loss 6.8881 | lr 2.40e-04 | 1042 ms/step
+step    50 | loss 6.7203 | lr 3.00e-04 | 1039 ms/step
+step    50 | VAL loss 6.6520
+SUMMARY {"n_params": 13865856, "steps": 50, "seed": 1337, "precision": "fp32", "global_batch": 64, "seq_len": 256, "device": "cpu", "data": "train.bin", "world_size": 1, "backend": null, "first_train_loss": 9.045601844787598, "final_train_loss": 6.720256805419922, "val_loss_500": null, "final_val_loss": 6.651964426040649, "timing_ms": {"data": 10.15857676975429, "fwd_bwd": 995.6943865399808, "optim": 14.186272630468011, "step": 1022.8731071110815}, "timed_steps": 40, "comm": {"fwd_bwd_sync_ms": 0.0, "fwd_bwd_nosync_ms": 0.0, "comm_ms": 0.0}, "wall_s": 52.51}
+[INFO] appended run to results/runs.csv
+=== [OK] cpu_threads64_r1 ===
+
+=== [RUN] cpu_threads1_r2 | 2026-11-17 19:25:46 ===
+[INFO] params 13.87M (13.77M excl. positions) | device cpu | world 1 (no DDP) | fp32 | data train.bin | batch 64 (per rank 64 = micro 64 x accum 1) | seq 256 | seed 1337
+step     1 | loss 9.0456 | lr 6.00e-06 | 16311 ms/step
+step    10 | loss 8.2294 | lr 6.00e-05 | 15625 ms/step
+step    20 | loss 7.8787 | lr 1.20e-04 | 15419 ms/step
+step    30 | loss 7.4542 | lr 1.80e-04 | 15375 ms/step
+step    40 | loss 6.8881 | lr 2.40e-04 | 15320 ms/step
+step    50 | loss 6.7203 | lr 3.00e-04 | 15311 ms/step
+step    50 | VAL loss 6.6520
+SUMMARY {"n_params": 13865856, "steps": 50, "seed": 1337, "precision": "fp32", "global_batch": 64, "seq_len": 256, "device": "cpu", "data": "train.bin", "world_size": 1, "backend": null, "first_train_loss": 9.045601844787598, "final_train_loss": 6.720256805419922, "val_loss_500": null, "final_val_loss": 6.651964426040649, "timing_ms": {"data": 0.6181960925459862, "fwd_bwd": 15165.012321667746, "optim": 21.79256989620626, "step": 15198.494896059856}, "timed_steps": 40, "comm": {"fwd_bwd_sync_ms": 0.0, "fwd_bwd_nosync_ms": 0.0, "comm_ms": 0.0}, "wall_s": 775.58}
+[INFO] appended run to results/runs.csv
+=== [OK] cpu_threads1_r2 ===
+
+=== [RUN] cpu_threads2_r2 | 2026-11-17 19:38:46 ===
+[INFO] params 13.87M (13.77M excl. positions) | device cpu | world 1 (no DDP) | fp32 | data train.bin | batch 64 (per rank 64 = micro 64 x accum 1) | seq 256 | seed 1337
+step     1 | loss 9.0456 | lr 6.00e-06 | 8624 ms/step
+step    10 | loss 8.2294 | lr 6.00e-05 | 7973 ms/step
+step    20 | loss 7.8787 | lr 1.20e-04 | 7907 ms/step
+step    30 | loss 7.4542 | lr 1.80e-04 | 7944 ms/step
+step    40 | loss 6.8881 | lr 2.40e-04 | 7927 ms/step
+step    50 | loss 6.7203 | lr 3.00e-04 | 7923 ms/step
+step    50 | VAL loss 6.6520
+SUMMARY {"n_params": 13865856, "steps": 50, "seed": 1337, "precision": "fp32", "global_batch": 64, "seq_len": 256, "device": "cpu", "data": "train.bin", "world_size": 1, "backend": null, "first_train_loss": 9.045601844787598, "final_train_loss": 6.720256805419922, "val_loss_500": null, "final_val_loss": 6.65196418762207, "timing_ms": {"data": 0.5731498822569847, "fwd_bwd": 7871.049771551043, "optim": 16.21916238218546, "step": 7890.562618384138}, "timed_steps": 40, "comm": {"fwd_bwd_sync_ms": 0.0, "fwd_bwd_nosync_ms": 0.0, "comm_ms": 0.0}, "wall_s": 401.03}
+[INFO] appended run to results/runs.csv
+=== [OK] cpu_threads2_r2 ===
+
+=== [RUN] cpu_threads4_r2 | 2026-11-17 19:45:32 ===
+[INFO] params 13.87M (13.77M excl. positions) | device cpu | world 1 (no DDP) | fp32 | data train.bin | batch 64 (per rank 64 = micro 64 x accum 1) | seq 256 | seed 1337
+step     1 | loss 9.0456 | lr 6.00e-06 | 5940 ms/step
+step    10 | loss 8.2294 | lr 6.00e-05 | 5519 ms/step
+step    20 | loss 7.8787 | lr 1.20e-04 | 5472 ms/step
+step    30 | loss 7.4542 | lr 1.80e-04 | 5456 ms/step
+step    40 | loss 6.8881 | lr 2.40e-04 | 5480 ms/step
+step    50 | loss 6.7203 | lr 3.00e-04 | 5473 ms/step
+step    50 | VAL loss 6.6520
+SUMMARY {"n_params": 13865856, "steps": 50, "seed": 1337, "precision": "fp32", "global_batch": 64, "seq_len": 256, "device": "cpu", "data": "train.bin", "world_size": 1, "backend": null, "first_train_loss": 9.045601844787598, "final_train_loss": 6.720256805419922, "val_loss_500": null, "final_val_loss": 6.651964426040649, "timing_ms": {"data": 0.5825734697282314, "fwd_bwd": 5403.81426201202, "optim": 14.383761445060372, "step": 5431.1784722376615}, "timed_steps": 40, "comm": {"fwd_bwd_sync_ms": 0.0, "fwd_bwd_nosync_ms": 0.0, "comm_ms": 0.0}, "wall_s": 277.05}
+[INFO] appended run to results/runs.csv
+=== [OK] cpu_threads4_r2 ===
+
+=== [RUN] cpu_threads8_r2 | 2026-11-17 19:50:14 ===
+[INFO] params 13.87M (13.77M excl. positions) | device cpu | world 1 (no DDP) | fp32 | data train.bin | batch 64 (per rank 64 = micro 64 x accum 1) | seq 256 | seed 1337
+step     1 | loss 9.0456 | lr 6.00e-06 | 2854 ms/step
+step    10 | loss 8.2294 | lr 6.00e-05 | 2546 ms/step
+step    20 | loss 7.8787 | lr 1.20e-04 | 2519 ms/step
+step    30 | loss 7.4542 | lr 1.80e-04 | 2517 ms/step
+step    40 | loss 6.8881 | lr 2.40e-04 | 2509 ms/step
+step    50 | loss 6.7203 | lr 3.00e-04 | 2502 ms/step
+step    50 | VAL loss 6.6520
+SUMMARY {"n_params": 13865856, "steps": 50, "seed": 1337, "precision": "fp32", "global_batch": 64, "seq_len": 256, "device": "cpu", "data": "train.bin", "world_size": 1, "backend": null, "first_train_loss": 9.045601844787598, "final_train_loss": 6.720256805419922, "val_loss_500": null, "final_val_loss": 6.651964426040649, "timing_ms": {"data": 0.7465118542313576, "fwd_bwd": 2460.0193607620895, "optim": 12.198728509247303, "step": 2485.103919170797}, "timed_steps": 40, "comm": {"fwd_bwd_sync_ms": 0.0, "fwd_bwd_nosync_ms": 0.0, "comm_ms": 0.0}, "wall_s": 126.59}
+[INFO] appended run to results/runs.csv
+=== [OK] cpu_threads8_r2 ===
+
+=== [RUN] cpu_threads16_r2 | 2026-11-17 19:52:26 ===
+[INFO] params 13.87M (13.77M excl. positions) | device cpu | world 1 (no DDP) | fp32 | data train.bin | batch 64 (per rank 64 = micro 64 x accum 1) | seq 256 | seed 1337
+step     1 | loss 9.0456 | lr 6.00e-06 | 1798 ms/step
+step    10 | loss 8.2294 | lr 6.00e-05 | 1630 ms/step
+step    20 | loss 7.8787 | lr 1.20e-04 | 1599 ms/step
+step    30 | loss 7.4542 | lr 1.80e-04 | 1592 ms/step
+step    40 | loss 6.8881 | lr 2.40e-04 | 1593 ms/step
+step    50 | loss 6.7203 | lr 3.00e-04 | 1598 ms/step
+step    50 | VAL loss 6.6520
+SUMMARY {"n_params": 13865856, "steps": 50, "seed": 1337, "precision": "fp32", "global_batch": 64, "seq_len": 256, "device": "cpu", "data": "train.bin", "world_size": 1, "backend": null, "first_train_loss": 9.045601844787598, "final_train_loss": 6.720256805419922, "val_loss_500": null, "final_val_loss": 6.651964426040649, "timing_ms": {"data": 11.092621134594083, "fwd_bwd": 1545.1534036546946, "optim": 11.321980506181717, "step": 1575.3415545914322}, "timed_steps": 40, "comm": {"fwd_bwd_sync_ms": 0.0, "fwd_bwd_nosync_ms": 0.0, "comm_ms": 0.0}, "wall_s": 80.9}
+[INFO] appended run to results/runs.csv
+=== [OK] cpu_threads16_r2 ===
+
+=== [RUN] cpu_threads32_r2 | 2026-11-17 19:53:52 ===
+[INFO] params 13.87M (13.77M excl. positions) | device cpu | world 1 (no DDP) | fp32 | data train.bin | batch 64 (per rank 64 = micro 64 x accum 1) | seq 256 | seed 1337
+step     1 | loss 9.0456 | lr 6.00e-06 | 1273 ms/step
+step    10 | loss 8.2294 | lr 6.00e-05 | 1064 ms/step
+step    20 | loss 7.8787 | lr 1.20e-04 | 1032 ms/step
+step    30 | loss 7.4542 | lr 1.80e-04 | 1041 ms/step
+step    40 | loss 6.8881 | lr 2.40e-04 | 1034 ms/step
+step    50 | loss 6.7203 | lr 3.00e-04 | 1036 ms/step
+step    50 | VAL loss 6.6520
+SUMMARY {"n_params": 13865856, "steps": 50, "seed": 1337, "precision": "fp32", "global_batch": 64, "seq_len": 256, "device": "cpu", "data": "train.bin", "world_size": 1, "backend": null, "first_train_loss": 9.045601844787598, "final_train_loss": 6.720256805419922, "val_loss_500": null, "final_val_loss": 6.651964426040649, "timing_ms": {"data": 0.6072469986975193, "fwd_bwd": 1036.069932859391, "optim": 12.171829119324684, "step": 1061.927379341796}, "timed_steps": 40, "comm": {"fwd_bwd_sync_ms": 0.0, "fwd_bwd_nosync_ms": 0.0, "comm_ms": 0.0}, "wall_s": 52.4}
+[INFO] appended run to results/runs.csv
+=== [OK] cpu_threads32_r2 ===
+
+=== [RUN] cpu_threads64_r2 | 2026-11-17 19:54:49 ===
+[INFO] params 13.87M (13.77M excl. positions) | device cpu | world 1 (no DDP) | fp32 | data train.bin | batch 64 (per rank 64 = micro 64 x accum 1) | seq 256 | seed 1337
+step     1 | loss 9.0456 | lr 6.00e-06 | 1437 ms/step
+step    10 | loss 8.2294 | lr 6.00e-05 | 1077 ms/step
+step    20 | loss 7.8787 | lr 1.20e-04 | 1048 ms/step
+step    30 | loss 7.4542 | lr 1.80e-04 | 1057 ms/step
+step    40 | loss 6.8881 | lr 2.40e-04 | 1054 ms/step
+step    50 | loss 6.7203 | lr 3.00e-04 | 1054 ms/step
+step    50 | VAL loss 6.6520
+SUMMARY {"n_params": 13865856, "steps": 50, "seed": 1337, "precision": "fp32", "global_batch": 64, "seq_len": 256, "device": "cpu", "data": "train.bin", "world_size": 1, "backend": null, "first_train_loss": 9.045601844787598, "final_train_loss": 6.720256805419922, "val_loss_500": null, "final_val_loss": 6.651964426040649, "timing_ms": {"data": 8.453797083348036, "fwd_bwd": 1016.3830413948745, "optim": 14.227916020900011, "step": 1049.2484613787383}, "timed_steps": 40, "comm": {"fwd_bwd_sync_ms": 0.0, "fwd_bwd_nosync_ms": 0.0, "comm_ms": 0.0}, "wall_s": 53.25}
+[INFO] appended run to results/runs.csv
+=== [OK] cpu_threads64_r2 ===
+
+=== [RUN] cpu_threads1_r3 | 2026-11-17 19:55:48 ===
+[INFO] params 13.87M (13.77M excl. positions) | device cpu | world 1 (no DDP) | fp32 | data train.bin | batch 64 (per rank 64 = micro 64 x accum 1) | seq 256 | seed 1337
+step     1 | loss 9.0456 | lr 6.00e-06 | 16239 ms/step
+step    10 | loss 8.2294 | lr 6.00e-05 | 15610 ms/step
+step    20 | loss 7.8787 | lr 1.20e-04 | 15439 ms/step
+step    30 | loss 7.4542 | lr 1.80e-04 | 15377 ms/step
+step    40 | loss 6.8881 | lr 2.40e-04 | 15362 ms/step
+step    50 | loss 6.7203 | lr 3.00e-04 | 15358 ms/step
+step    50 | VAL loss 6.6520
+SUMMARY {"n_params": 13865856, "steps": 50, "seed": 1337, "precision": "fp32", "global_batch": 64, "seq_len": 256, "device": "cpu", "data": "train.bin", "world_size": 1, "backend": null, "first_train_loss": 9.045601844787598, "final_train_loss": 6.720256805419922, "val_loss_500": null, "final_val_loss": 6.651964426040649, "timing_ms": {"data": 0.5981889553368092, "fwd_bwd": 15167.270769597962, "optim": 23.514212807640433, "step": 15201.980310957879}, "timed_steps": 40, "comm": {"fwd_bwd_sync_ms": 0.0, "fwd_bwd_nosync_ms": 0.0, "comm_ms": 0.0}, "wall_s": 777.6}
+[INFO] appended run to results/runs.csv
+=== [OK] cpu_threads1_r3 ===
+
+=== [RUN] cpu_threads2_r3 | 2026-11-17 20:08:50 ===
+[INFO] params 13.87M (13.77M excl. positions) | device cpu | world 1 (no DDP) | fp32 | data train.bin | batch 64 (per rank 64 = micro 64 x accum 1) | seq 256 | seed 1337
+step     1 | loss 9.0456 | lr 6.00e-06 | 8651 ms/step
+step    10 | loss 8.2294 | lr 6.00e-05 | 7971 ms/step
+step    20 | loss 7.8787 | lr 1.20e-04 | 7882 ms/step
+step    30 | loss 7.4542 | lr 1.80e-04 | 7868 ms/step
+step    40 | loss 6.8881 | lr 2.40e-04 | 7868 ms/step
+step    50 | loss 6.7203 | lr 3.00e-04 | 7847 ms/step
+step    50 | VAL loss 6.6520
+SUMMARY {"n_params": 13865856, "steps": 50, "seed": 1337, "precision": "fp32", "global_batch": 64, "seq_len": 256, "device": "cpu", "data": "train.bin", "world_size": 1, "backend": null, "first_train_loss": 9.045601844787598, "final_train_loss": 6.720256805419922, "val_loss_500": null, "final_val_loss": 6.65196418762207, "timing_ms": {"data": 0.5697645246982574, "fwd_bwd": 7779.924349393696, "optim": 16.33192109875381, "step": 7796.8788736034185}, "timed_steps": 40, "comm": {"fwd_bwd_sync_ms": 0.0, "fwd_bwd_nosync_ms": 0.0, "comm_ms": 0.0}, "wall_s": 397.46}
+[INFO] appended run to results/runs.csv
+=== [OK] cpu_threads2_r3 ===
+
+=== [RUN] cpu_threads4_r3 | 2026-11-17 20:15:33 ===
+[INFO] params 13.87M (13.77M excl. positions) | device cpu | world 1 (no DDP) | fp32 | data train.bin | batch 64 (per rank 64 = micro 64 x accum 1) | seq 256 | seed 1337
+step     1 | loss 9.0456 | lr 6.00e-06 | 5988 ms/step
+step    10 | loss 8.2294 | lr 6.00e-05 | 5528 ms/step
+step    20 | loss 7.8787 | lr 1.20e-04 | 5491 ms/step
+step    30 | loss 7.4542 | lr 1.80e-04 | 5496 ms/step
+step    40 | loss 6.8881 | lr 2.40e-04 | 5478 ms/step
+step    50 | loss 6.7203 | lr 3.00e-04 | 5481 ms/step
+step    50 | VAL loss 6.6520
+SUMMARY {"n_params": 13865856, "steps": 50, "seed": 1337, "precision": "fp32", "global_batch": 64, "seq_len": 256, "device": "cpu", "data": "train.bin", "world_size": 1, "backend": null, "first_train_loss": 9.045601844787598, "final_train_loss": 6.720256805419922, "val_loss_500": null, "final_val_loss": 6.651964426040649, "timing_ms": {"data": 0.5771548021584749, "fwd_bwd": 5422.276761149988, "optim": 14.353823382407427, "step": 5450.823610182852}, "timed_steps": 40, "comm": {"fwd_bwd_sync_ms": 0.0, "fwd_bwd_nosync_ms": 0.0, "comm_ms": 0.0}, "wall_s": 277.42}
+[INFO] appended run to results/runs.csv
+=== [OK] cpu_threads4_r3 ===
+
+=== [RUN] cpu_threads8_r3 | 2026-11-17 20:20:15 ===
+[INFO] params 13.87M (13.77M excl. positions) | device cpu | world 1 (no DDP) | fp32 | data train.bin | batch 64 (per rank 64 = micro 64 x accum 1) | seq 256 | seed 1337
+step     1 | loss 9.0456 | lr 6.00e-06 | 2900 ms/step
+step    10 | loss 8.2294 | lr 6.00e-05 | 2497 ms/step
+step    20 | loss 7.8787 | lr 1.20e-04 | 2469 ms/step
+step    30 | loss 7.4542 | lr 1.80e-04 | 2458 ms/step
+step    40 | loss 6.8881 | lr 2.40e-04 | 2458 ms/step
+step    50 | loss 6.7203 | lr 3.00e-04 | 2447 ms/step
+step    50 | VAL loss 6.6520
+SUMMARY {"n_params": 13865856, "steps": 50, "seed": 1337, "precision": "fp32", "global_batch": 64, "seq_len": 256, "device": "cpu", "data": "train.bin", "world_size": 1, "backend": null, "first_train_loss": 9.045601844787598, "final_train_loss": 6.720256805419922, "val_loss_500": null, "final_val_loss": 6.651964426040649, "timing_ms": {"data": 0.578251900151372, "fwd_bwd": 2403.327558655292, "optim": 12.410563416779041, "step": 2418.1783641688526}, "timed_steps": 40, "comm": {"fwd_bwd_sync_ms": 0.0, "fwd_bwd_nosync_ms": 0.0, "comm_ms": 0.0}, "wall_s": 123.84}
+[INFO] appended run to results/runs.csv
+=== [OK] cpu_threads8_r3 ===
+
+=== [RUN] cpu_threads16_r3 | 2026-11-17 20:22:24 ===
+[INFO] params 13.87M (13.77M excl. positions) | device cpu | world 1 (no DDP) | fp32 | data train.bin | batch 64 (per rank 64 = micro 64 x accum 1) | seq 256 | seed 1337
+step     1 | loss 9.0456 | lr 6.00e-06 | 1816 ms/step
+step    10 | loss 8.2294 | lr 6.00e-05 | 1583 ms/step
+step    20 | loss 7.8787 | lr 1.20e-04 | 1533 ms/step
+step    30 | loss 7.4542 | lr 1.80e-04 | 1514 ms/step
+step    40 | loss 6.8881 | lr 2.40e-04 | 1510 ms/step
+step    50 | loss 6.7203 | lr 3.00e-04 | 1523 ms/step
+step    50 | VAL loss 6.6520
+SUMMARY {"n_params": 13865856, "steps": 50, "seed": 1337, "precision": "fp32", "global_batch": 64, "seq_len": 256, "device": "cpu", "data": "train.bin", "world_size": 1, "backend": null, "first_train_loss": 9.045601844787598, "final_train_loss": 6.720256805419922, "val_loss_500": null, "final_val_loss": 6.651964426040649, "timing_ms": {"data": 0.5732199642807245, "fwd_bwd": 1467.0499346684664, "optim": 11.27995690330863, "step": 1478.7831974681467}, "timed_steps": 40, "comm": {"fwd_bwd_sync_ms": 0.0, "fwd_bwd_nosync_ms": 0.0, "comm_ms": 0.0}, "wall_s": 77.18}
+[INFO] appended run to results/runs.csv
+=== [OK] cpu_threads16_r3 ===
+
+=== [RUN] cpu_threads32_r3 | 2026-11-17 20:23:46 ===
+[INFO] params 13.87M (13.77M excl. positions) | device cpu | world 1 (no DDP) | fp32 | data train.bin | batch 64 (per rank 64 = micro 64 x accum 1) | seq 256 | seed 1337
+step     1 | loss 9.0456 | lr 6.00e-06 | 1278 ms/step
+step    10 | loss 8.2294 | lr 6.00e-05 | 1001 ms/step
+step    20 | loss 7.8787 | lr 1.20e-04 | 983 ms/step
+step    30 | loss 7.4542 | lr 1.80e-04 | 951 ms/step
+step    40 | loss 6.8881 | lr 2.40e-04 | 960 ms/step
+step    50 | loss 6.7203 | lr 3.00e-04 | 962 ms/step
+step    50 | VAL loss 6.6520
+SUMMARY {"n_params": 13865856, "steps": 50, "seed": 1337, "precision": "fp32", "global_batch": 64, "seq_len": 256, "device": "cpu", "data": "train.bin", "world_size": 1, "backend": null, "first_train_loss": 9.045601844787598, "final_train_loss": 6.720256805419922, "val_loss_500": null, "final_val_loss": 6.651964426040649, "timing_ms": {"data": 0.5838633514940739, "fwd_bwd": 934.9811139982194, "optim": 15.743116149678826, "step": 964.6397014148533}, "timed_steps": 40, "comm": {"fwd_bwd_sync_ms": 0.0, "fwd_bwd_nosync_ms": 0.0, "comm_ms": 0.0}, "wall_s": 48.64}
+[INFO] appended run to results/runs.csv
+=== [OK] cpu_threads32_r3 ===
+
+=== [RUN] cpu_threads64_r3 | 2026-11-17 20:24:40 ===
+[INFO] params 13.87M (13.77M excl. positions) | device cpu | world 1 (no DDP) | fp32 | data train.bin | batch 64 (per rank 64 = micro 64 x accum 1) | seq 256 | seed 1337
+step     1 | loss 9.0456 | lr 6.00e-06 | 1455 ms/step
+step    10 | loss 8.2294 | lr 6.00e-05 | 1043 ms/step
+step    20 | loss 7.8787 | lr 1.20e-04 | 998 ms/step
+step    30 | loss 7.4542 | lr 1.80e-04 | 983 ms/step
+step    40 | loss 6.8881 | lr 2.40e-04 | 976 ms/step
+step    50 | loss 6.7203 | lr 3.00e-04 | 971 ms/step
+step    50 | VAL loss 6.6520
+SUMMARY {"n_params": 13865856, "steps": 50, "seed": 1337, "precision": "fp32", "global_batch": 64, "seq_len": 256, "device": "cpu", "data": "train.bin", "world_size": 1, "backend": null, "first_train_loss": 9.045601844787598, "final_train_loss": 6.720256805419922, "val_loss_500": null, "final_val_loss": 6.651964426040649, "timing_ms": {"data": 7.090514525771141, "fwd_bwd": 930.2292561624199, "optim": 14.319162582978606, "step": 952.6643559802324}, "timed_steps": 40, "comm": {"fwd_bwd_sync_ms": 0.0, "fwd_bwd_nosync_ms": 0.0, "comm_ms": 0.0}, "wall_s": 49.06}
+[INFO] appended run to results/runs.csv
+=== [OK] cpu_threads64_r3 ===
+==================================================
+Job E finished: Tue Nov 17 08:25:35 PM CET 2026 | failed runs: 0
+==================================================
