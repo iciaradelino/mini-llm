@@ -101,7 +101,7 @@ Project Gutenberg's mirror, `https://gutenberg.pglaf.org/cache/epub/<id>/pg<id>.
 existing files are not downloaded again), strips the Gutenberg header, footer and
 licence text, normalises to UTF-8 and writes:
 
-- `data/clean/train/` — 69 works, 30.13 MB
+- `data/clean/train/` — 69 works, 29.80 MB
 - `data/clean/val/` — 12 works held out whole, 3.13 MB:
   *Poesías completas* (Machado), *Misericordia* (Galdós), *La Tribuna* (Pardo Bazán),
   *Cañas y barro* (Blasco Ibáñez), *Cuentos y diálogos* (Valera), *Don Álvaro*
@@ -114,7 +114,7 @@ The full list of works with Gutenberg IDs, movement, genre and split is in `data
 Compute nodes reach Project Gutenberg (verified in jobs 25843, 26989 and 27918). If a node has
 no internet, copy the 81 files into `data/raw/` first and the script uses them.
 
-Check: the log ends with `Train Corpus Size: 30.13 MB`, `Val Corpus Size: 3.13 MB`
+Check: the log ends with `Train Corpus Size: 29.80 MB`, `Val Corpus Size: 3.13 MB`
 and `catalog.csv (81 works)`.
 
 ## 2. Tokenizer and encoding (cpu partition)
@@ -142,8 +142,8 @@ Outputs in `data/tokenized/`:
 
 | File | Tokens |
 |------|--------|
-| `train.bin` | 9,069,382 |
-| `val.bin` | 962,497 |
+| `train.bin` | 8,952,876 |
+| `val.bin` | 960,245|
 | `tiny.bin` | 1,500,000 (prefix of `train.bin`) |
 | `tokenizer.json`, `meta.json` | — |
 
@@ -219,7 +219,8 @@ to `results/runs.csv`.
 | B | TODO | 1 GPU on julia | 1337 | fp32 ×3, bf16 ×3 | no script yet |
 | C | TODO | 2 GPUs on haskell | 1337 | DDP ×3, DDP with `NCCL_P2P_DISABLE=1` ×3, profiler | no script yet |
 | D | TODO | 1 GPU on each node | 1337 | cross-node DDP ×3 | no script yet |
-| E | `slurm/job_E_cpu_threads.sbatch` | cpu, 64 cores, one thread per core (`--hint=nomultithread`), 32 GB, 6 h | 1337 | 1–64 threads ×3, 50 steps each (timing only, `valid = n/a`) | script ready; not run yet |
+| E | `slurm/job_E_cpu_threads.sbatch` | Section 4, Job E row: resources become 64 logical CPUs = 32 physical cores; threads pinned with OMP_PLACES=cores; what it runs becomes 1–32 threads on physical cores + 64 threads on 32 cores (SMT), ×3; and status becomes done: job 31986, 21 rows; speed-up 15.8× at 32 cores; SMT 6 % slower.
+
 | opt | `slurm/job_opt_compile.sbatch` | gpu, 1 GPU on haskell, 8 cores, 32 GB, 45 min | 1337 | fp32 ×3 and fp32 `--compile` ×3, interleaved (step 12) | **done**: job 28862, 6 rows, all `valid = yes`; prediction refuted (0.75 % faster, not 10–30 %); results in `docs/optimization.md` |
 
 Submit each one from the repository root, e.g. `sbatch slurm/job_E_cpu_threads.sbatch`.
@@ -271,6 +272,12 @@ Every submitted job (job ID, script, dates, outcome). Raw logs are in `slurm/log
 | 28297 | `slurm/train_check.sbatch` | fortran | 2026-11-10 19:54 | completed, 3.5 min; 200 steps, val loss 6.67 → 6.06, identical to job 26102 (same seed, same data) |
 | 28436 | `slurm/prep_data.sbatch` | fortran | 2026-11-11 08:57 | completed, <1 s (raw files cached); 81-work corpus, 33.26 MB clean |
 | 28437 | `slurm/tokenize.sbatch` | fortran | 2026-11-11 08:57 | completed, 18 s; 81-work corpus, round-trip test passed |
+| 28581 | `slurm/prep_data.sbatch` | fortran | 2026-11-11 16:19 | completed, 2 s (raw files cached); current cleaning (editors' notes removed, PR #19): 81 works, 32.93 MB clean |
+| 28582 | `slurm/tokenize.sbatch` | fortran | 2026-11-11 16:19 | completed, 17 s; tokenizer `1c5df265502e`, train.bin 8,952,876 tokens; round-trip test passed |
+| 28597 | `slurm/job_E_cpu_threads.sbatch` | haskell | 2026-11-11 16:47 | cancelled after 20 min: `--cpus-per-task=64` gave 32 physical cores × 2 SMT threads (CPUs 4-35,260-291); its single row (`cpu_threads1_r1`, 15,259 ms/step) is not used |
+| 28616 | `slurm/job_E_cpu_threads.sbatch` | — | 2026-11-11 17:07 | cancelled while pending (`QOSMaxCpuPerUserLimit`): `--hint=nomultithread` needs 128 logical CPUs, above the QoS limit of 64 |
 | 28658 | `slurm/job_opt_compile.sbatch` | haskell | 2026-11-11 19:53 | failed in the 30-step compile check: `--device cuda` without an index crashed in `torch.cuda.set_device` (fixed in PR #27) |
 | 28778 | `slurm/job_opt_compile.sbatch` | haskell | 2026-11-12 12:51 | failed in the 30-step compile check: Triton found no C compiler in the container (fixed in PR #28: bind `/cvmfs`, set `CC`) |
 | 28862 | `slurm/job_opt_compile.sbatch` | haskell | 2026-11-12 17:03 | completed, 5.5 min; first successful GPU job; 6 runs, all `valid = yes`; `torch.compile` 0.75 % faster (prediction refuted, see `docs/optimization.md`); queue state in `slurm/logs/queue_*.txt` |
+| 31985 | `slurm/job_E_cpu_threads.sbatch` | — | 2026-11-17 18:53 | cancelled while pending: submitted from an outdated checkout that still had `--hint=nomultithread`; resubmitted as 31986 |
+| 31986 | `slurm/job_E_cpu_threads.sbatch` | fortran | 2026-11-17 18:55 | completed, 1 h 30 min; Job E on AMD EPYC 9755: 1–32 physical cores (pinned) + 64-thread SMT point, ×3; 21 rows, 0 failed; speed-up 15.8× at 32 cores (49 % efficiency), SMT 6 % slower |
