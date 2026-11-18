@@ -1,0 +1,36 @@
+-------------------------------------------------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  
+                                                   Name    Self CPU %      Self CPU   CPU total %     CPU total  CPU time avg     Self CUDA   Self CUDA %    CUDA total  CUDA time avg    # of Calls  
+-------------------------------------------------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  
+                                                fwd_bwd         0.00%       0.000us         0.00%       0.000us       0.000us     371.815ms        99.22%     371.815ms      74.363ms             5  
+                                               aten::mm         0.75%       3.137ms         1.18%       4.935ms      13.160us     268.416ms        71.63%     268.416ms     715.775us           375  
+                                 ampere_sgemm_128x64_nn         0.00%       0.000us         0.00%       0.000us       0.000us      68.555ms        18.29%      68.555ms     721.630us            95  
+                                 ampere_sgemm_128x64_tn         0.00%       0.000us         0.00%       0.000us       0.000us      44.751ms        11.94%      44.751ms     497.237us            90  
+                                ampere_sgemm_128x128_tn         0.00%       0.000us         0.00%       0.000us       0.000us      38.069ms        10.16%      38.069ms       1.088ms            35  
+void cutlass::Kernel2<cutlass_80_simt_sgemm_128x256_...         0.00%       0.000us         0.00%       0.000us       0.000us      37.442ms         9.99%      37.442ms       1.070ms            35  
+                    aten::_efficient_attention_backward         0.08%     347.474us         0.45%       1.894ms      63.137us      25.807ms         6.89%      28.345ms     944.826us            30  
+fmha_cutlassB_f32_aligned_64x64_k64_sm80(PyTorchMemE...         0.00%       0.000us         0.00%       0.000us       0.000us      25.807ms         6.89%      25.807ms     860.228us            30  
+                       ampere_sgemm_128x32_sliced1x4_nt         0.00%       0.000us         0.00%       0.000us       0.000us      24.380ms         6.51%      24.380ms     812.664us            30  
+                                ampere_sgemm_128x128_nn         0.00%       0.000us         0.00%       0.000us       0.000us      22.651ms         6.04%      22.651ms     755.030us            30  
+void cutlass::Kernel2<cutlass_80_simt_sgemm_256x128_...         0.00%       0.000us         0.00%       0.000us       0.000us      21.594ms         5.76%      21.594ms     719.812us            30  
+                                    aten::gelu_backward         0.04%     146.544us         0.06%     243.318us       8.111us      10.685ms         2.85%      10.685ms     356.183us            30  
+void at::native::vectorized_elementwise_kernel<4, at...         0.00%       0.000us         0.00%       0.000us       0.000us      10.685ms         2.85%      10.685ms     356.183us            30  
+void cutlass::Kernel2<cutlass_80_simt_sgemm_128x64_8...         0.00%       0.000us         0.00%       0.000us       0.000us      10.678ms         2.85%      10.678ms     355.917us            30  
+                       aten::native_layer_norm_backward         0.08%     325.560us         0.22%     922.333us      14.190us      10.640ms         2.84%      10.640ms     163.690us            65  
+                       aten::_log_softmax_backward_data         0.01%      34.348us         0.01%      56.472us      11.294us       9.961ms         2.66%       9.961ms       1.992ms             5  
+void at::native::(anonymous namespace)::cunn_SoftMax...         0.00%       0.000us         0.00%       0.000us       0.000us       9.961ms         2.66%       9.961ms       1.992ms             5  
+                     aten::_efficient_attention_forward         0.04%     156.697us         0.11%     447.997us      14.933us       8.721ms         2.33%       8.721ms     290.699us            30  
+fmha_cutlassF_f32_aligned_64x64_rf_sm80(PyTorchMemEf...         0.00%       0.000us         0.00%       0.000us       0.000us       8.721ms         2.33%       8.721ms     290.699us            30  
+void at::native::(anonymous namespace)::GammaBetaBac...         0.00%       0.000us         0.00%       0.000us       0.000us       8.143ms         2.17%       8.143ms     125.273us            65  
+                                             aten::gelu         0.04%     156.957us         0.06%     248.603us       8.287us       6.874ms         1.83%       6.874ms     229.134us            30  
+void at::native::vectorized_elementwise_kernel<4, at...         0.00%       0.000us         0.00%       0.000us       0.000us       6.874ms         1.83%       6.874ms     229.134us            30  
+                                     aten::_log_softmax         0.01%      30.787us         0.01%      48.222us       9.644us       6.619ms         1.77%       6.619ms       1.324ms             5  
+void at::native::(anonymous namespace)::cunn_SoftMax...         0.00%       0.000us         0.00%       0.000us       0.000us       6.619ms         1.77%       6.619ms       1.324ms             5  
+                              Optimizer.step#AdamW.step         0.00%       0.000us         0.00%       0.000us       0.000us       6.136ms         1.64%       6.136ms       1.227ms             5  
+                                    aten::_fused_adamw_         0.02%      66.150us         0.02%     101.671us      10.167us       6.014ms         1.60%       6.014ms     601.436us            10  
+void at::native::(anonymous namespace)::multi_tensor...         0.00%       0.000us         0.00%       0.000us       0.000us       6.014ms         1.60%       6.014ms     601.436us            10  
+void at::native::vectorized_elementwise_kernel<4, at...         0.00%       0.000us         0.00%       0.000us       0.000us       5.831ms         1.56%       5.831ms      44.856us           130  
+                                              aten::cat         0.06%     267.773us         0.09%     383.355us      10.953us       4.543ms         1.21%       4.543ms     129.791us            35  
+void at::native::(anonymous namespace)::CatArrayBatc...         0.00%       0.000us         0.00%       0.000us       0.000us       4.530ms         1.21%       4.530ms     150.996us            30  
+-------------------------------------------------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  
+Self CPU time total: 416.860ms
+Self CUDA time total: 374.728ms

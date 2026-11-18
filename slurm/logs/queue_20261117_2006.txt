@@ -1,0 +1,2 @@
+             JOBID PARTITION     NAME     USER ST          START_TIME  NODES SCHEDNODES           NODELIST(REASON)
+             32017       gpu    job_A   hpca24 PD 2026-11-18T00:55:43      1 haskell              (Resources)
