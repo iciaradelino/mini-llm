@@ -1,0 +1,46 @@
+==================================================
+Job ID: 28597 | Node: haskell | Start: Wed Nov 11 04:47:45 PM CET 2026
+Cores granted: 64 | threads: 1 2 4 8 16 32 64 | repeats: 3
+Steps per run: 50 (10 not timed) | global batch: 64 | runs.csv: results/runs.csv
+==================================================
+
+---- lscpu ----
+CPU(s):                                  512
+Model name:                              AMD EPYC 9755 128-Core Processor
+Thread(s) per core:                      2
+Core(s) per socket:                      128
+Socket(s):                               2
+CPU(s) scaling MHz:                      52%
+L3 cache:                                1 GiB (32 instances)
+NUMA node(s):                            2
+---- cores visible to this job (nproc): 64
+torch 2.8.0+cu128
+ATen/Parallel:
+	at::get_num_threads() : 64
+	at::get_num_interop_threads() : 256
+OpenMP 201511 (a.k.a. OpenMP 4.5)
+	omp_get_max_threads() : 64
+Intel(R) oneAPI Math Kernel Library Version 2024.2-Product Build 20240605 for Intel(R) 64 architecture applications
+	mkl_get_max_threads() : 64
+Intel(R) MKL-DNN v3.7.1 (Git Hash 8d263e693366ef8db40acc569cc7d8edf644556d)
+std::thread::hardware_concurrency() : 512
+Environment variables:
+	OMP_NUM_THREADS : [not set]
+	MKL_NUM_THREADS : [not set]
+ATen parallel backend: OpenMP
+
+
+=== [RUN] cpu_threads1_r1 | 2026-11-11 16:47:49 ===
+[INFO] params 13.87M (13.77M excl. positions) | device cpu | world 1 (no DDP) | fp32 | data train.bin | batch 64 (per rank 64 = micro 64 x accum 1) | seq 256 | seed 1337
+step     1 | loss 9.0456 | lr 6.00e-06 | 23139 ms/step
+step    10 | loss 8.2294 | lr 6.00e-05 | 16159 ms/step
+step    20 | loss 7.8787 | lr 1.20e-04 | 15724 ms/step
+step    30 | loss 7.4542 | lr 1.80e-04 | 15591 ms/step
+step    40 | loss 6.8881 | lr 2.40e-04 | 15531 ms/step
+step    50 | loss 6.7203 | lr 3.00e-04 | 15477 ms/step
+step    50 | VAL loss 6.6520
+SUMMARY {"n_params": 13865856, "steps": 50, "seed": 1337, "precision": "fp32", "global_batch": 64, "seq_len": 256, "device": "cpu", "data": "train.bin", "world_size": 1, "backend": null, "first_train_loss": 9.045601844787598, "final_train_loss": 6.720256805419922, "val_loss_500": null, "final_val_loss": 6.651964426040649, "timing_ms": {"data": 0.6501320749521255, "fwd_bwd": 15226.07438126579, "optim": 30.259088147431612, "step": 15258.589386474341}, "timed_steps": 40, "comm": {"fwd_bwd_sync_ms": 0.0, "fwd_bwd_nosync_ms": 0.0, "comm_ms": 0.0}, "wall_s": 783.68}
+[INFO] appended run to results/runs.csv
+=== [OK] cpu_threads1_r1 ===
+
+=== [RUN] cpu_threads2_r1 | 2026-11-11 17:00:58 ===
