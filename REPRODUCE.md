@@ -271,6 +271,12 @@ Every submitted job (job ID, script, dates, outcome). Raw logs are in `slurm/log
 | 28297 | `slurm/train_check.sbatch` | fortran | 2026-11-10 19:54 | completed, 3.5 min; 200 steps, val loss 6.67 → 6.06, identical to job 26102 (same seed, same data) |
 | 28436 | `slurm/prep_data.sbatch` | fortran | 2026-11-11 08:57 | completed, <1 s (raw files cached); 81-work corpus, 33.26 MB clean |
 | 28437 | `slurm/tokenize.sbatch` | fortran | 2026-11-11 08:57 | completed, 18 s; 81-work corpus, round-trip test passed |
+| 28581 | `slurm/prep_data.sbatch` | fortran | 2026-11-11 16:19 | completed, 2 s (raw files cached); current cleaning (editors' notes removed, PR #19): 81 works, 32.93 MB clean |
+| 28582 | `slurm/tokenize.sbatch` | fortran | 2026-11-11 16:19 | completed, 17 s; tokenizer `1c5df265502e`, train.bin 8,952,876 tokens; round-trip test passed |
+| 28597 | `slurm/job_E_cpu_threads.sbatch` | haskell | 2026-11-11 16:47 | cancelled after 20 min: `--cpus-per-task=64` gave 32 physical cores × 2 SMT threads (CPUs 4-35,260-291); its single row (`cpu_threads1_r1`, 15,259 ms/step) is not used |
+| 28616 | `slurm/job_E_cpu_threads.sbatch` | — | 2026-11-11 17:07 | cancelled while pending (`QOSMaxCpuPerUserLimit`): `--hint=nomultithread` needs 128 logical CPUs, above the QoS limit of 64 |
 | 28658 | `slurm/job_opt_compile.sbatch` | haskell | 2026-11-11 19:53 | failed in the 30-step compile check: `--device cuda` without an index crashed in `torch.cuda.set_device` (fixed in PR #27) |
 | 28778 | `slurm/job_opt_compile.sbatch` | haskell | 2026-11-12 12:51 | failed in the 30-step compile check: Triton found no C compiler in the container (fixed in PR #28: bind `/cvmfs`, set `CC`) |
 | 28862 | `slurm/job_opt_compile.sbatch` | haskell | 2026-11-12 17:03 | completed, 5.5 min; first successful GPU job; 6 runs, all `valid = yes`; `torch.compile` 0.75 % faster (prediction refuted, see `docs/optimization.md`); queue state in `slurm/logs/queue_*.txt` |
+| 31985 | `slurm/job_E_cpu_threads.sbatch` | — | 2026-11-17 18:53 | cancelled while pending: submitted from an outdated checkout that still had `--hint=nomultithread`; resubmitted as 31986 |
+| 31986 | `slurm/job_E_cpu_threads.sbatch` | fortran | 2026-11-17 18:55 | completed, 1 h 30 min; Job E on AMD EPYC 9755: 1–32 physical cores (pinned) + 64-thread SMT point, ×3; 21 rows, 0 failed; speed-up 15.8× at 32 cores (49 % efficiency), SMT 6 % slower |
