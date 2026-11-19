@@ -17,7 +17,7 @@
 #   probe   30 steps with NCCL_DEBUG=INFO: which network NCCL used between the nodes
 #   DDP x3  (500 steps, fp32, global batch 64 = 32 per GPU)
 # Compare with the Job B fp32 runs (1 GPU Blackwell, same seed and global batch).
-#
+
 # DRAFT for review by Icíar (owner of DDP/instrumentation): never run multi-node yet.
 # If it never gets scheduled, record it as SKIPPED with the reason and keep the queue
 # evidence:  squeue --me --start > slurm/logs/queue_$(date +%Y%m%d_%H%M).txt
