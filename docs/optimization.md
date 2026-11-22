@@ -86,8 +86,8 @@ sections above)*
 Job 28862 (`slurm/job_opt_compile.sbatch`): 1 GPU on haskell (RTX 6000 Ada), fp32,
 baseline model, global batch 64, seq 256, `--max_steps 500`, seed 1337. Three
 interleaved pairs (baseline, compiled), every compiled run with a cold cache. All
-six runs finished (`failed runs: 0`). Raw data: `results/runs.csv` (`job = opt`),
-`slurm/logs/job_opt_28862*`.
+six runs finished (`failed runs: 0`). Raw data: `results/runs_corpus_20261101.csv`
+(this job ran on an earlier corpus, see below) and `slurm/logs/job_opt_28862*`.
 
 | Run | `t_step_ms` | `t_fwd_bwd_ms` | `tokens_per_s` | `peak_mem_mb` | `val_loss_500` | `wall_s` |
 |-----|-------------|----------------|----------------|---------------|----------------|----------|
@@ -148,3 +148,33 @@ kept as evidence (`slurm/logs/job_opt_28658.*`, `job_opt_28778.*`). Job 28658:
 PR #27). Job 28778: Triton found no C compiler in the container (fixed in PR #28 by
 binding `/cvmfs` and setting `CC`). Queue waits before each run are in
 `slurm/logs/queue_*.txt`.
+
+### Replication on the current corpus
+
+Job 28862 trained on the corpus built on 2026-11-01 (4 761 128 train tokens), not on
+the corpus of the later pipeline runs (8 952 876 tokens after the clean-up of
+2026-11-11). Absolute losses on different corpora cannot be compared, and
+`check_correctness.py` does not match on corpus, so the measurement was repeated with
+the current corpus: job 32275, same script and settings, `meta.json` = 8 952 876
+tokens. All six runs finished (`failed runs: 0`); raw data in `results/runs.csv`
+(`slurm_job_id` 32275) and `slurm/logs/job_opt_32275*`. The 28862 rows were moved out of
+`runs.csv` into `results/runs_corpus_20261101.csv` so that `runs.csv` holds a single
+corpus; they are kept as evidence of the first measurement.
+
+| | Job 28862 (corpus of 2026-11-01) | Job 32275 (current corpus) |
+|---|---|---|
+| `t_step_ms`, baseline (median) | 80.53 | 80.59 |
+| `t_step_ms`, compiled (median) | 79.93 | 79.90 |
+| Gain | 0.75 % | 0.86 % |
+| Spread of the 3 baseline runs | 0.69 ms | 0.56 ms |
+| `peak_mem_mb` | 4580 → 4179 | 4580 → 4179 |
+| `val_loss_500`, baseline / compiled (median) | 4.9727 / 4.9724 | 4.9265 / 4.9261 |
+| `wall_s`, baseline / compiled (median) | 43.7 / 48.2 s | 43.8 / 48.5 s |
+
+The conclusions do not change: the gain is below 5 % in both jobs, so the prediction
+is refuted by the first criterion. In the repetition the gain (0.69 ms) is slightly
+larger than the spread of the baseline runs (0.56 ms), and every compiled run is
+faster than every baseline run, so the effect is probably real, but it is below 1 %.
+Peak memory, `val_loss_500` (within 0.03 % in every run) and the extra run time
+(about 5 s of compilation) match the first job. The absolute loss (about 4.93) is
+comparable only with runs on the current corpus.

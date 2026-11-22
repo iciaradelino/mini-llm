@@ -1,7 +1,7 @@
 # Model, training loop and optimization
 
 Draft of the report section "Model and optimization". Numbers come from
-`results/runs.csv` (job `opt`, Slurm job 28862); the full prediction, measurement
+`results/runs.csv` (job `opt`, Slurm job 32275, repetition on the current corpus); the full prediction, measurement
 and per-run table are in `docs/optimization.md`.
 
 ## 1. Model
@@ -63,21 +63,23 @@ cost.
 
 | | Baseline (median of 3) | `--compile` (median of 3) | Change |
 |---|---|---|---|
-| Step time | 80.53 ms | 79.93 ms | **-0.75 %** |
-| Throughput | 203 455 tokens/s | 204 989 tokens/s | +0.75 % |
+| Step time | 80.59 ms | 79.90 ms | **-0.86 %** |
+| Throughput | 203 299 tokens/s | 205 069 tokens/s | +0.87 % |
 | Peak GPU memory | 4580 MB | 4179 MB | -8.8 % |
-| `val_loss_500` | 4.9727 | 4.9724 | within 0.03 % |
-| Total run time | 43.7 s | 48.2 s | +4.5 s (+10 %) |
+| `val_loss_500` | 4.9265 | 4.9261 | within 0.03 % |
+| Total run time | 43.8 s | 48.5 s | +4.7 s (+11 %) |
 
-All six runs are valid under the 2 % rule.
+All six runs are valid under the 2 % rule. A first job (on an earlier, smaller
+corpus) gave the same picture: 0.75 % faster, same memory (`docs/optimization.md`).
+The table above is the repetition on the current corpus (job 32275).
 
-**The prediction was refuted.** The gain is 0.75 %, far below the 10-30 % predicted,
-and smaller than the spread between the three baseline runs (0.69 ms). The compiled
-runs were all slightly faster than all baseline runs and very consistent with each
-other, so a small real effect is likely, but it is not a useful speedup. The
+**The prediction was refuted.** The gain is 0.86 %, far below the 10-30 % predicted
+(the first job gave 0.75 %). The compiled runs were all slightly faster than all
+baseline runs and very consistent with each other, so a small real effect is likely,
+but it is not a useful speedup. The
 predictions on memory, correctness, which phase changes and the higher run time held.
-Compilation costs about 5 s per run; at 0.6 ms saved per step it would take roughly
-8000 steps to pay back.
+Compilation costs about 5 s per run; at 0.7 ms saved per step it would take roughly
+7000 steps to pay back.
 
 **Interpretation (not yet confirmed with the profiler).** A step performs roughly
 1.4 TFLOP in 78 ms, about 17 TFLOP/s in fp32. This suggests the step is dominated by
