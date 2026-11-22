@@ -23,7 +23,7 @@ deliverables before **Session 29**.
 - [ ] Job A — 1 GPU haskell: fp32 ×3, seq-len 128–1024, bf16 ×3, profiler
 - [ ] Job B — 1 GPU julia: fp32 ×3, bf16 ×3
 - [ ] Job C — 2 GPU haskell: DDP ×3, P2P off ×3, profiler
-- [ ] Job D — cross-node DDP ×3 (SKIPPED with reason if never scheduled)
+- [ ] Job D — cross-node DDP: fp32 ×3, bf16 ×3 (SKIPPED with reason if never scheduled) — `slurm/job_D_crossnode.sbatch` ready, prediction in `docs/job_D.md`
 - [ ] Job E — CPU thread sweep (= step 10)
 
 ## Phase 4 — Bottleneck and optimization

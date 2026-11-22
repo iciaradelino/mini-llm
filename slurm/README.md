@@ -15,7 +15,7 @@ Partitions (`cpu`, `gpu`) and GPU models are in `env/cluster.md`.
 | `job_A_haskell_1gpu.sbatch` | gpu, 1 GPU on haskell, 8 cores, 32 GB, 2 h | Baseline fp32 ×3, seq-len sweep, bf16 ×3, profiler run | ready except `--partition` (still `TODO_GPU_PARTITION`, should be `gpu`: confirmed by job 28862); not run |
 | `job_B_julia_1gpu.sbatch` | 1 GPU on julia | fp32 baseline + bf16 (GPU generation comparison) | planned |
 | `job_C_haskell_2gpu.sbatch` | 2 GPUs on haskell | DDP, DDP with `NCCL_P2P_DISABLE=1`, profiler | planned |
-| `job_D_crossnode.sbatch` | 1 GPU on each node | Cross-node DDP ×3 | planned |
+| `job_D_crossnode.sbatch` | gpu, 1 GPU on each of fortran and julia (2 nodes), 8 cores and 32 GB per node, 1 h | Cross-node DDP: NCCL network probe, fp32 ×3 and bf16 ×3 interleaved; prediction in `docs/job_D.md` | ready; not run |
 | `job_E_cpu_threads.sbatch` | cpu, 64 cores, one thread per core (`--hint=nomultithread`), 32 GB, 6 h | Thread sweep 1–64 × 3, 50 steps, interleaved repeats (timing only) | ready; not run |
 | `job_opt_compile.sbatch` | gpu, 1 GPU on haskell, 8 cores, 32 GB, 45 min | Step 12: fp32 vs fp32 `--compile`, ×3 each, interleaved; prediction and results in `docs/optimization.md` | done (job 28862; failed attempts 28658, 28778 kept as evidence) |
 

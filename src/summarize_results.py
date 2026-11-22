@@ -69,7 +69,7 @@ pct = lambda x: f"{100*x:.1f} %"
 # ----------------------------------------------------------------------------- tables
 def table_overview(df):
     rows = []
-    order = ["A", "B", "C", "E", "opt"]
+    order = ["A", "B", "C", "D", "E", "opt"]
     for job, sub in sorted(df.groupby("job"), key=lambda x: order.index(x[0]) if x[0] in order else 99):
         if job == "E":
             sub = sub[sub["slurm_job_id"] == JOB_E_ID]
@@ -131,6 +131,33 @@ def table_ddp(df):
     return md_table(rows, ["Configuration", "NCCL path", "Step (ms)", "Tokens/s", "Speed-up",
                            "Efficiency", "Exposed comm (ms)", "Comm share", "Val loss @500", "n"],
                     "llrrrrrrrr"), m, t1
+
+
+def table_crossnode(df):
+    """Job D (1 GPU on fortran + 1 on julia) against the 1-GPU baselines of Job B
+    (same GPU model, RTX PRO 6000 Blackwell), per precision. None if Job D has no rows."""
+    sub = df[(df["job"] == "D") & ~df["profiled"]].copy()
+    if sub.empty:
+        return None
+    sub["config"] = sub["config"].str.replace(r"_(fp32|bf16)$", "", regex=True)
+    m = med(sub, ["config", "precision"], ["t_step_ms", "t_fwd_bwd_ms", "t_optim_ms", "t_comm_ms",
+                                            "tokens_per_s", "val_loss_500"])
+    rows = []
+    for prec in ["fp32", "bf16"]:
+        base = df[(df["job"] == "B") & (df["config"] == f"baseline_{prec}") & ~df["profiled"]]
+        if base.empty:
+            continue
+        t1 = base["t_step_ms"].median()
+        rows.append(["1 GPU (Job B)", prec, f1(t1), fk(base["tokens_per_s"].median()), "1.00×", "100 %",
+                     "—", "—", f4(base["val_loss_500"].median()), len(base)])
+        for (cfg, p), r in m[m.index.get_level_values("precision") == prec].iterrows():
+            s = t1 / r.t_step_ms
+            rows.append(["2 GPUs, 2 nodes", prec, f1(r.t_step_ms), fk(r.tokens_per_s), f2(s) + "×",
+                         pct(s / 2), f2(r.t_comm_ms), pct(r.t_comm_ms / r.t_step_ms),
+                         f4(r.val_loss_500), int(r.n)])
+    return md_table(rows, ["Configuration", "Precision", "Step (ms)", "Tokens/s", "Speed-up",
+                           "Efficiency", "Exposed comm (ms)", "Comm share", "Val loss @500", "n"],
+                    "llrrrrrrrr")
 
 
 def table_cpu(df):
@@ -250,6 +277,7 @@ def main():
     gpu_tbl, gpu_m = table_gpu_single(df)
     seq_tbl, seq_m = table_seqlen(df)
     ddp_tbl, ddp_m, t1_ada = table_ddp(df)
+    cross_tbl = table_crossnode(df)
     cpu_tbl, cpu_m, f = table_cpu(df)
     land_tbl, entries = table_landscape(gpu_m, ddp_m, t1_ada, cpu_m)
 
@@ -267,6 +295,10 @@ def main():
         "training windows; well within the 2 % rule. "
         "Exposed communication = forward/backward time with gradient sync minus without (`no_sync()`), "
         "measured after training.\n",
+        "\n## Job D: data-parallel training across 2 nodes (fortran + julia)\n",
+        cross_tbl if cross_tbl else "_Not run yet: `slurm/job_D_crossnode.sbatch`._",
+        "\nSpeed-up and efficiency are relative to the 1-GPU median of Job B in the same precision "
+        "(same GPU model). Prediction and network details: `docs/job_D.md`.\n" if cross_tbl else "",
         "\n## Job E: CPU strong scaling (job 31986, AMD EPYC 9755)\n", cpu_tbl,
         "\nKarp–Flatt = experimentally determined serial fraction, e = (1/S − 1/p) / (1 − 1/p). "
         f"Over 8–32 cores it is {100*cpu_m.loc[[8,16,32],'karp_flatt'].min():.1f}–{100*cpu_m.loc[[8,16,32],'karp_flatt'].max():.1f} % "
