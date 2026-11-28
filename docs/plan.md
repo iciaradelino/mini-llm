@@ -16,29 +16,29 @@ deliverables before **Session 29**.
 - [x] 8. Correctness rule in README — operational definition in `docs/interfaces.md` §5; `src/check_correctness.py` with test `tests/test_check_correctness.py`
 
 ## Phase 2 — First GPU results (Session 25)
-- [x] 9. Submit first bundled GPU job as soon as CPU test passes; save `squeue --start` output if blocked — first GPU job: job opt, submitted 2026-11-11 (28658), first successful run 28862 on 2026-11-12; queue state in `slurm/logs/queue_*.txt`. `slurm/job_A_haskell_1gpu.sbatch` still has `--partition` TODO (should be `gpu`)
-- [ ] 10. CPU/OpenMP thread sweep: 1,2,4,8,16,32,64 threads × 3 repeats — `slurm/job_E_cpu_threads.sbatch` ready, not run yet
+- [x] 9. Submit first bundled GPU job as soon as CPU test passes; save `squeue --start` output if blocked — first GPU job: job opt, submitted 2026-11-11 (28658), first successful run 28862 on 2026-11-12; queue state in `slurm/logs/queue_*.txt`
+- [x] 10. CPU/OpenMP thread sweep: 1,2,4,8,16,32,64 threads × 3 repeats — job 31986: 1–32 physical cores + 64-thread SMT point (QoS caps us at 64 logical CPUs = 32 cores); 15.8× at 32 cores, SMT 6 % slower
 
 ## Phase 3 — GPU experiments
-- [ ] Job A — 1 GPU haskell: fp32 ×3, seq-len 128–1024, bf16 ×3, profiler
-- [ ] Job B — 1 GPU julia: fp32 ×3, bf16 ×3
-- [ ] Job C — 2 GPU haskell: DDP ×3, P2P off ×3, profiler
-- [ ] Job D — cross-node DDP ×3 (SKIPPED with reason if never scheduled)
-- [ ] Job E — CPU thread sweep (= step 10)
+- [x] Job A — 1 GPU haskell: fp32 ×3, seq-len 128–1024, bf16 ×3, profiler — job 32017
+- [x] Job B — 1 GPU julia: fp32 ×3, bf16 ×3 — job 32366
+- [x] Job C — 2 GPU haskell: DDP ×3, P2P off ×3, profiler — job 32368
+- [x] Job D — cross-node DDP ×3 (SKIPPED with reason if never scheduled) — ran as job 37281 (fp32 ×3); script and results still on unmerged branches
+- [x] Job E — CPU thread sweep (= step 10) — job 31986
 
 ## Phase 4 — Bottleneck and optimization
-- [ ] 11. Analyse profiler output (A, C); save table/screenshot to `results/profiles/` — `train.py --profile` ready
-- [x] 12. One optimization with predicted effect; before/after on same workload; apply correctness rule — `torch.compile`, job 28862: prediction refuted (0.75 % faster instead of 10–30 %), all 6 runs `valid = yes`; `docs/optimization.md`
+- [ ] 11. Analyse profiler output (A, C); save table/screenshot to `results/profiles/` — Job A operator table committed; Job C profile table not committed yet; written analysis pending
+- [x] 12. One optimization with predicted effect; before/after on same workload; apply correctness rule — `torch.compile`, job 32275 on the current corpus (first run 28862 on the old corpus): prediction refuted (0.86 % faster instead of 10–30 %), all 6 runs `valid = yes`; `docs/optimization.md`
 
 ## Phase 5 — Final model and analysis
 - [ ] 13. Long run (1–3 h) with best config; samples from "En un lugar de la Mancha" — checkpoints (`--save_checkpoint`) and `src/sample.py` ready
-- [ ] 14. Analysis script: medians, speedup, efficiency, all plots — no owner yet
+- [x] 14. Analysis script: medians, speedup, efficiency, all plots — `src/summarize_results.py` → `results/summary.md`, `results/plots/`
 
 ## Phase 6 — Deliverables (before Session 29)
 - [ ] 15. Technical report (5–7 pages, nine sections, technology matrix)
 - [ ] 16. EuroHPC scale-up plan (1–2 pages, Leonardo/LUMI, node-hours)
-- [ ] 17. REPRODUCE.md complete; all logs and raw CSV committed — Phase 1 (sections 0–3) and job index done; job opt recorded; sections 4–6 filled in as the remaining jobs run
-- [ ] 18. Presentation (5 slides, 5 minutes)
+- [ ] 17. REPRODUCE.md complete; all logs and raw CSV committed — sections 0–5 and job index up to date (jobs A, B, C, E, opt); job D, section 6 (final model) and the final tag remain
+- [x] 18. Presentation (5 slides, 5 minutes) — progress presentation given on 2026-11-24; final one pending
 
 ## Risks and fallbacks
 - GPU queue blocks us → CPU experiments still give baseline, scaling and sensitivity results; document the queue as a measured blocker.

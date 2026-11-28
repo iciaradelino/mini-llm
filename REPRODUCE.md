@@ -37,8 +37,8 @@ plain `python`, so the module's interpreter is used. torch is never pip-installe
 | Python | 3.11.13 | jobs 26101, 27921 |
 | PyTorch | 2.8.0+cu128 | job 27921 |
 | CUDA | 12.8 (bundled with the PyTorch build) | `+cu128` suffix |
-| NCCL | bundled with PyTorch; not printed by the single-GPU job 28862, to be recorded by the first multi-GPU job (`torch.cuda.nccl.version()`) | TODO after job C |
-| NVIDIA driver (haskell) | 580.126.09 (driver supports CUDA up to 13.0; PyTorch uses its bundled CUDA 12.8) | `nvidia-smi` in job 28862 |
+| NCCL | 2.27.3+cuda12.9 (bundled with PyTorch) | `NCCL INFO` lines in `slurm/logs/job_C_32368_nccl_p2p_on.log` |
+| NVIDIA driver (haskell, julia) | 580.126.09 (driver supports CUDA up to 13.0; PyTorch uses its bundled CUDA 12.8) | `nvidia-smi` in jobs 28862 and 32366 |
 | numpy | 2.3.2 (provided by the module) | job 26101 |
 | tokenizers | 0.23.3 | `env/requirements.txt` |
 | pandas / matplotlib | 3.1.0 / 3.11.2 (analysis only) | `env/requirements.txt` |
@@ -63,7 +63,9 @@ Cluster hardware and partitions: `env/cluster.md`.
 | `OMP_NUM_THREADS` | `$SLURM_CPUS_PER_TASK` (halved per rank in 2-process CPU DDP) | `train_check`, `ddp_cpu_check`, `cpu_smoke`, `job_A` |
 | `TOKENIZERS_PARALLELISM` | `true` | `tokenize` |
 | `RAYON_NUM_THREADS` | `$SLURM_CPUS_PER_TASK` | `tokenize` |
-| `NCCL_P2P_DISABLE` | `1` only in the P2P-off runs of job C | job C |
+| `NCCL_P2P_DISABLE` | `1` only in the P2P-off runs of job C; NCCL then falls back to shared memory (SHM) instead of P2P, see the probe logs | job C |
+| `NCCL_DEBUG` | `VERSION` in the runs (prints the NCCL version), `INFO` in the two 30-step transport probes | job C |
+| `OMP_PLACES` / `OMP_PROC_BIND` | `cores` / `close`: one thread per physical core up to 32 threads | job E |
 | `APPTAINER_BIND` | adds `/cvmfs`, so the container can see the host's gcc | `job_opt_compile` |
 | `CC` | `/cvmfs/software.eessi.io/versions/2023.06/compat/linux/x86_64/usr/bin/gcc` (gcc 10.4.1): C compiler that Triton needs for `torch.compile` | `job_opt_compile` |
 | `TORCHINDUCTOR_FORCE_DISABLE_CACHES` | `1` in the compiled runs, so each one pays the full (cold) compile cost | `job_opt_compile` |
@@ -93,7 +95,7 @@ sbatch slurm/prep_data.sbatch
 
 | Resources | Runtime | Log |
 |-----------|---------|-----|
-| cpu, 1 task, 4 cores, 8 GB, 30 min limit | ~30 s | `slurm/logs/prep_data_<jobid>.out` |
+| cpu, 1 task, 4 cores, 8 GB, 30 min limit | ~30 s with `data/raw/` already downloaded; ~18 min on a fresh account (81 downloads, job 32013), close to the limit | `slurm/logs/prep_data_<jobid>.out` |
 
 `src/prepare_corpus.py` (standard library only) downloads 81 public-domain works from
 Project Gutenberg's mirror, `https://gutenberg.pglaf.org/cache/epub/<id>/pg<id>.txt`
@@ -215,13 +217,19 @@ to `results/runs.csv`.
 
 | Job | Script | Resources | Seed | What it runs | Status |
 |-----|--------|-----------|------|--------------|--------|
-| A | `slurm/job_A_haskell_1gpu.sbatch` | gpu, 1 GPU on haskell, 8 cores, 32 GB, 2 h | 1337 | fp32 ×3, seq-len sweep 128/512/1024 ×3, bf16 ×3, profiler run | script ready; `--partition` still `TODO_GPU_PARTITION` (should be `gpu`, see `env/cluster.md`); not run yet |
-| B | TODO | 1 GPU on julia | 1337 | fp32 ×3, bf16 ×3 | no script yet |
-| C | TODO | 2 GPUs on haskell | 1337 | DDP ×3, DDP with `NCCL_P2P_DISABLE=1` ×3, profiler | no script yet |
-| D | TODO | 1 GPU on each node | 1337 | cross-node DDP ×3 | no script yet |
-| E | `slurm/job_E_cpu_threads.sbatch` | Section 4, Job E row: resources become 64 logical CPUs = 32 physical cores; threads pinned with OMP_PLACES=cores; what it runs becomes 1–32 threads on physical cores + 64 threads on 32 cores (SMT), ×3; and status becomes done: job 31986, 21 rows; speed-up 15.8× at 32 cores; SMT 6 % slower.
+| A | `slurm/job_A_haskell_1gpu.sbatch` | gpu, 1 GPU on haskell, 8 cores, 32 GB, 2 h | 1337 | fp32 ×3, seq-len sweep 128/512/1024 ×3, bf16 ×3, profiler run | **done**: job 32017, 16 rows; bf16 3.28× faster than fp32, same loss |
+| B | `slurm/job_B_julia_1gpu.sbatch` | gpu, 1 RTX PRO 6000 Blackwell on julia (`--gres=gpu:rtx6000bb:1`), 8 cores, 32 GB, 1 h | 1337 | fp32 ×3, bf16 ×3 | **done**: job 32366, 6 rows; 2.1× (fp32) and 1.8× (bf16) faster than haskell |
+| C | `slurm/job_C_haskell_2gpu.sbatch` | gpu, 2 RTX 6000 Ada on haskell (`--gres=gpu:rtx6000ada:2`), 16 cores, 64 GB, 1 h | 1337 | DDP ×3 with P2P off, profiler run, DDP ×3 with P2P on; NCCL transport probes | **done**: job 32368, 7 rows; 1.9× faster than 1 GPU; P2P on and off equally fast |
+| D | `slurm/job_D_crossnode.sbatch` | gpu, 1 GPU on each of two nodes | 1337 | cross-node DDP, fp32 ×3 (and bf16 ×3 in the second draft) | run (job 37281), but the script and results are on unmerged branches (`feature/job_D`, `feature/job-d-crossnode`) |
+| E | `slurm/job_E_cpu_threads.sbatch` | cpu, 64 logical CPUs = 32 physical cores × 2 SMT threads, 32 GB, 6 h | 1337 | 1–32 threads pinned to physical cores + 64 threads on 32 cores (SMT), ×3, 50 steps (timing only, `valid = n/a`) | **done**: job 31986, 21 rows; speed-up 15.8× at 32 cores; SMT 6 % slower |
+| opt | `slurm/job_opt_compile.sbatch` | gpu, 1 GPU on haskell, 8 cores, 32 GB, 45 min | 1337 | fp32 ×3 and fp32 `--compile` ×3, interleaved (step 12) | **done**: job 32275 on the current corpus, 6 rows, all `valid = yes`; `torch.compile` 0.86 % faster, prediction refuted; `docs/optimization.md` |
 
-| opt | `slurm/job_opt_compile.sbatch` | gpu, 1 GPU on haskell, 8 cores, 32 GB, 45 min | 1337 | fp32 ×3 and fp32 `--compile` ×3, interleaved (step 12) | **done**: job 28862, 6 rows, all `valid = yes`; prediction refuted (0.75 % faster, not 10–30 %); results in `docs/optimization.md` |
+Rows from the first optimization job (28862) were trained on the corpus of
+2026-11-01 (30 works). They are kept, never deleted, in
+`results/runs_corpus_20261101.csv` (same schema), so that `check_correctness.py`
+never compares them with runs on the current corpus. Every row in
+`results/runs.csv` was trained on the current corpus: tokenizer `1c5df265502e`,
+`train.bin` 8,952,876 tokens.
 
 Submit each one from the repository root, e.g. `sbatch slurm/job_E_cpu_threads.sbatch`.
 Job 28862 confirmed the GPU setup: partition `gpu`, `--gres=gpu:1`, node haskell
@@ -241,8 +249,14 @@ then commit, open a PR, and add the job to the job log index below.
 ## 5. Analysis
 
 ```bash
-# TODO: python src/analyze.py results/runs.csv
+python3 src/check_correctness.py     # 1. fill `valid`
+python3 src/summarize_results.py     # 2. tables in results/summary.md, plots in results/plots/
 ```
+
+`summarize_results.py` needs pandas, numpy and matplotlib (`env/requirements.txt`;
+on a laptop, `python3 -m pip install --user pandas matplotlib numpy`). Every value
+it reports is the median of the repeats of one configuration; profiled runs are
+left out of the timing tables.
 
 ## 6. Final model and samples
 
@@ -279,6 +293,11 @@ Every submitted job (job ID, script, dates, outcome). Raw logs are in `slurm/log
 | 28658 | `slurm/job_opt_compile.sbatch` | haskell | 2026-11-11 19:53 | failed in the 30-step compile check: `--device cuda` without an index crashed in `torch.cuda.set_device` (fixed in PR #27) |
 | 28778 | `slurm/job_opt_compile.sbatch` | haskell | 2026-11-12 12:51 | failed in the 30-step compile check: Triton found no C compiler in the container (fixed in PR #28: bind `/cvmfs`, set `CC`) |
 | 28862 | `slurm/job_opt_compile.sbatch` | haskell | 2026-11-12 17:03 | completed, 5.5 min; first successful GPU job; 6 runs, all `valid = yes`; `torch.compile` 0.75 % faster (prediction refuted, see `docs/optimization.md`); trained on the corpus of 2026-11-01, so its rows are in `results/runs_corpus_20261101.csv`; queue state in `slurm/logs/queue_*.txt` |
-| 32275 | `slurm/job_opt_compile.sbatch` | haskell | 2026-11-18 14:07 | completed, 5 min 42 s; repetition of 28862 on the current corpus (8,952,876 tokens); 6 runs, all `valid = yes`; `torch.compile` 0.86 % faster, prediction still refuted |
 | 31985 | `slurm/job_E_cpu_threads.sbatch` | — | 2026-11-17 18:53 | cancelled while pending: submitted from an outdated checkout that still had `--hint=nomultithread`; resubmitted as 31986 |
 | 31986 | `slurm/job_E_cpu_threads.sbatch` | fortran | 2026-11-17 18:55 | completed, 1 h 30 min; Job E on AMD EPYC 9755: 1–32 physical cores (pinned) + 64-thread SMT point, ×3; 21 rows, 0 failed; speed-up 15.8× at 32 cores (49 % efficiency), SMT 6 % slower |
+| 32013 | `slurm/prep_data.sbatch` | fortran | 2026-11-17 19:13 | completed, 17.5 min; fresh account (hpca24), all 81 works downloaded from the mirror (~25 s each); 32.93 MB clean |
+| 32016 | `slurm/tokenize.sbatch` | fortran | 2026-11-17 19:31 | completed, 23 s; tokenizer `1c5df265502e`, train.bin 8,952,876 tokens (identical to 28582); round-trip test passed |
+| 32017 | `slurm/job_A_haskell_1gpu.sbatch` | haskell | 2026-11-17 21:00 | completed, 8 min; 16 runs, 0 failed; fp32 79.8 ms/step, bf16 24.3 ms/step (3.28×) with the same loss; seq-len sweep and profiler trace; queue state in `slurm/logs/queue_20261117_2006.txt` |
+| 32275 | `slurm/job_opt_compile.sbatch` | haskell | 2026-11-18 14:07 | completed, 5 min 42 s; repetition of 28862 on the current corpus (8,952,876 tokens); 6 runs, all `valid = yes`; `torch.compile` 0.86 % faster, prediction still refuted |
+| 32366 | `slurm/job_B_julia_1gpu.sbatch` | julia | 2026-11-18 19:06 | completed, 2 min; RTX PRO 6000 Blackwell; 6 runs, 0 failed; fp32 37.8 ms/step, bf16 13.6 ms/step; same loss as job A |
+| 32368 | `slurm/job_C_haskell_2gpu.sbatch` | haskell | 2026-11-18 19:23 | completed, 4 min; 2 × RTX 6000 Ada, DDP; 7 runs, 0 failed; 41.5 ms/step (1.9× vs 1 GPU), 2.7 ms exposed communication; P2P off falls back to SHM with no slowdown; NCCL 2.27.3 |
