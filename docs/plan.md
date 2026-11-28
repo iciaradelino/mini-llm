@@ -23,7 +23,7 @@ deliverables before **Session 29**.
 - [x] Job A — 1 GPU haskell: fp32 ×3, seq-len 128–1024, bf16 ×3, profiler — job 32017
 - [x] Job B — 1 GPU julia: fp32 ×3, bf16 ×3 — job 32366
 - [x] Job C — 2 GPU haskell: DDP ×3, P2P off ×3, profiler — job 32368
-- [x] Job D — cross-node DDP ×3 (SKIPPED with reason if never scheduled) — ran as job 37281 (fp32 ×3); script and results still on unmerged branches
+- [x] Job D — cross-node DDP ×3 (SKIPPED with reason if never scheduled) — job 37281 (fp32 ×3), NCCL over TCP sockets; slower than 1 GPU
 - [x] Job E — CPU thread sweep (= step 10) — job 31986
 
 ## Phase 4 — Bottleneck and optimization
@@ -37,8 +37,8 @@ deliverables before **Session 29**.
 ## Phase 6 — Deliverables (before Session 29)
 - [ ] 15. Technical report (5–7 pages, nine sections, technology matrix)
 - [ ] 16. EuroHPC scale-up plan (1–2 pages, Leonardo/LUMI, node-hours)
-- [ ] 17. REPRODUCE.md complete; all logs and raw CSV committed — sections 0–5 and job index up to date (jobs A, B, C, E, opt); job D, section 6 (final model) and the final tag remain
-- [x] 18. Presentation (5 slides, 5 minutes) — progress presentation given on 2026-11-24; final one pending
+- [ ] 17. REPRODUCE.md complete; all logs and raw CSV committed — sections 0–5 and job index up to date (jobs A–E, opt); section 6 (final model) and the final tag remain
+- [x] 18. Presentation (5 slides, 5 minutes) — progress presentation given on 2026-11-24
 
 ## Risks and fallbacks
 - GPU queue blocks us → CPU experiments still give baseline, scaling and sensitivity results; document the queue as a measured blocker.
